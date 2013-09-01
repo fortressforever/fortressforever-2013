@@ -16,7 +16,7 @@ $Project "captioncompiler"
 
 $Project "client"
 {
-	"game\client\client_hl2mp.vpc"		[($WIN32||$POSIX) && $HL2MP]
+	"game\client\client_ff.vpc"			[($WIN32||$POSIX) && $HL2MP]
 }
 
 $Project "game_shader_dx9"
@@ -36,7 +36,7 @@ $Project "height2normal"
 
 $Project "server"
 {
-	"game\server\server_hl2mp.vpc"		[($WIN32||$POSIX) && $HL2MP]
+	"game\server\server_ff.vpc"			[($WIN32||$POSIX) && $HL2MP]
 }
 
 $Project "mathlib"

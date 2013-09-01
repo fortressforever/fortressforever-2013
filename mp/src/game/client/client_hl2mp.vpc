@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"hl2mp" [!$SOURCESDK]
-$Macro GAMENAME 	"mod_hl2mp" [$SOURCESDK]
 
 $Include "$SRCDIR\game\client\client_base.vpc"
 
@@ -22,7 +20,7 @@ $Configuration
 	}
 }
 
-$Project "Client (HL2MP)"
+$Project
 {
 	$Folder	"Source Files"
 	{

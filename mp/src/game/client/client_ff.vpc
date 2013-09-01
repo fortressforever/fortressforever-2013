@@ -1,0 +1,39 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_FF.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"ff" [!$SOURCESDK]
+$Macro GAMENAME 	"FortressForever" [$SOURCESDK]
+
+$Include "$SRCDIR\game\client\client_hl2mp.vpc"
+
+$macro VSLIBDIR  "." [!$VS2010]
+$macro VSLIBDIR  "VS2010" [$VS2010]
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories		"$BASE;ff\ui,.\ff,$SRCDIR\game\shared\ff,.\ff,.\ff\elements,$SRCDIR\game\shared\ff"
+		$PreprocessorDefinitions			"$BASE;FF;FF_CLIENT_DLL"
+	}
+}
+
+$Project "Client (FF)"
+{
+	$Folder	"Source Files"
+	{
+		$Folder	"FF"
+		{
+		
+		}
+
+		$Folder "Link Libraries"
+		{
+		
+		}
+	}
+}
