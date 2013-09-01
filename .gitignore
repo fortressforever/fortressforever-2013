@@ -20,9 +20,9 @@ ipch
 *.vcxproj
 *.sln
 *.vcxproj.filters
-lib/public/mathlib.lib
-lib/public/tier1.lib
-lib/public/vgui_controls.lib
+mathlib.lib
+tier1.lib
+vgui_controls.lib
 *.cache
 *.unsuccessfulbuild
 generated_proto
