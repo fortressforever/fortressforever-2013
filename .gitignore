@@ -19,6 +19,13 @@ ipch
 *.idb
 *.vcxproj
 *.sln
+*.vcxproj.filters
+lib/public/mathlib.lib
+lib/public/tier1.lib
+lib/public/vgui_controls.lib
+*.cache
+*.unsuccessfulbuild
+generated_proto
 
 # OSX/Linux build products
 *.mak
@@ -54,3 +61,6 @@ config.cfg
 # shader files
 *.tmp
 
+# VPC
+*.vpc_crc
+*.vpc.sentinel
