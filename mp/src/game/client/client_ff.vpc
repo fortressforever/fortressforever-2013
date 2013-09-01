@@ -10,14 +10,13 @@ $Macro GAMENAME 	"FortressForever" [$SOURCESDK]
 
 $Include "$SRCDIR\game\client\client_hl2mp.vpc"
 
-$macro VSLIBDIR  "." [!$VS2010]
-$macro VSLIBDIR  "VS2010" [$VS2010]
+$Macro THIRDPARTYDIR	"$SRCDIR\thirdparty"
 
 $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories		"$BASE;ff\ui,.\ff,$SRCDIR\game\shared\ff,.\ff,.\ff\elements,$SRCDIR\game\shared\ff"
+		$AdditionalIncludeDirectories		"$BASE;ff\ui,.\ff,$SRCDIR\game\shared\ff,.\ff,.\ff\elements,$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
 		$PreprocessorDefinitions			"$BASE;FF;FF_CLIENT_DLL"
 	}
 }
@@ -28,12 +27,20 @@ $Project "Client (FF)"
 	{
 		$Folder	"FF"
 		{
-		
-		}
+			$Folder "Lua"
+			{
+				$File	"$SRCDIR\game\shared\ff\lua\luaman.cpp"
+				$File	"$SRCDIR\game\shared\ff\lua\luaman.h"
 
-		$Folder "Link Libraries"
-		{
-		
+				$Folder "Link Libraries"
+				{
+					$File "$SRCDIR\lib\thirdparty\$PLATFORM\lua51.lib" [$WINDOWS]
+					$File "$SRCDIR\lib\thirdparty\$PLATFORM\luabind.lib" [$WINDOWS]
+					// TODO: Build linux/mac libraries for lua/luabind
+					//$File "$SRCDIR\lib\thirdparty\$PLATFORM\lua51.a" [$POSIX]
+					//$File "$SRCDIR\lib\thirdparty\$PLATFORM\luabind.a" [$POSIX]
+				}
+			}
 		}
 	}
 }

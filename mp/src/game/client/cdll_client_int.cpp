@@ -146,6 +146,10 @@
 #include "fbxsystem/fbxsystem.h"
 #endif
 
+#ifdef FF
+#include "lua/luaman.h"
+#endif
+
 extern vgui::IInputInternal *g_InputInternal;
 const char *COM_GetModDirectory(); // return the mod dir (rather than the complete -game param, which can be a path)
 
@@ -1089,6 +1093,11 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #ifndef _X360
 	HookHapticMessages(); // Always hook the messages
 #endif
+
+#ifdef FF
+	lua_init();
+#endif
+
 	return true;
 }
 
@@ -1169,6 +1178,10 @@ void CHLClient::PostInit()
 //-----------------------------------------------------------------------------
 void CHLClient::Shutdown( void )
 {
+#ifdef FF
+	lua_shutdown();
+#endif
+
     if (g_pAchievementsAndStatsInterface)
     {
         g_pAchievementsAndStatsInterface->ReleasePanel();
