@@ -29,7 +29,7 @@ We will be using the branching model laid out here: http://nvie.com/posts/a-succ
 
 #### File Names and Directory Structure
 
-* Always put FF code files in the src/game/<server/client/shared>/ff/ directory.
+* Always put FF code files in the src/game/\[server/client/shared\]/ff/ directory.
     * __TODO__ Decide on a subdirectory scheme
 * Always prefix Fortress Forever code files with ff_
 * Add a secondary prefix depending on the usage of the file; for client-only files, use cl\_; for server-only files, use sv\_; for shared files, use sh\_
