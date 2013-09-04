@@ -8,9 +8,6 @@ $Macro SRCDIR		"..\.."
 
 $Include "$SRCDIR\game\client\client_base.vpc"
 
-$macro VSLIBDIR  "." [!$VS2010]
-$macro VSLIBDIR  "VS2010" [$VS2010]
-
 $Configuration
 {
 	$Compiler
@@ -171,17 +168,5 @@ $Project
 				$File	"hl2mp\hud_deathnotice.cpp"
 			}
 		}
-	}
-	$Folder "Libraries"
-	{
-		$File "$SRCDIR\lib\$PLATFORM\release\$VSLIBDIR\libprotobuf.lib" [$WINDOWS]
-		{
-			$Configuration "Debug" { $ExcludedFromBuild	"Yes" }
-		}
-		$File "$SRCDIR\lib\$PLATFORM\debug\$VSLIBDIR\libprotobuf.lib" [$WINDOWS]
-		{
-			$Configuration "Release" { $ExcludedFromBuild "Yes" }
-		}
-		$File "$SRCDIR\lib\$PLATFORM\release\libprotobuf.a"         [$POSIX]
 	}
 }
