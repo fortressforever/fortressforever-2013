@@ -18,12 +18,22 @@ We will be using the branching model laid out here: http://nvie.com/posts/a-succ
 
 ## Code
 
+* Avoid making changes in the base Source engine files; always try to move those changes into a FF-specific source file that derives from the base class.
+
 ### Syntax
 
-#### Variable, Function, File Names and Directory Structure
+#### Variable and Function Names
 
 * __TODO__ Decide on a naming convention
 * Always make variable and function names as descriptive as possible (if 'i' stands for 'currentPlayerIndex' then use 'currentPlayerIndex')
+
+#### File Names and Directory Structure
+
+* Always put FF code files in the src/game/<server/client/shared>/ff/ directory.
+    * __TODO__ Decide on a subdirectory scheme
+* Always prefix Fortress Forever code files with ff_
+* Add a secondary prefix depending on the usage of the file; for client-only files, use cl\_; for server-only files, use sv\_; for shared files, use sh\_
+    * Example: the "player" source files would be named: ff\_cl\_player, ff\_sv\_player, and ff\_sh\_player
 
 ### Adding/Removing Files
 
