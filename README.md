@@ -4,7 +4,7 @@
 
 We will be using the branching model laid out here: http://nvie.com/posts/a-successful-git-branching-model/
 
-* __Never push to the master branch, only merge from the develop branch or a hotfix branch__
+* __Never push to the master branch, it should only recieve merges from the develop branch or a hotfix branch (per release)__
 * Merge any source-sdk-2013 changes into the develop branch (will probably have to deal with conflicts)
 * Only use rebase when you have unpushed local changes and someone else pushed changes to the corresponding remote branch; never rebase a remote branch (see [this](http://ginsys.eu/git-and-github-keeping-a-feature-branch-updated-with-upstream/) and [this](http://www.jarrodspillers.com/git/2009/08/19/git-merge-vs-git-rebase-avoiding-rebase-hell.html))
 * Only merge from the develop branch to a feature branch when absolutely necessary (important bugfix, etc); features should ideally be self-contained
