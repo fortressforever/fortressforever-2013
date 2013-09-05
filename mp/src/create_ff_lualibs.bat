@@ -1,0 +1,1 @@
+devtools\bin\vpc.exe +lualibs /mksln ff_lualibs.sln
