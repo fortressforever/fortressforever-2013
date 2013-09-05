@@ -10,12 +10,15 @@
 
 $Games
 {
-	"HL2MP"
+//	"HL2MP",
+	"FF"
 }
 
 // Makes the VPC scripts work in the SDK's context
 $Conditional "SOURCESDK" "1"
 
-$Include "vpc_scripts\projects.vgc"
+// valve default 
+//$Include "vpc_scripts\projects.vgc"
+$include "vpc_scripts\projects_ff.vgc"
 $Include "vpc_scripts\groups.vgc"
 
