@@ -64,3 +64,8 @@ $Group "dedicated"
 	"tier1"
 }
 
+$Group "lualibs"
+{
+	"lua"
+	"luabind"
+}

@@ -1,0 +1,62 @@
+// luabind vpc project script
+
+$Macro SRCDIR		"..\.."
+
+$Macro OUTBINNAME	"luabind"
+$Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
+$Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"		// use this for dynamic linkage
+
+//$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;detail"
+	}
+}
+
+$Project "luabind"
+{
+	$Folder	"Header Files"
+	{
+		$File  "adopt_policy.hpp"
+		$File  "back_reference.hpp"
+		$File  "back_reference_fwd.hpp"
+		$File  "class.hpp"
+		$File  "class_info.hpp"
+		$File  "config.hpp"
+		$File  "container_policy.hpp"
+		$File  "copy_policy.hpp"
+		$File  "dependency_policy.hpp"
+		$File  "discard_result_policy.hpp"
+		$File  "error.hpp"
+		$File  "exception_handler.hpp"
+		$File  "from_stack.hpp"
+		$File  "function.hpp"
+		$File  "get_main_thread.hpp"
+		$File  "get_pointer.hpp"
+		$File  "handle.hpp"
+		$File  "iterator_policy.hpp"
+		$File  "luabind.hpp"
+		$File  "lua_include.hpp"
+		$File  "make_function.hpp"
+		$File  "nil.hpp"
+		$File  "object.hpp"
+		$File  "open.hpp"
+		$File  "operator.hpp"
+		$File  "out_value_policy.hpp"
+		$File  "prefix.hpp"
+		$File  "raw_policy.hpp"
+		$File  "return_reference_to_policy.hpp"
+		$File  "scope.hpp"
+		$File  "shared_ptr_converter.hpp"
+		$File  "tag_function.hpp"
+		$File  "typeid.hpp"
+		$File  "value_wrapper.hpp"
+		$File  "version.hpp"
+		$File  "weak_ref.hpp"
+		$File  "wrapper_base.hpp"
+		$File  "yield_policy.hpp"
+	}
+}
