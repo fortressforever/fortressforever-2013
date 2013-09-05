@@ -12,7 +12,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;$SRCDIR"
+		$AdditionalIncludeDirectories	"$BASE"
 		$PreprocessorDefinitions		"LUA_OPNAMES;LUA_BUILD_AS_DLL;"
 	}
 }
