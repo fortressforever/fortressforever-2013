@@ -1,0 +1,9 @@
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME "FortressForever"
+$Include "$SRCDIR\materialsystem\stdshaders\game_shader_dx9_base.vpc"
+
+$Project "Shaders (FF)"
+{
+// custom shaders here
+}
