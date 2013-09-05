@@ -2,66 +2,57 @@
 
 $Macro SRCDIR		"..\.."
 
-$Macro OUTBINNAME	"lua51"
-$Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
-$Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"		// use this for dynamic linkage
-
-//$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
+$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
 
 $Configuration
 {
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE"
-		$PreprocessorDefinitions		"LUA_OPNAMES;LUA_BUILD_AS_DLL;"
+		$EnableC++Exceptions			"Yes (/EHsc)" 
+		$PreprocessorDefinitions		"LUA_OPNAMES"
+		// Compile as C++ code breaks symbols, didnt want to spend any more time figuring out why becuase this is essentially what
+		// we have been doing
+		$CompileAs							"Compile as C Code (/TC)"
 	}
 }
 
 $Project "lua"
 {
-	$Folder	"Source Files"
+	$Folder "Source Files"
 	{
-		$File	"lapi.c"
-		$File	"lauxlib.c"
-		$File	"lbaselib.c"
-		$File	"lcode.c"
-		$File	"ldblib.c"
-		$File 	"ldebug.c"
-		$File	"ldo.c"
-		{
-			$Configuration
-			{
-				$Compiler
-				{
-					$EnableC++Exceptions	"Yes (/EHsc)" 
-				}
-			}
-		}
-		$File	"ldump.c"
-		$File	"lfunc.c"
-		$File	"lgc.c"
-		$File	"linit.c"
-		$File	"liolib.c"
-		$File	"llex.c"
-		$File	"lmathlib.c"
-		$File	"lmem.c"
-		$File	"loadlib.c"
-		$File	"lobject.c"
-		$File	"lopcodes.c"
-		$File	"loslib.c"
-		$File	"lparser.c"
-		$File	"lstate.c"
-		$File	"lstring.c"
-		$File	"lstrlib.c"
-		$File	"ltable.c"
-		$File	"ltablib.c"
-		$File	"ltm.c"
-		//$File	"lua.c"
-		$File	"luac.c"
-		$File	"lundump.c"
-		$File	"lvm.c"
-		$File	"lzio.c"
-		$File	"print.c"	
+		$File  "lapi.c"
+		$File  "lauxlib.c"
+		$File  "lbaselib.c"
+		$File  "lcode.c"
+		$File  "ldblib.c"
+		$File  "ldebug.c"
+		$File  "ldo.c"
+		$File  "ldump.c"
+		$File  "lfunc.c"
+		$File  "lgc.c"
+		$File  "linit.c"
+		$File  "liolib.c"
+		$File  "llex.c"
+		$File  "lmathlib.c"
+		$File  "lmem.c"
+		$File  "loadlib.c"
+		$File  "lobject.c"
+		$File  "lopcodes.c"
+		$File  "loslib.c"
+		$File  "lparser.c"
+		$File  "lstate.c"
+		$File  "lstring.c"
+		$File  "lstrlib.c"
+		$File  "ltable.c"
+		$File  "ltablib.c"
+		$File  "ltm.c"
+		//$File  "lua.c"
+		$File  "luac.c"
+		$File  "lundump.c"
+		$File  "lvm.c"
+		$File  "lzio.c"
+		$File  "print.c"
 	}
 
 	$Folder	"Header Files"
@@ -83,7 +74,6 @@ $Project "lua"
 		$File	"lstring.h"
 		$File	"ltable.h"
 		$File	"ltm.h"
-		$File	"lua.h"
 		$File	"lua.hpp"
 		$File	"luaconf.h"
 		$File	"lualib.h"

@@ -1,0 +1,18 @@
+$Macro SRCDIR		".."
+$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories		"$BASE,$SRCDIR\utils\common"
+	}
+}
+
+$Project "vpc-test"
+{
+	$Folder	"Source Files"
+	{
+		$File	"vpc-test.cpp"
+	}
+}

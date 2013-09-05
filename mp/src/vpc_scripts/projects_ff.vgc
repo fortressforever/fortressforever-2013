@@ -130,3 +130,9 @@ $Project "luabind"
 	"thirdparty\luabind\luabind.vpc" [$WIN32||$X360||$POSIX]
 }
 
+$Project "luatest"
+{
+	"thirdparty\luatest\luatest.vpc" [$WIN32||$X360||$POSIX]
+}
+
+

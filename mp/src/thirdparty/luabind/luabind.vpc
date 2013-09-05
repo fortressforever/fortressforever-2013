@@ -1,62 +1,40 @@
 // luabind vpc project script
 
-$Macro SRCDIR		"..\.."
+$Macro SRCDIR			"..\.."
+$Macro THIRDPARTYDIR	"$SRCDIR\thirdparty"
+$Macro LUADIR			"$THIRDPARTYDIR\lua"
 
-$Macro OUTBINNAME	"luabind"
-$Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
-$Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"		// use this for dynamic linkage
-
-//$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
+$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
 
 $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;detail"
+		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"
+		$EnableC++Exceptions			"Yes (/EHsc)" 
 	}
 }
 
 $Project "luabind"
 {
-	$Folder	"Header Files"
+	$Folder "Source Files"
 	{
-		$File  "adopt_policy.hpp"
-		$File  "back_reference.hpp"
-		$File  "back_reference_fwd.hpp"
-		$File  "class.hpp"
-		$File  "class_info.hpp"
-		$File  "config.hpp"
-		$File  "container_policy.hpp"
-		$File  "copy_policy.hpp"
-		$File  "dependency_policy.hpp"
-		$File  "discard_result_policy.hpp"
-		$File  "error.hpp"
-		$File  "exception_handler.hpp"
-		$File  "from_stack.hpp"
-		$File  "function.hpp"
-		$File  "get_main_thread.hpp"
-		$File  "get_pointer.hpp"
-		$File  "handle.hpp"
-		$File  "iterator_policy.hpp"
-		$File  "luabind.hpp"
-		$File  "lua_include.hpp"
-		$File  "make_function.hpp"
-		$File  "nil.hpp"
-		$File  "object.hpp"
-		$File  "open.hpp"
-		$File  "operator.hpp"
-		$File  "out_value_policy.hpp"
-		$File  "prefix.hpp"
-		$File  "raw_policy.hpp"
-		$File  "return_reference_to_policy.hpp"
-		$File  "scope.hpp"
-		$File  "shared_ptr_converter.hpp"
-		$File  "tag_function.hpp"
-		$File  "typeid.hpp"
-		$File  "value_wrapper.hpp"
-		$File  "version.hpp"
-		$File  "weak_ref.hpp"
-		$File  "wrapper_base.hpp"
-		$File  "yield_policy.hpp"
+		$File	"class.cpp"
+		$File	"class_info.cpp"
+		$File	"class_registry.cpp"
+		$File	"class_rep.cpp"
+		$File	"create_class.cpp"
+		$File	"error.cpp"
+		$File	"exception_handler.cpp"
+		$File	"function.cpp"
+		$File	"inheritance.cpp"
+		$File	"link_compatibility.cpp"
+		$File	"object_rep.cpp"
+		$File	"open.cpp"
+		$File 	"pcall.cpp"
+		$File	"scope.cpp"
+		$File	"stack_content_by_name.cpp"
+		$File	"weak_ref.cpp"
+		$File	"wrapper_base.cpp"
 	}
 }
