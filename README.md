@@ -19,13 +19,14 @@ We will be using the branching model laid out here: http://nvie.com/posts/a-succ
 ## Code
 
 * Avoid making changes in the base Source engine files; always try to move those changes into a FF-specific source file that derives from the base class.
+* __TODO__ Design some object composition rules to keep code where we you expect it to be (there was a lot of code in strange places). Not sure how to address this yet.
 
 ### Syntax
 
 #### Variable and Function Names
 
 * __TODO__ Decide on a naming convention
-* Always make variable and function names as descriptive as possible (if 'i' stands for 'currentPlayerIndex' then use 'currentPlayerIndex')
+* Always make variable and function names as descriptive as possible, this includes for-loop variables (e.g. if 'i' stands for 'currentPlayerIndex' then use 'currentPlayerIndex').
 
 #### File Names and Directory Structure
 
@@ -38,6 +39,8 @@ We will be using the branching model laid out here: http://nvie.com/posts/a-succ
 ### Adding/Removing Files
 
 Solution and makefiles are no longer stored on the repo, they are generated using [VPC](https://developer.valvesoftware.com/wiki/Valve_Project_Creator). To add/remove files from the project, you must edit the __game/client/client_ff.vpc__ and/or __game/server/server_ff.vpc__ files and then execute __createallprojects(.bat)__ in the __src/__ directory. To remove a non-FF-specific file from the project (like HL2DM files), add exactly what you would to add the file (or copy the line from the .vpc that includes it), but put a - before "$File".
+
+AS A RULE: If changes are made to the VPC files as part of a commit then the commit comment should start with "VPCMOD: " for easy spotting by developers to indicate they need to re-run the bats.
 
 ## Documentation
 
