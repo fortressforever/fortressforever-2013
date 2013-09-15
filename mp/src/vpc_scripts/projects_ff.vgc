@@ -119,3 +119,20 @@ $Project "vvis_launcher"
 	"utils\vvis_launcher\vvis_launcher.vpc" [$WIN32]
 }
 
+// ff external libs
+$Project "lua"
+{
+	"thirdparty\lua\lua.vpc" [$WIN32||$X360||$POSIX]
+}
+
+$Project "luabind"
+{
+	"thirdparty\luabind\luabind.vpc" [$WIN32||$X360||$POSIX]
+}
+
+$Project "luatest"
+{
+	"thirdparty\luatest\luatest.vpc" [$WIN32||$X360||$POSIX]
+}
+
+

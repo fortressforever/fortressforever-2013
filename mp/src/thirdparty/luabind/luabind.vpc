@@ -1,0 +1,40 @@
+// luabind vpc project script
+
+$Macro SRCDIR			"..\.."
+$Macro THIRDPARTYDIR	"$SRCDIR\thirdparty"
+$Macro LUADIR			"$THIRDPARTYDIR\lua"
+
+$Include "$SRCDIR\vpc_scripts\source_lib_base.vpc"	// this for static lib
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"
+		$EnableC++Exceptions			"Yes (/EHsc)" 
+	}
+}
+
+$Project "luabind"
+{
+	$Folder "Source Files"
+	{
+		$File	"class.cpp"
+		$File	"class_info.cpp"
+		$File	"class_registry.cpp"
+		$File	"class_rep.cpp"
+		$File	"create_class.cpp"
+		$File	"error.cpp"
+		$File	"exception_handler.cpp"
+		$File	"function.cpp"
+		$File	"inheritance.cpp"
+		$File	"link_compatibility.cpp"
+		$File	"object_rep.cpp"
+		$File	"open.cpp"
+		$File 	"pcall.cpp"
+		$File	"scope.cpp"
+		$File	"stack_content_by_name.cpp"
+		$File	"weak_ref.cpp"
+		$File	"wrapper_base.cpp"
+	}
+}
