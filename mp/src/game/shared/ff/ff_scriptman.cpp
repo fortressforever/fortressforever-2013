@@ -2,13 +2,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // includes
 #include "cbase.h"
-//#include "ff_scriptman.h"
+#include "ff_scriptman.h"
 //#include "ff_entity_system.h"
 //#include "ff_luacontext.h"
 //#include "ff_lualib.h"
 //#include "ff_utils.h"
 //#include "ff_item_flag.h"
-#include "triggers.h"
+//#include "triggers.h"
 
 // engine
 #include "filesystem.h"
@@ -25,8 +25,9 @@
 //#undef min
 //#undef max
 //
-//// luabind
-//#include "luabind/luabind.hpp"
+// luabind
+#include "lua.hpp"
+#include "luabind/luabind.hpp"
 //#include "luabind/object.hpp"
 //#include "luabind/iterator_policy.hpp"
 

@@ -1,8 +1,14 @@
 // VPC included in client/server FF VPCs containing all shared 
 
+// expects $SRCDIR macro to exist
 $Project
 {
 	$Folder "FF Shared"
 	{
+		$Folder "Lua"
+		{
+			$File	"$SRCDIR\game\shared\ff\ff_scriptman.cpp"
+			$File	"$SRCDIR\game\shared\ff\ff_scriptman.h"
+		}
 	}
 }
