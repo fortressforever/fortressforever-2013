@@ -27,11 +27,12 @@ $Project "Client (FF)"
 	{
 		$Folder	"FF"
 		{
-			$Folder "Lua"
-			{
-				$File	"$SRCDIR\game\shared\ff\lua\luaman.cpp"
-				$File	"$SRCDIR\game\shared\ff\lua\luaman.h"
-			}
+			//TODO:
+			//$Folder "Lua"
+			//{
+			//	$File	"$SRCDIR\game\shared\ff\lua\luaman.cpp"
+			//	$File	"$SRCDIR\game\shared\ff\lua\luaman.h"
+			//}
 		}
 	}
 	

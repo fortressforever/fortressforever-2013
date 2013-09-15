@@ -148,7 +148,7 @@
 #endif
 
 #ifdef FF
-#include "lua/luaman.h"
+//#include "lua/luaman.h"
 #endif
 
 extern vgui::IInputInternal *g_InputInternal;
@@ -1097,7 +1097,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #endif
 
 #ifdef FF
-	lua_init();
+	//lua_init();
 #endif
 
 	return true;
@@ -1181,7 +1181,7 @@ void CHLClient::PostInit()
 void CHLClient::Shutdown( void )
 {
 #ifdef FF
-	lua_shutdown();
+	//lua_shutdown();
 #endif
 
     if (g_pAchievementsAndStatsInterface)
