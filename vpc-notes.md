@@ -17,3 +17,15 @@ even when in a project unless you force generate them..
 3. run 'vpc +ProjectName' to make it spit out vcxprojs. if it cant find your
 'ProjectName', you may need to add the vpc to your project file in default.vgc.
 4. if you want to create a solution for a group (or single project for some wacky reason) pass '/mksln <sln name>' to vpc
+
+
+### File paths
+_Adding_: $Folder has no effect on path when trying to find $File. it is solely for creating 'filters' in the VS project. 
+_Removing_: You must recreate the $Folder structure that was used when adding or else it wont actually remove shit!! eg.
+		$Folder "HL2MP"
+		{
+			-$File	"hl2mp\hl2mp_client.cpp"
+		}
+If you just try:
+	-$File	"hl2mp\hl2mp_client.cpp"
+It wont fucking work

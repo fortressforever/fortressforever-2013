@@ -10,6 +10,8 @@ $Macro GAMENAME 	"FortressForever" [$SOURCESDK]
 
 $Include "$SRCDIR\game\client\client_hl2mp.vpc"
 
+$Include "$SRCDIR\game\shared\ff\ff_shared.vpc"
+
 $Macro THIRDPARTYDIR	"$SRCDIR\thirdparty"
 
 $Configuration
@@ -25,6 +27,7 @@ $Project "Client (FF)"
 {
 	$Folder	"Source Files"
 	{
+		// for FF Shared, see game\shared\ff\ff_shared.vpc
 		$Folder	"FF"
 		{
 			//TODO:
@@ -33,12 +36,15 @@ $Project "Client (FF)"
 			//	$File	"$SRCDIR\game\shared\ff\lua\luaman.cpp"
 			//	$File	"$SRCDIR\game\shared\ff\lua\luaman.h"
 			//}
+			
+			$Folder "Libraries"
+			{
+				$Lib 	lua
+				$Lib	luabind
+			}
 		}
-	}
-	
-	$Folder "Libraries"
-	{
-		$Lib 	lua
-		$Lib	luabind
+		
+		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!
+		// done for us in HL2DM sdk vpc: -$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
 	}
 }

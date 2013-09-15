@@ -1,0 +1,8 @@
+// VPC included in client/server FF VPCs containing all shared 
+
+$Project
+{
+	$Folder "FF Shared"
+	{
+	}
+}
