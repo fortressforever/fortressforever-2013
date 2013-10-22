@@ -64,3 +64,4 @@ config.cfg
 # VPC
 *.vpc_crc
 *.vpc.sentinel
+/mp/game/FortressForever
