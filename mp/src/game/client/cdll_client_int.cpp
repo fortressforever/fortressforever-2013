@@ -849,7 +849,6 @@ extern IGameSystem *ViewportClientSystem();
 //-----------------------------------------------------------------------------
 ISourceVirtualReality *g_pSourceVR = NULL;
 
-#include "steam/steam_api.h"
 // Purpose: Called when the DLL is first loaded.
 // Input  : engineFactory - 
 // Output : int
