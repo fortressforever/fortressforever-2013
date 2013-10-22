@@ -849,6 +849,7 @@ extern IGameSystem *ViewportClientSystem();
 //-----------------------------------------------------------------------------
 ISourceVirtualReality *g_pSourceVR = NULL;
 
+#include "steam/steam_api.h"
 // Purpose: Called when the DLL is first loaded.
 // Input  : engineFactory - 
 // Output : int
@@ -871,7 +872,27 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	ConnectTier3Libraries( &appSystemFactory, 1 );
 
 #ifndef NO_STEAM
+	//assert ( false );
 	ClientSteamContext().Activate();
+	uint32 appId = steamapicontext->SteamUtils()->GetAppID();
+	char msg[128];
+	Q_snprintf(msg, 128,"Steam AppID = %i\n", appId);
+	DevMsg(msg);
+	/*
+	// careful: you might want to use a long long if you're a internet celeb like squeek 
+	int numFriends = steamapicontext->SteamFriends()->GetFriendCount(k_EFriendFlagImmediate);
+	for (int i = 0; i < numFriends; i++)
+	{
+		CSteamID steamFrendzor = steamapicontext->SteamFriends()->GetFriendByIndex(i, k_EFriendFlagImmediate);
+		AccountID_t acctId = steamFrendzor.GetAccountID();
+		//const char *steamName = steamapicontext->SteamFriends()->GetFriendPersonaName(steamFrendzor);		
+		if (acctId == 5800795)
+		{
+			//5800795 is my old steam acct running on my laptop to test this shit
+			steamapicontext->SteamFriends()->InviteUserToGame(steamFrendzor, "connect 1.2.3.4;password barf");
+		}
+
+	}*/
 #endif
 
 	// We aren't happy unless we get all of our interfaces.

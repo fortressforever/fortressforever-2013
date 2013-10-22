@@ -1,8 +1,8 @@
 "GameInfo"
 {
-	game	"FF test"
-	title	"FF test"
-	title2	"FF test"
+	game	"FortressForever"
+	title	"Fortress Forever"
+	title2	""
 	type multiplayer_only
 	nomodels 0
 	nohimodel 1
@@ -15,8 +15,10 @@
 
 
 	FileSystem
-	{
-		SteamAppId				243750
+	{	
+		// this is Source SDK Base 2013 MP
+		//SteamAppId				243750 
+		SteamAppId				253530
 		
 		//
 		// The code that loads this file automatically does a few things here:
