@@ -56,7 +56,8 @@ ConVar player_limit_jump_speed( "player_limit_jump_speed", "1", FCVAR_REPLICATED
 ConVar option_duck_method("option_duck_method", "1", FCVAR_REPLICATED|FCVAR_ARCHIVE );// 0 = HOLD to duck, 1 = Duck is a toggle
 
 // [MD] I'll remove this eventually. For now, I want the ability to A/B the optimizations.
-bool g_bMovementOptimizations = true;
+// FF port note: sets to false.. default is true, set to false here too
+bool g_bMovementOptimizations = false;
 
 // Roughly how often we want to update the info about the ground surface we're on.
 // We don't need to do this very often.
@@ -75,6 +76,15 @@ bool g_bMovementOptimizations = true;
 #define	NUM_CROUCH_HINTS	3
 
 extern IGameMovement *g_pGameMovement;
+
+// FF cvars
+static ConVar sv_sharkingfriction("sv_sharkingfriction", "1", FCVAR_REPLICATED | FCVAR_CHEAT);
+#define SV_SHARKINGFRICTION sv_sharkingfriction.GetFloat()
+
+//static ConVar ffdev_headcrush_damage("ffdev_headcrush_damage", "108", FCVAR_FF_FFDEV_REPLICATED, "Straight headcrush damage; not used if usefalldamage is on");
+#define HEADCRUSH_DAMAGE 108.0f
+//static ConVar ffdev_headcrush_usefalldamage("ffdev_headcrush_usefalldamage", "4.0", FCVAR_FF_FFDEV_REPLICATED, "0 = off, > 0 means take FALLDAMAGE * val damage");
+#define HEADCRUSH_USEFALLDAMAGE 4.0f
 
 #if defined( PLAYER_GETTING_STUCK_TESTING )
 
@@ -1034,6 +1044,19 @@ void CGameMovement::CheckParameters( void )
 		}
 	}
 
+	// FF squeek: transition from walk -> crouch brought you back to full speed; only stop cropping speed when the player is fully ducked
+	// porting note: speed cropped changed from bool to flags
+	if ( m_iSpeedCropped == SPEED_CROPPED_RESET && ( mv->m_nButtons & IN_SPEED ) /*&& !(mv->m_nButtons & IN_DUCK)*/ && !( player->m_Local.m_bDucked /*&& !player->m_Local.m_bDucking*/ ))
+	{
+		// Bug ID #0000363: +speed command not fully implemented
+		float frac = 0.5f;
+		mv->m_flForwardMove *= frac;
+		mv->m_flSideMove    *= frac;
+		mv->m_flUpMove      *= frac;
+
+		m_iSpeedCropped |= SPEED_CROPPED_DUCK; // FF Dexter: set to duck value since we dont use weapon
+	}
+
 	if ( player->GetFlags() & FL_FROZEN ||
 		 player->GetFlags() & FL_ONTRAIN || 
 		 IsDead() )
@@ -1383,30 +1406,47 @@ void CGameMovement::WaterMove( void )
 	//
 	for (i=0 ; i<3 ; i++)
 	{
-		wishvel[i] = forward[i]*mv->m_flForwardMove + right[i]*mv->m_flSideMove;
+		// FF Bug #0000964: +moveup/+movedown don't work
+		// Hey, get some up velocity wishing going on to buddy! Don't forget about us +moveup/+movedown users!
+		wishvel[i] = forward[i]*mv->m_flForwardMove + right[i]*mv->m_flSideMove + up[i]*mv->m_flUpMove;
 	}
 
+
+	bool bIsSharking = false;
+	// FF --> Mirv: Sharking fix
 	// if we have the jump key down, move us up as well
 	if (mv->m_nButtons & IN_JUMP)
 	{
-		wishvel[2] += mv->m_flClientMaxSpeed;
+		//wishvel[2] += mv->m_flClientMaxSpeed;
+		mv->m_vecVelocity[2] = 100.0f;
+		bIsSharking = true;
 	}
+	// FF <-- Mirv: Trimping fix
+
 	// Sinking after no other movement occurs
-	else if (!mv->m_flForwardMove && !mv->m_flSideMove && !mv->m_flUpMove)
+	if (!mv->m_flForwardMove && !mv->m_flSideMove && !mv->m_flUpMove && player->GetGroundEntity() == NULL)	// FF |-- Mirv: But only when not on ground, to fix #0000432: Standing underwater on a slope causes player to slip
 	{
 		wishvel[2] -= 60;		// drift towards bottom
 	}
 	else  // Go straight up by upmove amount.
 	{
+		// FF --> Mirv: No lets not do this (trackerid: 0000945)
 		// exaggerate upward movement along forward as well
-		float upwardMovememnt = mv->m_flForwardMove * forward.z * 2;
-		upwardMovememnt = clamp( upwardMovememnt, 0.f, mv->m_flClientMaxSpeed );
-		wishvel[2] += mv->m_flUpMove + upwardMovememnt;
+		//float upwardMovememnt = mv->m_flForwardMove * forward.z * 2;
+		//upwardMovememnt = clamp( upwardMovememnt, 0, mv->m_flClientMaxSpeed );
+		//wishvel[2] += mv->m_flUpMove + upwardMovememnt;
+		// <--
 	}
 
 	// Copy it over and determine speed
 	VectorCopy (wishvel, wishdir);
 	wishspeed = VectorNormalize(wishdir);
+
+	// FF --> Jon: cap swimming speed if cloaked
+        // FF TODO: (player stuff)
+	//float flMaxSpeed = mv->m_flMaxSpeed;
+	//if (ToFFPlayer(player)->IsCloaked())
+	//	flMaxSpeed = SPY_MAXCLOAKSPEED;
 
 	// Cap speed.
 	if (wishspeed > mv->m_flMaxSpeed)
@@ -1423,7 +1463,11 @@ void CGameMovement::WaterMove( void )
 	speed = VectorNormalize(temp);
 	if (speed)
 	{
-		newspeed = speed - gpGlobals->frametime * speed * sv_friction.GetFloat() * player->m_surfaceFriction;
+                // FF: sharking
+		if (!bIsSharking)
+			newspeed = speed - gpGlobals->frametime * speed * /*sv_friction.GetFloat()*/ 4.0f * /*player->m_surfaceFriction*/ 1.0f;	// |-- Mirv: More TFC Feeling (tm) friction
+		else
+			newspeed = speed - gpGlobals->frametime * speed * SV_SHARKINGFRICTION * /*player->m_surfaceFriction*/ 1.0f;
 		if (newspeed < 0.1f)
 		{
 			newspeed = 0;
@@ -1591,6 +1635,15 @@ void CGameMovement::StepMove( Vector &vecDestination, trace_t &trace )
 	{
 		// copy z value from slide move
 		mv->m_vecVelocity.z = vecDownVel.z;
+
+		// FF --> Mirv:
+		// If we have stepped up far enough then flag for smoothstairs
+		float flDistance = vecUpPos.z - vecPos.z;
+		if (flDistance >= 8.0f)
+		{
+			player->m_bSmoothStair = true;
+		}
+		// <-- Mirv
 	}
 	
 	float flStepDist = mv->GetAbsOrigin().z - vecPos.z;
@@ -1628,6 +1681,9 @@ void CGameMovement::Friction( void )
 	if (player->GetGroundEntity() != NULL)  // On an entity that is the ground
 	{
 		friction = sv_friction.GetFloat() * player->m_surfaceFriction;
+
+ 	        // FF: friction tweak
+		friction *= /*player->m_surfaceFriction*/ 1.0f;	// |-- Mirv: More TFC Feeling (tm) friction
 
 		// Bleed off some speed, but if we have less than the bleed
 		//  threshold, bleed the threshold amount.
@@ -1727,7 +1783,7 @@ void CGameMovement::AirAccelerate( Vector& wishdir, float wishspeed, float accel
 		return;
 
 	// Determine acceleration speed after acceleration
-	accelspeed = accel * wishspeed * gpGlobals->frametime * player->m_surfaceFriction;
+	accelspeed = accel * wishspeed * gpGlobals->frametime * /*player->m_surfaceFriction*/ 1.0f;	// FF |-- Mirv: More TFC Feeling (tm) friction
 
 	// Cap it
 	if (accelspeed > addspeed)
@@ -1834,7 +1890,7 @@ void CGameMovement::Accelerate( Vector& wishdir, float wishspeed, float accel )
 		return;
 
 	// Determine amount of accleration.
-	accelspeed = accel * gpGlobals->frametime * wishspeed * player->m_surfaceFriction;
+	accelspeed = accel * gpGlobals->frametime * wishspeed * /*player->m_surfaceFriction*/ 1.0f;	// FF |-- Mirv: More TFC Feeling (tm) friction
 
 	// Cap at addspeed
 	if (accelspeed > addspeed)
@@ -1878,6 +1934,14 @@ void CGameMovement::StayOnGround( void )
 		//This is incredibly hacky. The real problem is that trace returning that strange value we can't network over.
 		if ( flDelta > 0.5f * COORD_RESOLUTION)
 		{
+	                // FF --> Mirv:
+			// If we have stepped up far enough then flag for smoothstairs
+			float flDistance = mv->GetAbsOrigin().z - trace.endpos.z;
+			if (flDistance >= 8.0f)
+			{
+				player->m_bSmoothStair = true;
+			}
+			// <-- Mirv
 			mv->SetAbsOrigin( trace.endpos );
 		}
 	}
@@ -2030,7 +2094,13 @@ void CGameMovement::FullWalkMove( )
 		TryPlayerMove();
 		// See if we are still in water?
 		CheckWater();
-		return;
+
+		// FF hlstriker: Make sure player isn't swimming before we return
+		if( player->GetWaterLevel() < WL_Waist )
+		{
+			player->m_flWaterJumpTime = 0;
+		        return;
+                }
 	}
 
 	// If we are swimming in the water, see if we are nudging against a place we can jump up out
@@ -2802,6 +2872,7 @@ int CGameMovement::TryPlayerMove( Vector *pFirstDest, trace_t *pFirstTrace )
 		fSlamVol = 0.85f;
 	}
 
+        // FF TODO: move player falling sounds here
 	PlayerRoughLandingEffects( fSlamVol );
 
 	return blocked;
@@ -3801,7 +3872,11 @@ void CGameMovement::CategorizePosition( void )
 	// Shooting up really fast.  Definitely not on ground.
 	// On ladder moving up, so not on ground either
 	// NOTE: 145 is a jump.
-#define NON_JUMP_VELOCITY 140.0f
+//#define NON_JUMP_VELOCITY 140.0f
+        // FF Port notes: this is done kinda wacky trrying to move mirvs code the same way
+        float NON_JUMP_VELOCITY = 180.0f;
+        if ( ( mv->m_nButtons & IN_JUMP ) && ! ( mv->m_nOldButtons & IN_JUMP ) )
+             NON_JUMP_VELOCITY = 260000;
 
 	float zvel = mv->m_vecVelocity[2];
 	bool bMovingUp = zvel > 0.0f;
@@ -3896,6 +3971,14 @@ void CGameMovement::CheckFalling( void )
 	if ( player->GetGroundEntity() == NULL || player->m_Local.m_flFallVelocity <= 0 )
 		return;
 
+        // FF TODO: double jumping off other dudes - player stuff
+        /*
+        // Jiggles: To stop players from double jumping off other players
+	if ( player->GetGroundEntity() && player->GetGroundEntity()->IsPlayer() )
+		pPlayer->m_bCanDoubleJump = false;
+	else
+		pPlayer->m_bCanDoubleJump = true;
+        */
 	if ( !IsDead() && player->m_Local.m_flFallVelocity >= PLAYER_FALL_PUNCH_THRESHOLD )
 	{
 		bool bAlive = true;
@@ -3933,7 +4016,8 @@ void CGameMovement::CheckFalling( void )
 			}
 			else if ( player->m_Local.m_flFallVelocity > PLAYER_MAX_SAFE_FALL_SPEED / 2 )
 			{
-				fvol = 0.85;
+				// FF 0000608: Makes dropping damage sound from heights that dont inflict damage
+				fvol = 0; //0.85;
 			}
 			else if ( player->m_Local.m_flFallVelocity < PLAYER_MIN_BOUNCE_SPEED )
 			{
@@ -3941,6 +4025,8 @@ void CGameMovement::CheckFalling( void )
 			}
 		}
 
+                // FF Note -> was logic in fall sound code here, 
+                // FF TODO: Landing effects sound
 		PlayerRoughLandingEffects( fvol );
 
 		if (bAlive)
@@ -3981,6 +4067,7 @@ void CGameMovement::PlayerRoughLandingEffects( float fvol )
 
 #if !defined( CLIENT_DLL )
 		player->RumbleEffect( ( fvol > 0.85f ) ? ( RUMBLE_FALL_LONG ) : ( RUMBLE_FALL_SHORT ), 0, RUMBLE_FLAGS_NONE );
+                // FF TODO: FF player headcrush would go here!!!
 #endif
 	}
 }
@@ -4080,7 +4167,10 @@ void CGameMovement::FinishUnDuck( void )
 
 	VectorCopy( mv->GetAbsOrigin(), newOrigin );
 
-	if ( player->GetGroundEntity() != NULL )
+        // FF : believe this is our change
+	// The extra check (m_Local.m_bDucked) added because players were popping up 
+	// into the air when they hadn't yet been moved down for the duck
+	if ( player->GetGroundEntity() != NULL && player->m_Local.m_bDucked )
 	{
 		for ( i = 0; i < 3; i++ )
 		{
@@ -4201,7 +4291,7 @@ void CGameMovement::FinishDuck( void )
 	{
 		Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 		Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch );
+		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f ; // FF |-- Mirv: We only want half the difference
 		Vector out;
    		VectorAdd( mv->GetAbsOrigin(), viewDelta, out );
 		mv->SetAbsOrigin( out );
@@ -4231,7 +4321,7 @@ void CGameMovement::StartUnDuckJump( void )
 
 	Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 	Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-	Vector viewDelta = ( hullSizeNormal - hullSizeCrouch );
+	Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f; // FF |-- Mirv: We only want half the difference
 	Vector out;
 	VectorAdd( mv->GetAbsOrigin(), viewDelta, out );
 	mv->SetAbsOrigin( out );
@@ -4688,7 +4778,7 @@ void CGameMovement::PerformFlyCollisionResolution( trace_t &pm, Vector &move )
 	case MOVECOLLIDE_DEFAULT:
 		{
 			if (player->GetMoveCollide() == MOVECOLLIDE_FLY_BOUNCE)
-				backoff = 2.0 - player->m_surfaceFriction;
+				backoff = 2.0 - /* player->m_surfaceFriction */ 1.0f; // FF |-- Mirv: More TFC feeling (tm) friction
 			else
 				backoff = 1;
 

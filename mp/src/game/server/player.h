@@ -1109,7 +1109,7 @@ private:
 
 	float					m_flOldPlayerZ;
 	float					m_flOldPlayerViewOffsetZ;
-
+	bool					m_bSmoothStair;					// FF |-- Mirv
 	bool					m_bPlayerUnderwater;
 
 	EHANDLE					m_hViewEntity;
