@@ -9,7 +9,7 @@
 #include "c_hl2mp_player.h"
 #include "view.h"
 #include "takedamageinfo.h"
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #include "in_buttons.h"
 #include "iviewrender_beams.h"			// flashlight beam
 #include "r_efx.h"
@@ -124,7 +124,7 @@ void C_HL2MP_Player::TraceAttack( const CTakeDamageInfo &info, const Vector &vec
 
 		if ( pAttacker )
 		{
-			if ( HL2MPRules()->IsTeamplay() && pAttacker->InSameTeam( this ) == true )
+			if ( FFRules()->IsTeamplay() && pAttacker->InSameTeam( this ) == true )
 				return;
 		}
 

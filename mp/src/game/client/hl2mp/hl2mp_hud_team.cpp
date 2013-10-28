@@ -12,7 +12,7 @@
 #include "vgui_entitypanel.h"
 #include "iclientmode.h"
 #include "vgui/ILocalize.h"
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #include "c_team.h"
 #include <vgui_controls/AnimationController.h>
 // memdbgon must be the last include file in a .cpp file!!!
@@ -138,7 +138,7 @@ void CTeamPlayHud::OnThink()
 	if ( pLocalPlayer == NULL )
 		 return;
 
-	if ( HL2MPRules()->IsTeamplay() == false )
+	if ( FFRules()->IsTeamplay() == false )
 		 return;
 
 	if ( pLocalPlayer->IsAlive() == false )

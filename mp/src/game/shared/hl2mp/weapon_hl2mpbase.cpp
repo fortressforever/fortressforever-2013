@@ -9,7 +9,7 @@
 #include "in_buttons.h"
 #include "takedamageinfo.h"
 #include "ammodef.h"
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 
 
 #ifdef CLIENT_DLL
@@ -182,7 +182,7 @@ void CWeaponHL2MPBase::Materialize( void )
 		VPhysicsInitNormal( SOLID_BBOX, GetSolidFlags() | FSOLID_TRIGGER, false );
 		SetMoveType( MOVETYPE_VPHYSICS );
 
-		HL2MPRules()->AddLevelDesignerPlacedObject( this );
+		FFRules()->AddLevelDesignerPlacedObject( this );
 	}
 
 	if ( HasSpawnFlags( SF_NORESPAWN ) == false )

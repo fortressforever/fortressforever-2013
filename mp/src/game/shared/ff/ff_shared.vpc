@@ -3,12 +3,26 @@
 // expects $SRCDIR macro to exist
 $Project
 {
-	$Folder "FF Shared"
+	$Folder "Source Files"
 	{
-		$Folder "Lua"
+		$Folder "FF Shared"
 		{
-			$File	"$SRCDIR\game\shared\ff\ff_scriptman.cpp"
-			$File	"$SRCDIR\game\shared\ff\ff_scriptman.h"
+			$Folder "Lua"
+			{
+				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.h"
+			}
+
+			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.cpp"
+			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.h"
+
+		}
+
+		// folder structure has to match for remove to work correctly..
+		$Folder "HL2MP"
+		{
+			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.cpp"
+			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.h"
 		}
 	}
 }

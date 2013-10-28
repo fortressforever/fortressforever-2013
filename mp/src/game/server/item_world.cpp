@@ -15,7 +15,7 @@
 #include "world.h"
 
 #ifdef HL2MP
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -303,7 +303,7 @@ void CItem::FallThink ( void )
 		m_vOriginalSpawnOrigin = GetAbsOrigin();
 		m_vOriginalSpawnAngles = GetAbsAngles();
 
-		HL2MPRules()->AddLevelDesignerPlacedObject( this );
+		FFRules()->AddLevelDesignerPlacedObject( this );
 	}
 #endif // HL2MP
 
@@ -448,7 +448,7 @@ void CItem::ItemTouch( CBaseEntity *pOther )
 			UTIL_Remove( this );
 
 #ifdef HL2MP
-			HL2MPRules()->RemoveLevelDesignerPlacedObject( this );
+			FFRules()->RemoveLevelDesignerPlacedObject( this );
 #endif
 		}
 	}

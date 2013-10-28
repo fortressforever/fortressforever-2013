@@ -33,7 +33,7 @@
 #include "gameweaponmanager.h"
 
 #ifdef HL2MP
-	#include "hl2mp_gamerules.h"
+	#include "ff_gamerules_shared.h"
 #endif
 
 #endif
@@ -754,7 +754,7 @@ void CBaseCombatWeapon::OnPickedUp( CBaseCombatCharacter *pNewOwner )
 	}
 
 #ifdef HL2MP
-	HL2MPRules()->RemoveLevelDesignerPlacedObject( this );
+	FFRules()->RemoveLevelDesignerPlacedObject( this );
 #endif
 
 	// Someone picked me up, so make it so that I can't be removed.

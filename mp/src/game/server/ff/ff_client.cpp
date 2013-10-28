@@ -15,7 +15,7 @@
 
 #include "cbase.h"
 #include "hl2mp_player.h"
-//#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #include "gamerules.h"
 #include "teamplay_gamerules.h"
 #include "entitylist.h"
@@ -58,7 +58,7 @@ void FinishClientPutInServer( CHL2MP_Player *pPlayer )
 	// notify other clients of player joining the game
 	UTIL_ClientPrintAll( HUD_PRINTNOTIFY, "#Game_connected", sName[0] != 0 ? sName : "<unconnected>" );
 
-	if ( HL2MPRules()->IsTeamplay() == true )
+	if ( FFRules()->IsTeamplay() == true )
 	{
 		ClientPrint( pPlayer, HUD_PRINTTALK, "You are on team %s1\n", pPlayer->GetTeam()->GetName() );
 	}
@@ -196,6 +196,6 @@ void GameStartFrame( void )
 void InstallGameRules()
 {
 	// vanilla deathmatch
-	CreateGameRulesObject( "CHL2MPRules" );
+	CreateGameRulesObject( "CFFRules" );
 }
 

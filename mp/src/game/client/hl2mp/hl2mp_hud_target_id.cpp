@@ -12,7 +12,7 @@
 #include "vgui_entitypanel.h"
 #include "iclientmode.h"
 #include "vgui/ILocalize.h"
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -158,7 +158,7 @@ void CTargetID::Paint()
 			bShowPlayerName = true;
 			g_pVGuiLocalize->ConvertANSIToUnicode( pPlayer->GetPlayerName(),  wszPlayerName, sizeof(wszPlayerName) );
 			
-			if ( HL2MPRules()->IsTeamplay() == true && pPlayer->InSameTeam(pLocalPlayer) )
+			if ( FFRules()->IsTeamplay() == true && pPlayer->InSameTeam(pLocalPlayer) )
 			{
 				printFormatString = "#Playerid_sameteam";
 				bShowHealth = true;

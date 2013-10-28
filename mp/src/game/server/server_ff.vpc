@@ -36,6 +36,7 @@ $Project "Server (FF)"
 		{
 			$File	"FF\ff_client.cpp"
 			$File	"FF\ff_gameinterface.cpp"
+			$File	"FF\ff_gameinterface.h"
 
 			$Folder "Libraries"
 			{
@@ -44,6 +45,7 @@ $Project "Server (FF)"
 			}
 		}
 
+	
 		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!
 		$Folder "HL2MP"
 		{

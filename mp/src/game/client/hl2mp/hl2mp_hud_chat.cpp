@@ -13,7 +13,7 @@
 #include "c_team.h"
 #include "c_playerresource.h"
 #include "c_hl2mp_player.h"
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #include "ihudlcd.h"
 
 

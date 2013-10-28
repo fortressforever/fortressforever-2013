@@ -10,7 +10,7 @@
 #include "gamestringpool.h"
 
 #ifdef HL2MP
-#include "hl2mp_gamerules.h"
+#include "ff_gamerules_shared.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
