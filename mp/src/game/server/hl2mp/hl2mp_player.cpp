@@ -13,7 +13,7 @@
 #include "hl2mp_player_shared.h"
 #include "predicted_viewmodel.h"
 #include "in_buttons.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 #include "KeyValues.h"
 #include "team.h"
 #include "weapon_hl2mpbase.h"

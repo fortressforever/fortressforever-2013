@@ -8,12 +8,12 @@
 
 class CBasePlayer;
 
-class C_FF_SH_GameMovement : public CGameMovement
+class CFF_SH_GameMovement : public CGameMovement
 {
-	DECLARE_CLASS(C_FF_SH_GameMovement, CGameMovement);
+	DECLARE_CLASS(CFF_SH_GameMovement, CGameMovement);
 	
 public:
-	C_FF_SH_GameMovement() {};
+	CFF_SH_GameMovement() {};
 
 protected:
 	/// Catches all landings

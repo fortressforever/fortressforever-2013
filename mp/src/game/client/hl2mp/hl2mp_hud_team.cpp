@@ -12,7 +12,7 @@
 #include "vgui_entitypanel.h"
 #include "iclientmode.h"
 #include "vgui/ILocalize.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 #include "c_team.h"
 #include <vgui_controls/AnimationController.h>
 // memdbgon must be the last include file in a .cpp file!!!

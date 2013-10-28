@@ -9,7 +9,7 @@
 #include "c_hl2mp_player.h"
 #include "view.h"
 #include "takedamageinfo.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 #include "in_buttons.h"
 #include "iviewrender_beams.h"			// flashlight beam
 #include "r_efx.h"

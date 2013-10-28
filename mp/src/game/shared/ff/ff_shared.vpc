@@ -5,12 +5,12 @@ $Project
 {
 	$Folder "Source Files"
 	{
-		$Folder "FF Shared"
+		$Folder "FF"
 		{
 			$Folder "Lua"
 			{
-				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.cpp"
-				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.h"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman.h"
 			}
 			$Folder "Movement"
 			{
@@ -18,8 +18,8 @@ $Project
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.h"
 			}
 
-			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.cpp"
-			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.h"
+			$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.cpp"
+			$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.h"
 
 		}
 

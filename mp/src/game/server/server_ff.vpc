@@ -34,9 +34,9 @@ $Project "Server (FF)"
 		// for FF Shared, see game\shared\ff\ff_shared.vpc
 		$Folder	"FF"
 		{
-			$File	"FF\ff_client.cpp"
-			$File	"FF\ff_gameinterface.cpp"
-			$File	"FF\ff_gameinterface.h"
+			$File	"FF\ff_sv_client.cpp"
+			$File	"FF\ff_sv_gameinterface.cpp"
+			$File	"FF\ff_sv_gameinterface.h"
 
 			$Folder "Libraries"
 			{

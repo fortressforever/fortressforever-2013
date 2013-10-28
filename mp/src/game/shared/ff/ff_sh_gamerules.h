@@ -11,8 +11,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef FF_GAMERULES_H
-#define FF_GAMERULES_H
+#ifndef FF_SH_GAMERULES_H
+#define FF_SH_GAMERULES_H
 #pragma once
 
 #include "gamerules.h"
@@ -34,14 +34,17 @@ enum
 
 
 #ifdef CLIENT_DLL
-	#define CFFRules C_FFRules
-	#define CFFGameRulesProxy C_FFGameRulesProxy
+	#define CFF_SH_Rules CFF_CL_Rules
+	#define CFF_SH_GameRulesProxy CFF_CL_GameRulesProxy
+#else
+	#define CFF_SH_Rules CFF_SV_Rules
+	#define CFF_SH_GameRulesProxy CFF_SV_GameRulesProxy
 #endif
 
-class CFFGameRulesProxy : public CGameRulesProxy
+class CFF_SH_GameRulesProxy : public CGameRulesProxy
 {
 public:
-	DECLARE_CLASS( CFFGameRulesProxy, CGameRulesProxy );
+	DECLARE_CLASS( CFF_SH_GameRulesProxy, CGameRulesProxy );
 	DECLARE_NETWORKCLASS();
 };
 
@@ -79,10 +82,10 @@ public:
 	Vector m_vCrouchTraceMax;	
 };
 
-class CFFRules : public CTeamplayRules
+class CFF_SH_Rules : public CTeamplayRules
 {
 public:
-	DECLARE_CLASS( CFFRules, CTeamplayRules );
+	DECLARE_CLASS( CFF_SH_Rules, CTeamplayRules );
 
 #ifdef CLIENT_DLL
 
@@ -93,8 +96,8 @@ public:
 	DECLARE_SERVERCLASS_NOBASE(); // This makes datatables able to access our private vars.
 #endif
 	
-	CFFRules();
-	virtual ~CFFRules();
+	CFF_SH_Rules();
+	virtual ~CFF_SH_Rules();
 
 	virtual void Precache( void );
 	virtual bool ShouldCollide( int collisionGroup0, int collisionGroup1 );
@@ -164,9 +167,9 @@ private:
 #endif
 };
 
-inline CFFRules* FFRules()
+inline CFF_SH_Rules* FFRules()
 {
-	return static_cast<CFFRules*>(g_pGameRules);
+	return static_cast<CFF_SH_Rules*>(g_pGameRules);
 }
 
-#endif //HL2MP_GAMERULES_H
+#endif //FF_SH_GAMERULES_H

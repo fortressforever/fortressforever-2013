@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 #include "viewport_panel_names.h"
 #include "gameeventdefs.h"
 #include <KeyValues.h>
@@ -30,7 +30,7 @@
 	#include "weapon_hl2mpbasehlmpcombatweapon.h"
 	#include "team.h"
 	#include "voice_gamemgr.h"
-	#include "ff_gameinterface.h"
+	#include "ff_sv_gameinterface.h"
 	#include "hl2mp_cvars.h"
 
 #ifdef DEBUG	
@@ -55,9 +55,9 @@ extern CBaseEntity	 *g_pLastRebelSpawn;
 #endif
 
 
-REGISTER_GAMERULES_CLASS( CFFRules );
+REGISTER_GAMERULES_CLASS( CFF_SH_Rules );
 
-BEGIN_NETWORK_TABLE_NOBASE( CFFRules, DT_FFRules )
+BEGIN_NETWORK_TABLE_NOBASE( CFF_SH_Rules, DT_FFRules )
 
 	#ifdef CLIENT_DLL
 		RecvPropBool( RECVINFO( m_bTeamPlayEnabled ) ),
@@ -68,8 +68,12 @@ BEGIN_NETWORK_TABLE_NOBASE( CFFRules, DT_FFRules )
 END_NETWORK_TABLE()
 
 
-LINK_ENTITY_TO_CLASS( ff_gamerules, CFFGameRulesProxy );
-IMPLEMENT_NETWORKCLASS_ALIASED( FFGameRulesProxy, DT_FFGameRulesProxy )
+LINK_ENTITY_TO_CLASS( ff_gamerules, CFF_SH_GameRulesProxy );
+#ifdef CLIENT_DLL
+	IMPLEMENT_CLIENTCLASS( CFF_CL_GameRulesProxy, DT_FFGameRulesProxy, CFF_SV_GameRulesProxy )
+#else
+	IMPLEMENT_SERVERCLASS( CFF_SV_GameRulesProxy, DT_FFGameRulesProxy )
+#endif
 
 static FFViewVectors g_FFViewVectors(
 	Vector( 0, 0, 64 ),       //VEC_VIEW (m_vView) 
@@ -138,23 +142,23 @@ static const char *s_PreserveEnts[] =
 #ifdef CLIENT_DLL
 	void RecvProxy_FFRules( const RecvProp *pProp, void **pOut, void *pData, int objectID )
 	{
-		CFFRules *pRules = FFRules();
+		CFF_SH_Rules *pRules = FFRules();
 		Assert( pRules );
 		*pOut = pRules;
 	}
 
-	BEGIN_RECV_TABLE( CFFGameRulesProxy, DT_FFGameRulesProxy )
+	BEGIN_RECV_TABLE( CFF_SH_GameRulesProxy, DT_FFGameRulesProxy )
 		RecvPropDataTable( "ff_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_FFRules ), RecvProxy_FFRules )
 	END_RECV_TABLE()
 #else
 	void* SendProxy_FFRules( const SendProp *pProp, const void *pStructBase, const void *pData, CSendProxyRecipients *pRecipients, int objectID )
 	{
-		CFFRules *pRules = FFRules();
+		CFF_SH_Rules *pRules = FFRules();
 		Assert( pRules );
 		return pRules;
 	}
 
-	BEGIN_SEND_TABLE( CFFGameRulesProxy, DT_FFGameRulesProxy )
+	BEGIN_SEND_TABLE( CFF_SH_GameRulesProxy, DT_FFGameRulesProxy )
 		SendPropDataTable( "ff_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_FFRules ), SendProxy_FFRules )
 	END_SEND_TABLE()
 #endif
@@ -183,7 +187,7 @@ char *sTeamNames[] =
 	"Rebels",
 };
 
-CFFRules::CFFRules()
+CFF_SH_Rules::CFF_SH_Rules()
 {
 #ifndef CLIENT_DLL
 	// Create the team managers
@@ -210,17 +214,17 @@ CFFRules::CFFRules()
 #endif
 }
 
-const CViewVectors* CFFRules::GetViewVectors()const
+const CViewVectors* CFF_SH_Rules::GetViewVectors()const
 {
 	return &g_FFViewVectors;
 }
 
-const FFViewVectors* CFFRules::GetFFViewVectors()const
+const FFViewVectors* CFF_SH_Rules::GetFFViewVectors()const
 {
 	return &g_FFViewVectors;
 }
 	
-CFFRules::~CFFRules( void )
+CFF_SH_Rules::~CFF_SH_Rules( void )
 {
 #ifndef CLIENT_DLL
 	// Note, don't delete each team since they are in the gEntList and will 
@@ -229,7 +233,7 @@ CFFRules::~CFFRules( void )
 #endif
 }
 
-void CFFRules::CreateStandardEntities( void )
+void CFF_SH_Rules::CreateStandardEntities( void )
 {
 
 #ifndef CLIENT_DLL
@@ -252,7 +256,7 @@ void CFFRules::CreateStandardEntities( void )
 // FlWeaponRespawnTime - what is the time in the future
 // at which this weapon may spawn?
 //=========================================================
-float CFFRules::FlWeaponRespawnTime( CBaseCombatWeapon *pWeapon )
+float CFF_SH_Rules::FlWeaponRespawnTime( CBaseCombatWeapon *pWeapon )
 {
 #ifndef CLIENT_DLL
 	if ( weaponstay.GetInt() > 0 )
@@ -271,7 +275,7 @@ float CFFRules::FlWeaponRespawnTime( CBaseCombatWeapon *pWeapon )
 }
 
 
-bool CFFRules::IsIntermission( void )
+bool CFF_SH_Rules::IsIntermission( void )
 {
 #ifndef CLIENT_DLL
 	return m_flIntermissionEndTime > gpGlobals->curtime;
@@ -280,7 +284,7 @@ bool CFFRules::IsIntermission( void )
 	return false;
 }
 
-void CFFRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info )
+void CFF_SH_Rules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 {
 #ifndef CLIENT_DLL
 	if ( IsIntermission() )
@@ -290,7 +294,7 @@ void CFFRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 }
 
 
-void CFFRules::Think( void )
+void CFF_SH_Rules::Think( void )
 {
 
 #ifndef CLIENT_DLL
@@ -376,7 +380,7 @@ void CFFRules::Think( void )
 #endif
 }
 
-void CFFRules::GoToIntermission( void )
+void CFF_SH_Rules::GoToIntermission( void )
 {
 #ifndef CLIENT_DLL
 	if ( g_fGameOver )
@@ -400,7 +404,7 @@ void CFFRules::GoToIntermission( void )
 	
 }
 
-bool CFFRules::CheckGameOver()
+bool CFF_SH_Rules::CheckGameOver()
 {
 #ifndef CLIENT_DLL
 	if ( g_fGameOver )   // someone else quit the game already
@@ -427,7 +431,7 @@ bool CFFRules::CheckGameOver()
 // now,  otherwise it returns the time at which it can try
 // to spawn again.
 //=========================================================
-float CFFRules::FlWeaponTryRespawn( CBaseCombatWeapon *pWeapon )
+float CFF_SH_Rules::FlWeaponTryRespawn( CBaseCombatWeapon *pWeapon )
 {
 #ifndef CLIENT_DLL
 	if ( pWeapon && (pWeapon->GetWeaponFlags() & ITEM_FLAG_LIMITINWORLD) )
@@ -446,7 +450,7 @@ float CFFRules::FlWeaponTryRespawn( CBaseCombatWeapon *pWeapon )
 // VecWeaponRespawnSpot - where should this weapon spawn?
 // Some game variations may choose to randomize spawn locations
 //=========================================================
-Vector CFFRules::VecWeaponRespawnSpot( CBaseCombatWeapon *pWeapon )
+Vector CFF_SH_Rules::VecWeaponRespawnSpot( CBaseCombatWeapon *pWeapon )
 {
 #ifndef CLIENT_DLL
 	CWeaponHL2MPBase *pHL2Weapon = dynamic_cast< CWeaponHL2MPBase*>( pWeapon );
@@ -500,7 +504,7 @@ bool GetObjectsOriginalParameters( CBaseEntity *pObject, Vector &vOriginalOrigin
 	return false;
 }
 
-void CFFRules::ManageObjectRelocation( void )
+void CFF_SH_Rules::ManageObjectRelocation( void )
 {
 	int iTotal = m_hRespawnableItemsAndWeapons.Count();
 
@@ -555,7 +559,7 @@ void CFFRules::ManageObjectRelocation( void )
 //=========================================================
 //AddLevelDesignerPlacedWeapon
 //=========================================================
-void CFFRules::AddLevelDesignerPlacedObject( CBaseEntity *pEntity )
+void CFF_SH_Rules::AddLevelDesignerPlacedObject( CBaseEntity *pEntity )
 {
 	if ( m_hRespawnableItemsAndWeapons.Find( pEntity ) == -1 )
 	{
@@ -566,7 +570,7 @@ void CFFRules::AddLevelDesignerPlacedObject( CBaseEntity *pEntity )
 //=========================================================
 //RemoveLevelDesignerPlacedWeapon
 //=========================================================
-void CFFRules::RemoveLevelDesignerPlacedObject( CBaseEntity *pEntity )
+void CFF_SH_Rules::RemoveLevelDesignerPlacedObject( CBaseEntity *pEntity )
 {
 	if ( m_hRespawnableItemsAndWeapons.Find( pEntity ) != -1 )
 	{
@@ -578,7 +582,7 @@ void CFFRules::RemoveLevelDesignerPlacedObject( CBaseEntity *pEntity )
 // Where should this item respawn?
 // Some game variations may choose to randomize spawn locations
 //=========================================================
-Vector CFFRules::VecItemRespawnSpot( CItem *pItem )
+Vector CFF_SH_Rules::VecItemRespawnSpot( CItem *pItem )
 {
 	return pItem->GetOriginalSpawnOrigin();
 }
@@ -586,7 +590,7 @@ Vector CFFRules::VecItemRespawnSpot( CItem *pItem )
 //=========================================================
 // What angles should this item use to respawn?
 //=========================================================
-QAngle CFFRules::VecItemRespawnAngles( CItem *pItem )
+QAngle CFF_SH_Rules::VecItemRespawnAngles( CItem *pItem )
 {
 	return pItem->GetOriginalSpawnAngles();
 }
@@ -594,7 +598,7 @@ QAngle CFFRules::VecItemRespawnAngles( CItem *pItem )
 //=========================================================
 // At what time in the future may this Item respawn?
 //=========================================================
-float CFFRules::FlItemRespawnTime( CItem *pItem )
+float CFF_SH_Rules::FlItemRespawnTime( CItem *pItem )
 {
 	return sv_hl2mp_item_respawn_time.GetFloat();
 }
@@ -604,7 +608,7 @@ float CFFRules::FlItemRespawnTime( CItem *pItem )
 // CanHaveWeapon - returns false if the player is not allowed
 // to pick up this weapon
 //=========================================================
-bool CFFRules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem )
+bool CFF_SH_Rules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem )
 {
 	if ( weaponstay.GetInt() > 0 )
 	{
@@ -621,7 +625,7 @@ bool CFFRules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem
 // WeaponShouldRespawn - any conditions inhibiting the
 // respawning of this weapon?
 //=========================================================
-int CFFRules::WeaponShouldRespawn( CBaseCombatWeapon *pWeapon )
+int CFF_SH_Rules::WeaponShouldRespawn( CBaseCombatWeapon *pWeapon )
 {
 #ifndef CLIENT_DLL
 	if ( pWeapon->HasSpawnFlags( SF_NORESPAWN ) )
@@ -636,7 +640,7 @@ int CFFRules::WeaponShouldRespawn( CBaseCombatWeapon *pWeapon )
 //-----------------------------------------------------------------------------
 // Purpose: Player has just left the game
 //-----------------------------------------------------------------------------
-void CFFRules::ClientDisconnected( edict_t *pClient )
+void CFF_SH_Rules::ClientDisconnected( edict_t *pClient )
 {
 #ifndef CLIENT_DLL
 	// Msg( "CLIENT DISCONNECTED, REMOVING FROM TEAM.\n" );
@@ -660,7 +664,7 @@ void CFFRules::ClientDisconnected( edict_t *pClient )
 //=========================================================
 // Deathnotice. 
 //=========================================================
-void CFFRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info )
+void CFF_SH_Rules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 {
 #ifndef CLIENT_DLL
 	// Work out what killed the player, and send a message to all clients about it
@@ -756,7 +760,7 @@ void CFFRules::DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info )
 
 }
 
-void CFFRules::ClientSettingsChanged( CBasePlayer *pPlayer )
+void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 {
 #ifndef CLIENT_DLL
 	
@@ -819,7 +823,7 @@ void CFFRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 	
 }
 
-int CFFRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
+int CFF_SH_Rules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
 {
 #ifndef CLIENT_DLL
 	// half life multiplay has a simple concept of Player Relationships.
@@ -836,7 +840,7 @@ int CFFRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
 	return GR_NOTTEAMMATE;
 }
 
-const char *CFFRules::GetGameDescription( void )
+const char *CFF_SH_Rules::GetGameDescription( void )
 { 
 	if ( IsTeamplay() )
 		return "Team Deathmatch"; 
@@ -844,12 +848,12 @@ const char *CFFRules::GetGameDescription( void )
 	return "Deathmatch"; 
 } 
 
-bool CFFRules::IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer )
+bool CFF_SH_Rules::IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer )
 {
 	return true;
 }
  
-float CFFRules::GetMapRemainingTime()
+float CFF_SH_Rules::GetMapRemainingTime()
 {
 	// if timelimit is disabled, return 0
 	if ( mp_timelimit.GetInt() <= 0 )
@@ -865,12 +869,12 @@ float CFFRules::GetMapRemainingTime()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CFFRules::Precache( void )
+void CFF_SH_Rules::Precache( void )
 {
 	CBaseEntity::PrecacheScriptSound( "AlyxEmp.Charge" );
 }
 
-bool CFFRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
+bool CFF_SH_Rules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 {
 	if ( collisionGroup0 > collisionGroup1 )
 	{
@@ -888,7 +892,7 @@ bool CFFRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 
 }
 
-bool CFFRules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
+bool CFF_SH_Rules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
 {
 #ifndef CLIENT_DLL
 	if( BaseClass::ClientCommand( pEdict, args ) )
@@ -976,7 +980,7 @@ CAmmoDef *GetAmmoDef()
 
 #endif
 
-	bool CFFRules::FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon )
+	bool CFF_SH_Rules::FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon )
 	{		
 		if ( pPlayer->GetActiveWeapon() && pPlayer->IsNetClient() )
 		{
@@ -995,7 +999,7 @@ CAmmoDef *GetAmmoDef()
 
 #ifndef CLIENT_DLL
 
-void CFFRules::RestartGame()
+void CFF_SH_Rules::RestartGame()
 {
 	// bounds check
 	if ( mp_timelimit.GetInt() < 0 )
@@ -1059,7 +1063,7 @@ void CFFRules::RestartGame()
 	}
 }
 
-void CFFRules::CleanUpMap()
+void CFF_SH_Rules::CleanUpMap()
 {
 	// Recreate all the map entities from the map data (preserving their indices),
 	// then remove everything else except the players.
@@ -1156,7 +1160,7 @@ void CFFRules::CleanUpMap()
 	MapEntity_ParseAllEntities( engine->GetMapEntitiesString(), &filter, true );
 }
 
-void CFFRules::CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg )
+void CFF_SH_Rules::CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg )
 {
 	if( m_bAwaitingReadyRestart && FStrEq( chatmsg, mp_ready_signal.GetString() ) )
 	{
@@ -1167,7 +1171,7 @@ void CFFRules::CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chat
 	}
 }
 
-void CFFRules::CheckRestartGame( void )
+void CFF_SH_Rules::CheckRestartGame( void )
 {
 	// Restart the game if specified by the server
 	int iRestartDelay = mp_restartgame.GetInt();
@@ -1215,7 +1219,7 @@ void CFFRules::CheckRestartGame( void )
 	}
 }
 
-void CFFRules::CheckAllPlayersReady( void )
+void CFF_SH_Rules::CheckAllPlayersReady( void )
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
@@ -1232,7 +1236,7 @@ void CFFRules::CheckAllPlayersReady( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CFFRules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
+const char *CFF_SH_Rules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 {
 	if ( !pPlayer )  // dedicated server output
 	{

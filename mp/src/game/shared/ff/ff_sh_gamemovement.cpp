@@ -11,7 +11,7 @@ ConVar sv_sharkingfriction("sv_sharkingfriction", "1", FCVAR_REPLICATED);
 #define SV_SHARKINGFRICTION sv_sharkingfriction.GetFloat()
 
 // debug purposes
-void C_FF_SH_GameMovement::PlayerMove( void )
+void CFF_SH_GameMovement::PlayerMove( void )
 {
 	static float flLastSurfaceFriction = -1.0f;
 	if (player->m_surfaceFriction != flLastSurfaceFriction)
@@ -23,7 +23,7 @@ void C_FF_SH_GameMovement::PlayerMove( void )
 	BaseClass::PlayerMove();
 }
 
-void C_FF_SH_GameMovement::OnLand( float flFallVelocity )
+void CFF_SH_GameMovement::OnLand( float flFallVelocity )
 {
 	BaseClass::OnLand( flFallVelocity );
 
@@ -58,7 +58,7 @@ void C_FF_SH_GameMovement::OnLand( float flFallVelocity )
 	*/
 }
 
-void C_FF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
+void CFF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
 {
 	if ( fvol > 0.0 )
 	{
@@ -106,7 +106,7 @@ void C_FF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
 	}
 }
 
-void C_FF_SH_GameMovement::FinishUnDuck( void )
+void CFF_SH_GameMovement::FinishUnDuck( void )
 {
 	int i;
 	trace_t trace;
@@ -189,7 +189,7 @@ void C_FF_SH_GameMovement::FinishUnDuck( void )
 	*/
 }
 
-void C_FF_SH_GameMovement::Duck( void )
+void CFF_SH_GameMovement::Duck( void )
 {
 	// FF TODO: Port these changes, this function was totally rewritten
 	/*
@@ -507,7 +507,7 @@ void C_FF_SH_GameMovement::Duck( void )
 }
 
 // Expose our interface.
-static C_FF_SH_GameMovement g_GameMovement;
+static CFF_SH_GameMovement g_GameMovement;
 IGameMovement *g_pGameMovement = ( IGameMovement * )&g_GameMovement;
 
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR( C_FF_SH_GameMovement, IGameMovement, INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR( CFF_SH_GameMovement, IGameMovement, INTERFACENAME_GAMEMOVEMENT, g_GameMovement );

@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // includes
 #include "cbase.h"
-#include "ff_scriptman_shared.h"
+#include "ff_sh_scriptman.h"
 //#include "ff_entity_system.h"
 //#include "ff_luacontext.h"
 //#include "ff_lualib.h"
@@ -39,11 +39,11 @@ using namespace luabind;
 
 /////////////////////////////////////////////////////////////////////////////
 // globals
-CFFScriptManager _scriptman;
+CFF_SH_ScriptManager _scriptman;
 
 
 /////////////////////////////////////////////////////////////////////////////
-CFFScriptManager::CFFScriptManager()
+CFF_SH_ScriptManager::CFF_SH_ScriptManager()
 : L(NULL)
 , m_isLoading(false)
 , m_scriptCRC(0)
@@ -52,14 +52,14 @@ CFFScriptManager::CFFScriptManager()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-CFFScriptManager::~CFFScriptManager()
+CFF_SH_ScriptManager::~CFF_SH_ScriptManager()
 {
 	Shutdown();
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::Shutdown()
+void CFF_SH_ScriptManager::Shutdown()
 {
 	m_ScriptExists = false;
 
@@ -73,7 +73,7 @@ void CFFScriptManager::Shutdown()
 
 
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::Init()
+void CFF_SH_ScriptManager::Init()
 {
 	// shutdown VM if already running
 	if(L)
@@ -109,10 +109,10 @@ void CFFScriptManager::Init()
 }
 
 #ifdef FF_DLL
-void CFFScriptManager::LevelInit(const char* szMapName)
+void CFF_SH_ScriptManager::LevelInit(const char* szMapName)
 {
 	const char* default_luafile = "maps/default.lua";
-	//FF_TODO: VPROF_BUDGET("CFFScriptManager::LevelInit", VPROF_BUDGETGROUP_FF_LUA);
+	//FF_TODO: VPROF_BUDGET("CFF_SH_ScriptManager::LevelInit", VPROF_BUDGETGROUP_FF_LUA);
 
 	if(!szMapName)
 		return;
@@ -235,7 +235,7 @@ void CFFScriptManager::LevelInit(const char* szMapName)
 
 #ifdef FF_DLL
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::LevelShutdown()
+void CFF_SH_ScriptManager::LevelShutdown()
 {
 	// shutdown the VM
 	if(L)
@@ -248,7 +248,7 @@ void CFFScriptManager::LevelShutdown()
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::OnScriptLoad(const char* szFileName,
+void CFF_SH_ScriptManager::OnScriptLoad(const char* szFileName,
 								   const char* szFileContents)
 {
 	// ignore the message if we are not still in the "loading" phase
@@ -262,14 +262,14 @@ void CFFScriptManager::OnScriptLoad(const char* szFileName,
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::BeginScriptLoad()
+void CFF_SH_ScriptManager::BeginScriptLoad()
 {
 	CRC32_Init(&m_scriptCRC);
 	m_isLoading = true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void CFFScriptManager::EndScriptLoad()
+void CFF_SH_ScriptManager::EndScriptLoad()
 {
 	CRC32_Final(&m_scriptCRC);
 	m_isLoading = false;
@@ -277,9 +277,9 @@ void CFFScriptManager::EndScriptLoad()
 
 
 /////////////////////////////////////////////////////////////////////////////
-bool CFFScriptManager::LoadFile( lua_State *L, const char *filename)
+bool CFF_SH_ScriptManager::LoadFile( lua_State *L, const char *filename)
 {
-	//FF_TODO: VPROF_BUDGET( "CFFScriptManager::LoadFile", VPROF_BUDGETGROUP_FF_LUA );
+	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFile", VPROF_BUDGETGROUP_FF_LUA );
 
 	// don't allow scripters to sneak in scripts after the initial load
 	if(!_scriptman.m_isLoading)

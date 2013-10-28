@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "gameinterface.h"
 #include "mapentities.h"
-#include "ff_gameinterface.h"
+#include "ff_sv_gameinterface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

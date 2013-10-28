@@ -9,7 +9,7 @@
 #include "in_buttons.h"
 #include "takedamageinfo.h"
 #include "ammodef.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 
 
 #ifdef CLIENT_DLL

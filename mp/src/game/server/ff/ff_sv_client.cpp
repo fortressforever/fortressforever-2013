@@ -15,7 +15,7 @@
 
 #include "cbase.h"
 #include "hl2mp_player.h"
-#include "ff_gamerules_shared.h"
+#include "ff_sh_gamerules.h"
 #include "gamerules.h"
 #include "teamplay_gamerules.h"
 #include "entitylist.h"
@@ -196,6 +196,6 @@ void GameStartFrame( void )
 void InstallGameRules()
 {
 	// vanilla deathmatch
-	CreateGameRulesObject( "CFFRules" );
+	CreateGameRulesObject( "CFF_SH_Rules" );
 }
 

@@ -569,7 +569,7 @@ private:
 	friend class CDODGameMovement;
 	friend class CPortalGameMovement;
 	// FF -->
-	friend class C_FF_SH_GameMovement;
+	friend class CFF_SH_GameMovement;
 	// FF <--
 	
 	// Accessors for gamemovement
