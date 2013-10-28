@@ -12,6 +12,11 @@ $Project
 				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_scriptman_shared.h"
 			}
+			$Folder "Movement"
+			{
+				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.h"
+			}
 
 			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.cpp"
 			$File	"$SRCDIR\game\shared\ff\ff_gamerules_shared.h"

@@ -39,5 +39,11 @@ $Project "Client (FF)"
 		
 		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!
 		// done for us in HL2DM sdk vpc: -$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
+		
+		$Folder	"HL2 DLL"
+		{
+			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.cpp"
+			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.h"
+		}
 	}
 }

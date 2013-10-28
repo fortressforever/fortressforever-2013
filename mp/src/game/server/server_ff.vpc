@@ -47,6 +47,13 @@ $Project "Server (FF)"
 
 	
 		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!
+		
+		$Folder	"HL2 DLL"
+		{
+			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.cpp"
+			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.h"
+		}
+		
 		$Folder "HL2MP"
 		{
 			-$File	"hl2mp\hl2mp_client.cpp"

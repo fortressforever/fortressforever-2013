@@ -568,6 +568,9 @@ private:
 	friend class CHL2GameMovement;
 	friend class CDODGameMovement;
 	friend class CPortalGameMovement;
+	// FF -->
+	friend class C_FF_SH_GameMovement;
+	// FF <--
 	
 	// Accessors for gamemovement
 	float GetStepSize( void ) const { return m_Local.m_flStepSize; }
