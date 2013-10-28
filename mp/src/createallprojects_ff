@@ -1,0 +1,2 @@
+#!/bin/bash
+devtools/bin/vpc /ff +everything /mksln everything_ff

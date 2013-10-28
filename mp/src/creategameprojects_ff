@@ -1,0 +1,3 @@
+#!/bin/bash
+
+devtools/bin/vpc /ff +game /mksln game_ff
