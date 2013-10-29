@@ -335,13 +335,17 @@ bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 	CFF_SH_Player *pFFPlayer = ToFFPlayer(player);
 	Assert(pFFPlayer);
 
+	// FF TODO: Move this back into player
+	static float m_flNextJumpTimeForDouble = 0.0f;
+
 	bool bDidDoubleJump = false;
 	// FF TODO: Port the stuff that is needed for this code
 	/*
 	// Double jump - but don't allow double jumps while building, please!
 	if( ffplayer->m_bCanDoubleJump && !ffplayer->IsStaticBuilding() )
 	{
-		float flElapsed = ffplayer->m_flNextJumpTimeForDouble - gpGlobals->curtime;
+	*/
+		float flElapsed = m_flNextJumpTimeForDouble - gpGlobals->curtime;
 
 		if (flElapsed > 0 && flElapsed < 0.4f)
 		{
@@ -349,15 +353,17 @@ bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 			flJumpSpeed += 190.0f;
 
 #ifdef GAME_DLL
-			DevMsg("[S] Double jump %f!\n", fMul);
+			DevMsg("[S] Double jump\n");
 #else
-			//DevMsg("[C] Double jump %f!\n", fMul);
+			DevMsg("[C] Double jump\n");
 #endif
 			bDidDoubleJump = true;
-			ffplayer->m_bCanDoubleJump = false;
+			// FF TODO: Port the stuff that is needed for this code
+			//ffplayer->m_bCanDoubleJump = false;
 		}
 
-		ffplayer->m_flNextJumpTimeForDouble = gpGlobals->curtime + 0.5f;
+		m_flNextJumpTimeForDouble = gpGlobals->curtime + 0.5f;
+	/*
 	}
 	*/
 	return bDidDoubleJump;
