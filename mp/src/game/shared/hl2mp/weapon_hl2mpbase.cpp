@@ -23,12 +23,12 @@ extern IVModelInfo* modelinfo;
 
 	#include "vgui/ISurface.h"
 	#include "vgui_controls/Controls.h"
-	#include "c_hl2mp_player.h"
+	#include "ff_cl_player.h"
 	#include "hud_crosshair.h"
 
 #else
 
-	#include "hl2mp_player.h"
+	#include "ff_sv_player.h"
 	#include "vphysics/constraints.h"
 
 #endif
@@ -131,9 +131,9 @@ CBasePlayer* CWeaponHL2MPBase::GetPlayerOwner() const
 	return dynamic_cast< CBasePlayer* >( GetOwner() );
 }
 
-CHL2MP_Player* CWeaponHL2MPBase::GetHL2MPPlayerOwner() const
+CFF_SH_Player* CWeaponHL2MPBase::GetFFPlayerOwner() const
 {
-	return dynamic_cast< CHL2MP_Player* >( GetOwner() );
+	return dynamic_cast< CFF_SH_Player* >( GetOwner() );
 }
 
 #ifdef CLIENT_DLL

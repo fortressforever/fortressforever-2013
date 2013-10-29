@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "hud.h"
 #include "hudelement.h"
-#include "c_hl2mp_player.h"
+#include "ff_cl_player.h"
 #include "c_playerresource.h"
 #include "vgui_entitypanel.h"
 #include "iclientmode.h"
@@ -106,7 +106,7 @@ void CTargetID::Paint()
 	wchar_t sIDString[ MAX_ID_STRING ];
 	sIDString[0] = 0;
 
-	C_HL2MP_Player *pPlayer = C_HL2MP_Player::GetLocalHL2MPPlayer();
+	CFF_CL_Player *pPlayer = CFF_CL_Player::GetLocalFFPlayer();
 
 	if ( !pPlayer )
 		return;

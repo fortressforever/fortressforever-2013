@@ -17,9 +17,16 @@ $Project
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.h"
 			}
-
-			$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.cpp"
-			$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.h"
+			$Folder "Player"
+			{
+				$File	"$SRCDIR\game\shared\ff\ff_sh_player.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_player.h"
+			}
+			$Folder "Game"
+			{
+				$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.h"
+			}
 
 		}
 

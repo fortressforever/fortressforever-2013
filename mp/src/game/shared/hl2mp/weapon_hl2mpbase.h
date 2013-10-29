@@ -10,7 +10,7 @@
 #pragma once
 #endif
 
-#include "hl2mp_player_shared.h"
+#include "ff_sh_player.h"
 #include "basecombatweapon_shared.h"
 #include "hl2mp_weapon_parse.h"
 
@@ -19,7 +19,7 @@
 	void UTIL_ClipPunchAngleOffset( QAngle &in, const QAngle &punch, const QAngle &clip );
 #endif
 
-class CHL2MP_Player;
+class CFF_SH_Player;
 
 // These are the names of the ammo types that go in the CAmmoDefs and that the 
 // weapon script files reference.
@@ -51,7 +51,7 @@ public:
 	virtual bool	IsPredicted() const;
 
 	CBasePlayer* GetPlayerOwner() const;
-	CHL2MP_Player* GetHL2MPPlayerOwner() const;
+	CFF_SH_Player* GetFFPlayerOwner() const;
 
 	void WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f );
 	

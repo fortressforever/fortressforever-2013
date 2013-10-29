@@ -14,7 +14,7 @@
 */
 
 #include "cbase.h"
-#include "hl2mp_player.h"
+#include "ff_sv_player.h"
 #include "ff_sh_gamerules.h"
 #include "gamerules.h"
 #include "teamplay_gamerules.h"
@@ -38,7 +38,7 @@ ConVar sv_motd_unload_on_dismissal( "sv_motd_unload_on_dismissal", "0", 0, "If e
 extern CBaseEntity*	FindPickerEntityClass( CBasePlayer *pPlayer, char *classname );
 extern bool			g_fGameOver;
 
-void FinishClientPutInServer( CHL2MP_Player *pPlayer )
+void FinishClientPutInServer( CFF_SV_Player *pPlayer )
 {
 	pPlayer->InitialSpawn();
 	pPlayer->Spawn();
@@ -87,7 +87,7 @@ called each time a player is spawned into the game
 void ClientPutInServer( edict_t *pEdict, const char *playername )
 {
 	// Allocate a CBaseTFPlayer for pev, and call spawn
-	CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer( "player", pEdict );
+	CFF_SV_Player *pPlayer = CFF_SV_Player::CreatePlayer( "player", pEdict );
 	pPlayer->SetPlayerName( playername );
 }
 
@@ -97,7 +97,7 @@ void ClientActive( edict_t *pEdict, bool bLoadGame )
 	// Can't load games in CS!
 	Assert( !bLoadGame );
 
-	CHL2MP_Player *pPlayer = ToHL2MPPlayer( CBaseEntity::Instance( pEdict ) );
+	CFF_SV_Player *pPlayer = ToFFPlayer( CBaseEntity::Instance( pEdict ) );
 	FinishClientPutInServer( pPlayer );
 }
 
@@ -160,7 +160,7 @@ void ClientGamePrecache( void )
 // called by ClientKill and DeadThink
 void respawn( CBaseEntity *pEdict, bool fCopyCorpse )
 {
-	CHL2MP_Player *pPlayer = ToHL2MPPlayer( pEdict );
+	CFF_SV_Player *pPlayer = ToFFPlayer( pEdict );
 
 	if ( pPlayer )
 	{

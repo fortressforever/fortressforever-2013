@@ -9,10 +9,10 @@
 #include "in_buttons.h"
 
 #ifdef CLIENT_DLL
-	#include "c_hl2mp_player.h"
+	#include "ff_cl_player.h"
 	#include "c_te_effect_dispatch.h"
 #else
-	#include "hl2mp_player.h"
+	#include "ff_sv_player.h"
 	#include "te_effect_dispatch.h"
 	#include "grenade_frag.h"
 #endif
@@ -405,7 +405,7 @@ void CWeaponFrag::CheckThrowPosition( CBasePlayer *pPlayer, const Vector &vecEye
 	}
 }
 
-void DropPrimedFragGrenade( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pGrenade )
+void DropPrimedFragGrenade( CFF_SH_Player *pPlayer, CBaseCombatWeapon *pGrenade )
 {
 	CWeaponFrag *pWeaponFrag = dynamic_cast<CWeaponFrag*>( pGrenade );
 

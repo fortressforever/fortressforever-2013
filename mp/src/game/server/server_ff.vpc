@@ -34,9 +34,17 @@ $Project "Server (FF)"
 		// for FF Shared, see game\shared\ff\ff_shared.vpc
 		$Folder	"FF"
 		{
-			$File	"FF\ff_sv_client.cpp"
-			$File	"FF\ff_sv_gameinterface.cpp"
-			$File	"FF\ff_sv_gameinterface.h"
+			$Folder "Game"
+			{
+				$File	"FF\ff_sv_client.cpp"
+				$File	"FF\ff_sv_gameinterface.cpp"
+				$File	"FF\ff_sv_gameinterface.h"
+			}
+			$Folder "Player"
+			{
+				$File	"ff\ff_sv_player.cpp"
+				$File	"ff\ff_sv_player.h"
+			}
 
 			$Folder "Libraries"
 			{
@@ -59,6 +67,11 @@ $Project "Server (FF)"
 			-$File	"hl2mp\hl2mp_client.cpp"
 			-$File	"hl2mp\hl2mp_gameinterface.cpp"
 			-$File	"hl2mp\hl2mp_gameinterface.h"
+			// Player
+			-$File	"hl2mp\hl2mp_player.cpp"
+			-$File	"hl2mp\hl2mp_player.h"
+			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_player_shared.cpp"
+			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_player_shared.h"
 		}
 	}
 }

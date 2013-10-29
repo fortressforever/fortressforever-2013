@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "hud.h"
 #include "hudelement.h"
-#include "c_hl2mp_player.h"
+#include "ff_cl_player.h"
 #include "c_playerresource.h"
 #include "vgui_entitypanel.h"
 #include "iclientmode.h"

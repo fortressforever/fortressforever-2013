@@ -12,7 +12,7 @@
 #include "vgui/ILocalize.h"
 #include "c_team.h"
 #include "c_playerresource.h"
-#include "c_hl2mp_player.h"
+#include "ff_cl_player.h"
 #include "ff_sh_gamerules.h"
 #include "ihudlcd.h"
 

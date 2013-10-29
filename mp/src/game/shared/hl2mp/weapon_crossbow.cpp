@@ -9,10 +9,10 @@
 #include "in_buttons.h"
 
 #ifdef CLIENT_DLL
-	#include "c_hl2mp_player.h"
+	#include "ff_cl_player.h"
 	#include "c_te_effect_dispatch.h"
 #else
-	#include "hl2mp_player.h"
+	#include "ff_sv_player.h"
 	#include "te_effect_dispatch.h"
 	#include "IEffects.h"
 	#include "Sprite.h"

@@ -16,9 +16,9 @@
 #include "npcevent.h"
 
 #if defined( CLIENT_DLL )
-	#include "c_hl2mp_player.h"
+	#include "ff_cl_player.h"
 #else
-	#include "hl2mp_player.h"
+	#include "ff_sv_player.h"
 	#include "ai_basenpc.h"
 #endif
 

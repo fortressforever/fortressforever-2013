@@ -12,7 +12,7 @@
 #include "ammodef.h"
 
 #ifdef CLIENT_DLL
-	#include "c_hl2mp_player.h"
+	#include "ff_cl_player.h"
 #else
 
 	#include "eventqueue.h"
@@ -26,7 +26,7 @@
 	#include <ctype.h>
 	#include "voice_gamemgr.h"
 	#include "iscorer.h"
-	#include "hl2mp_player.h"
+	#include "ff_sv_player.h"
 	#include "weapon_hl2mpbasehlmpcombatweapon.h"
 	#include "team.h"
 	#include "voice_gamemgr.h"
@@ -764,9 +764,9 @@ void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 {
 #ifndef CLIENT_DLL
 	
-	CHL2MP_Player *pHL2Player = ToHL2MPPlayer( pPlayer );
+	CFF_SH_Player *pFFPlayer = ToFFPlayer( pPlayer );
 
-	if ( pHL2Player == NULL )
+	if ( pFFPlayer == NULL )
 		return;
 
 	const char *pCurrentModel = modelinfo->GetModelName( pPlayer->GetModel() );
@@ -778,44 +778,44 @@ void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 		//Too soon, set the cvar back to what it was.
 		//Note: this will make this function be called again
 		//but since our models will match it'll just skip this whole dealio.
-		if ( pHL2Player->GetNextModelChangeTime() >= gpGlobals->curtime )
+		if ( pFFPlayer->GetNextModelChangeTime() >= gpGlobals->curtime )
 		{
 			char szReturnString[512];
 
 			Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel %s\n", pCurrentModel );
-			engine->ClientCommand ( pHL2Player->edict(), szReturnString );
+			engine->ClientCommand ( pFFPlayer->edict(), szReturnString );
 
-			Q_snprintf( szReturnString, sizeof( szReturnString ), "Please wait %d more seconds before trying to switch.\n", (int)(pHL2Player->GetNextModelChangeTime() - gpGlobals->curtime) );
-			ClientPrint( pHL2Player, HUD_PRINTTALK, szReturnString );
+			Q_snprintf( szReturnString, sizeof( szReturnString ), "Please wait %d more seconds before trying to switch.\n", (int)(pFFPlayer->GetNextModelChangeTime() - gpGlobals->curtime) );
+			ClientPrint( pFFPlayer, HUD_PRINTTALK, szReturnString );
 			return;
 		}
 
 		if (FFRules()->IsTeamplay() == false )
 		{
-			pHL2Player->SetPlayerModel();
+			pFFPlayer->SetPlayerModel();
 
-			const char *pszCurrentModelName = modelinfo->GetModelName( pHL2Player->GetModel() );
+			const char *pszCurrentModelName = modelinfo->GetModelName( pFFPlayer->GetModel() );
 
 			char szReturnString[128];
 			Q_snprintf( szReturnString, sizeof( szReturnString ), "Your player model is: %s\n", pszCurrentModelName );
 
-			ClientPrint( pHL2Player, HUD_PRINTTALK, szReturnString );
+			ClientPrint( pFFPlayer, HUD_PRINTTALK, szReturnString );
 		}
 		else
 		{
 			if ( Q_stristr( szModelName, "models/human") )
 			{
-				pHL2Player->ChangeTeam( TEAM_REBELS );
+				pFFPlayer->ChangeTeam( TEAM_REBELS );
 			}
 			else
 			{
-				pHL2Player->ChangeTeam( TEAM_COMBINE );
+				pFFPlayer->ChangeTeam( TEAM_COMBINE );
 			}
 		}
 	}
 	if ( sv_report_client_settings.GetInt() == 1 )
 	{
-		UTIL_LogPrintf( "\"%s\" cl_cmdrate = \"%s\"\n", pHL2Player->GetPlayerName(), engine->GetClientConVarValue( pHL2Player->entindex(), "cl_cmdrate" ));
+		UTIL_LogPrintf( "\"%s\" cl_cmdrate = \"%s\"\n", pFFPlayer->GetPlayerName(), engine->GetClientConVarValue( pFFPlayer->entindex(), "cl_cmdrate" ));
 	}
 
 	BaseClass::ClientSettingsChanged( pPlayer );
@@ -899,7 +899,7 @@ bool CFF_SH_Rules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
 		return true;
 
 
-	CHL2MP_Player *pPlayer = (CHL2MP_Player *) pEdict;
+	CFF_SH_Player *pPlayer = (CFF_SH_Player *) pEdict;
 
 	if ( pPlayer->ClientCommand( args ) )
 		return true;
@@ -1018,7 +1018,7 @@ void CFF_SH_Rules::RestartGame()
 	// now respawn all players
 	for (int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
-		CHL2MP_Player *pPlayer = (CHL2MP_Player*) UTIL_PlayerByIndex( i );
+		CFF_SH_Player *pPlayer = (CFF_SH_Player*) UTIL_PlayerByIndex( i );
 
 		if ( !pPlayer )
 			continue;
@@ -1160,7 +1160,7 @@ void CFF_SH_Rules::CleanUpMap()
 	MapEntity_ParseAllEntities( engine->GetMapEntitiesString(), &filter, true );
 }
 
-void CFF_SH_Rules::CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg )
+void CFF_SH_Rules::CheckChatForReadySignal( CFF_SH_Player *pPlayer, const char *chatmsg )
 {
 	if( m_bAwaitingReadyRestart && FStrEq( chatmsg, mp_ready_signal.GetString() ) )
 	{
@@ -1223,7 +1223,7 @@ void CFF_SH_Rules::CheckAllPlayersReady( void )
 {
 	for (int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
-		CHL2MP_Player *pPlayer = (CHL2MP_Player*) UTIL_PlayerByIndex( i );
+		CFF_SH_Player *pPlayer = (CFF_SH_Player*) UTIL_PlayerByIndex( i );
 
 		if ( !pPlayer )
 			continue;

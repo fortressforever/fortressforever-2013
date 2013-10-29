@@ -20,7 +20,7 @@
 #include "gamevars_shared.h"
 
 #ifndef CLIENT_DLL
-#include "hl2mp_player.h"
+#include "ff_sv_player.h"
 #endif
 
 #define VEC_CROUCH_TRACE_MIN	FFRules()->GetFFViewVectors()->m_vCrouchTraceMin
@@ -134,7 +134,7 @@ public:
 	void	AddLevelDesignerPlacedObject( CBaseEntity *pEntity );
 	void	RemoveLevelDesignerPlacedObject( CBaseEntity *pEntity );
 	void	ManageObjectRelocation( void );
-	void    CheckChatForReadySignal( CHL2MP_Player *pPlayer, const char *chatmsg );
+	void    CheckChatForReadySignal( CFF_SH_Player *pPlayer, const char *chatmsg );
 	const char *GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer );
 
 #endif

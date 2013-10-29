@@ -14,12 +14,12 @@
 
 #include "cbase.h"
 #include "player.h"
-#include "hl2mp_player.h"
+#include "ff_sv_player.h"
 #include "in_buttons.h"
 #include "movehelper_server.h"
 
 void ClientPutInServer( edict_t *pEdict, const char *playername );
-void Bot_Think( CHL2MP_Player *pBot );
+void Bot_Think( CFF_SV_Player *pBot );
 
 #ifdef DEBUG
 
@@ -91,7 +91,7 @@ CBasePlayer *BotPutInServer( bool bFrozen, int iTeam )
 
 	// Allocate a CBasePlayer for the bot, and call spawn
 	//ClientPutInServer( pEdict, botname );
-	CHL2MP_Player *pPlayer = ((CHL2MP_Player *)CBaseEntity::Instance( pEdict ));
+	CFF_SV_Player *pPlayer = ((CFF_SV_Player *)CBaseEntity::Instance( pEdict ));
 	pPlayer->ClearFlags();
 	pPlayer->AddFlag( FL_CLIENT | FL_FAKECLIENT );
 
@@ -113,7 +113,7 @@ void Bot_RunAll( void )
 {
 	for ( int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
-		CHL2MP_Player *pPlayer = ToHL2MPPlayer( UTIL_PlayerByIndex( i ) );
+		CFF_SV_Player *pPlayer = ToFFPlayer( UTIL_PlayerByIndex( i ) );
 
 		if ( pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT) )
 		{
@@ -156,7 +156,7 @@ bool RunMimicCommand( CUserCmd& cmd )
 //			msec - 
 // Output : 	virtual void
 //-----------------------------------------------------------------------------
-static void RunPlayerMove( CHL2MP_Player *fakeclient, const QAngle& viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, float frametime )
+static void RunPlayerMove( CFF_SV_Player *fakeclient, const QAngle& viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, float frametime )
 {
 	if ( !fakeclient )
 		return;
@@ -206,7 +206,7 @@ static void RunPlayerMove( CHL2MP_Player *fakeclient, const QAngle& viewangles, 
 //-----------------------------------------------------------------------------
 // Purpose: Run this Bot's AI for one frame.
 //-----------------------------------------------------------------------------
-void Bot_Think( CHL2MP_Player *pBot )
+void Bot_Think( CFF_SV_Player *pBot )
 {
 	// Make sure we stay being a bot
 	pBot->AddFlag( FL_FAKECLIENT );
