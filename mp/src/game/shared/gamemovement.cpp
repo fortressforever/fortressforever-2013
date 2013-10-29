@@ -1456,7 +1456,7 @@ void CGameMovement::WaterMove( void )
 	if (speed)
 	{
 		// FF --> Different water frictions for jump key held (sharking) vs not
-		bool bIsSharking = player->GetWaterLevel() < WL_Waist && mv->m_nButtons & IN_JUMP;
+		bool bIsSharking = player->GetWaterLevel() <= WL_Waist && mv->m_nButtons & IN_JUMP;
 		float flWaterFriction = bIsSharking ? SV_SHARKINGFRICTION : sv_friction.GetFloat();
 		// FF <--
 
