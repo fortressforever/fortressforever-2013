@@ -16,11 +16,21 @@ public:
 	CFF_SH_GameMovement() {};
 
 protected:
+	// FF specific functions -->
+	bool	DoDoubleJump( float &flJumpSpeed );
+	bool	DoTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed );
+	bool	DoDownTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed );
+	float	ApplySoftCap( float &flSpeed );
+	float	ApplyHardCap( float &flSpeed );
+	// FF specific functions <--
+
 	/// Catches all landings
 	virtual void	OnLand( float flFallVelocity );
 
 	/// Overwritten from gamemovement.cpp -->
+	// Jumping
 	virtual void	PlayerRoughLandingEffects( float fvol );
+	virtual bool	CheckJumpButton( void );
 	// Ducking
 	virtual void	Duck( void );
 	virtual void	FinishUnDuck( void );

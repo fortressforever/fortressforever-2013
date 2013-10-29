@@ -77,13 +77,8 @@ bool g_bMovementOptimizations = true;
 extern IGameMovement *g_pGameMovement;
 
 // FF cvars
-static ConVar sv_sharkingfriction("sv_sharkingfriction", "1", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar sv_sharkingfriction("sv_sharkingfriction", "1", FCVAR_REPLICATED | FCVAR_CHEAT);
 #define SV_SHARKINGFRICTION sv_sharkingfriction.GetFloat()
-
-//static ConVar ffdev_headcrush_damage("ffdev_headcrush_damage", "108", FCVAR_FF_FFDEV_REPLICATED, "Straight headcrush damage; not used if usefalldamage is on");
-#define HEADCRUSH_DAMAGE 108.0f
-//static ConVar ffdev_headcrush_usefalldamage("ffdev_headcrush_usefalldamage", "4.0", FCVAR_FF_FFDEV_REPLICATED, "0 = off, > 0 means take FALLDAMAGE * val damage");
-#define HEADCRUSH_USEFALLDAMAGE 4.0f
 
 #if defined( PLAYER_GETTING_STUCK_TESTING )
 
@@ -2407,6 +2402,7 @@ void CGameMovement::PlaySwimSound()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+// FF: Overwritten in FF's GameMovement. Only used for non-FFPlayer objects
 bool CGameMovement::CheckJumpButton( void )
 {
 	if (player->pl.deadflag)
