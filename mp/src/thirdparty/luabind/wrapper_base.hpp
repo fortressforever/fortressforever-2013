@@ -89,7 +89,8 @@ namespace luabind
 
 #endif // LUABIND_WRAPPER_BASE_HPP_INCLUDED
 
-#elif BOOST_PP_ITERATION_FLAGS() == 1
+#else // FF dexter gcc fix
+#if BOOST_PP_ITERATION_FLAGS() == 1
 
 #define LUABIND_TUPLE_PARAMS(z, n, data) const A##n *
 #define LUABIND_OPERATOR_PARAMS(z, n, data) const A##n & a##n
@@ -142,7 +143,6 @@ namespace luabind
 #undef LUABIND_CALL_MEMBER_NAME
 #undef LUABIND_OPERATOR_PARAMS
 #undef LUABIND_TUPLE_PARAMS
-
 #else // free call_member forwardarding functions
 
 #define N BOOST_PP_ITERATION()
@@ -187,4 +187,5 @@ namespace luabind
 
 #undef N
 
+#endif
 #endif
