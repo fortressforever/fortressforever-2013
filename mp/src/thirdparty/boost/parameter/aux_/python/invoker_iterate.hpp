@@ -28,13 +28,13 @@
 #if BOOST_PP_ITERATION_FLAGS() == 1
 template <class M, class R, class Args>
 struct invoker<N, M, R, Args>
-#elif BOOST_PP_ITERATION_FLAGS() == 2
+#else if BOOST_PP_ITERATION_FLAGS() == 2
 template <class T, class R, class Args>
 struct call_invoker<N, T, R, Args>
-#elif BOOST_PP_ITERATION_FLAGS() == 3
+#else if BOOST_PP_ITERATION_FLAGS() == 3
 template <class T, class Args>
 struct init_invoker<N, T, Args>
-#elif BOOST_PP_ITERATION_FLAGS() == 4
+#else if BOOST_PP_ITERATION_FLAGS() == 4
 template <class M, class R, class T, class Args>
 struct member_invoker<N, M, R, T, Args>
 #endif
@@ -76,11 +76,11 @@ struct member_invoker<N, M, R, T, Args>
 # endif
             , BOOST_PP_ENUM_BINARY_PARAMS(N, parameter::keyword<kw, >::get() = a)
          );
-#elif BOOST_PP_ITERATION_FLAGS() == 2
+#else if BOOST_PP_ITERATION_FLAGS() == 2
          self(
             BOOST_PP_ENUM_BINARY_PARAMS(N, parameter::keyword<kw, >::get() = a)
          );
-#elif BOOST_PP_ITERATION_FLAGS() == 3
+#else if BOOST_PP_ITERATION_FLAGS() == 3
          new T(
              BOOST_PP_ENUM_BINARY_PARAMS(N, parameter::keyword<kw, >::get() = a)
          );
