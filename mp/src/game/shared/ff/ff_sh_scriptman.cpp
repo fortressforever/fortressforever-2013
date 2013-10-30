@@ -13,10 +13,10 @@
 // engine
 #include "filesystem.h"
 
-// TODO: check if these things are still needed for lua/luabind
-//#undef MINMAX_H
-//#undef min
-//#undef max
+// dexter note 10/29/2013 these are definitely still needed for lua/luabind
+#undef MINMAX_H
+#undef min
+#undef max
 //
 // luabind
 #include "lua.hpp"
