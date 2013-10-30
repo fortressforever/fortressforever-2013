@@ -17,6 +17,7 @@ public:
 
 protected:
 	// FF specific functions -->
+	bool	CanJump( void );
 	bool	DoDoubleJump( float &flJumpSpeed );
 	bool	DoTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed );
 	bool	DoDownTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed );

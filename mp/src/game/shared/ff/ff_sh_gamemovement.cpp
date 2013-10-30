@@ -67,70 +67,8 @@ bool CFF_SH_GameMovement::CheckJumpButton( void )
 	}
 	// FF <--
 
-	if (player->pl.deadflag)
-	{
-		mv->m_nOldButtons |= IN_JUMP ;	// don't jump again until released
+	if (!CanJump())
 		return false;
-	}
-
-	// See if we are waterjumping.  If so, decrement count and return.
-	if (player->m_flWaterJumpTime)
-	{
-		player->m_flWaterJumpTime -= gpGlobals->frametime;
-		if (player->m_flWaterJumpTime < 0)
-			player->m_flWaterJumpTime = 0;
-		
-		return false;
-	}
-
-	// If we are in the water most of the way...
-	if ( player->GetWaterLevel() >= WL_Waist )
-	{	
-		// swimming, not jumping
-		SetGroundEntity( NULL );
-
-		if(player->GetWaterType() == CONTENTS_WATER)    // We move up a certain amount
-			mv->m_vecVelocity[2] = 100;
-		else if (player->GetWaterType() == CONTENTS_SLIME)
-			mv->m_vecVelocity[2] = 80;
-		
-		// play swiming sound
-		if ( player->m_flSwimSoundTime <= 0 )
-		{
-			// Don't play sound again for 1 second
-			player->m_flSwimSoundTime = 1000;
-			PlaySwimSound();
-		}
-
-		return false;
-	}
-	
-	// No more effect
- 	if (player->GetGroundEntity() == NULL)
-	{
-		// FF --> Allow holding jump in the air to make you jump when you land
-		if(!(mv->m_nOldButtons & IN_JUMP))
-		{
-			// FF Port Note: For only allowing holding jump while in the downward part of a jump, do a (mv->m_vecVelocity[2] < 0.0f) check here
-			mv->m_nButtons &= ~IN_JUMP;
-		}
-		// FF <--
-		return false;		// in air, so no effect
-	}
-
-	// Don't allow jumping when the player is in a stasis field.
-#ifndef HL2_EPISODIC
-	if ( player->m_Local.m_bSlowMovement )
-		return false;
-#endif
-
-#ifdef CLIENT_DLL
-	if ( mv->m_nOldButtons & IN_JUMP && cl_jumpqueue.GetBool() )
-		return false;		// don't pogo stick
-#else
-	if ( mv->m_nOldButtons & IN_JUMP && (Q_atoi( engine->GetClientConVarValue( player->entindex(), "cl_jumpqueue" ) ) ) )
-		return false;		// don't pogo stick
-#endif
 
 	// In the air now.
     SetGroundEntity( NULL );
@@ -239,6 +177,75 @@ bool CFF_SH_GameMovement::CheckJumpButton( void )
 	return true;
 }
 
+bool CFF_SH_GameMovement::CanJump( void )
+{
+	if (player->pl.deadflag)
+	{
+		mv->m_nOldButtons |= IN_JUMP ;	// don't jump again until released
+		return false;
+	}
+
+	// See if we are waterjumping.  If so, decrement count and return.
+	if (player->m_flWaterJumpTime)
+	{
+		player->m_flWaterJumpTime -= gpGlobals->frametime;
+		if (player->m_flWaterJumpTime < 0)
+			player->m_flWaterJumpTime = 0;
+		
+		return false;
+	}
+
+	// If we are in the water most of the way...
+	if ( player->GetWaterLevel() >= WL_Waist )
+	{	
+		// swimming, not jumping
+		SetGroundEntity( NULL );
+
+		if(player->GetWaterType() == CONTENTS_WATER)    // We move up a certain amount
+			mv->m_vecVelocity[2] = 100;
+		else if (player->GetWaterType() == CONTENTS_SLIME)
+			mv->m_vecVelocity[2] = 80;
+		
+		// play swiming sound
+		if ( player->m_flSwimSoundTime <= 0 )
+		{
+			// Don't play sound again for 1 second
+			player->m_flSwimSoundTime = 1000;
+			PlaySwimSound();
+		}
+
+		return false;
+	}
+	
+	// No more effect
+ 	if (player->GetGroundEntity() == NULL)
+	{
+		// FF --> Allow holding jump in the air to make you jump when you land
+		if(!(mv->m_nOldButtons & IN_JUMP))
+		{
+			// FF Port Note: For only allowing holding jump while in the downward part of a jump, do a (mv->m_vecVelocity[2] < 0.0f) check here
+			mv->m_nButtons &= ~IN_JUMP;
+		}
+		// FF <--
+		return false;		// in air, so no effect
+	}
+
+	// Don't allow jumping when the player is in a stasis field.
+#ifndef HL2_EPISODIC
+	if ( player->m_Local.m_bSlowMovement )
+		return false;
+#endif
+
+#ifdef CLIENT_DLL
+	if ( mv->m_nOldButtons & IN_JUMP && cl_jumpqueue.GetBool() )
+		return false;		// don't pogo stick
+#else
+	if ( mv->m_nOldButtons & IN_JUMP && (Q_atoi( engine->GetClientConVarValue( player->entindex(), "cl_jumpqueue" ) ) ) )
+		return false;		// don't pogo stick
+#endif
+
+	return true;
+}
 
 float CFF_SH_GameMovement::ApplySoftCap( float &flSpeed )
 {
@@ -263,6 +270,7 @@ float CFF_SH_GameMovement::ApplySoftCap( float &flSpeed )
 
 	return multi;
 }
+
 float CFF_SH_GameMovement::ApplyHardCap( float &flSpeed )
 {
 	const float flHardCapSpeed = BHOP_CAP_HARD * mv->m_flMaxSpeed;
@@ -285,6 +293,7 @@ float CFF_SH_GameMovement::ApplyHardCap( float &flSpeed )
 
 	return multi;
 }
+
 bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed )
 {
 	// Don't do anything for flat ground or downwardly sloping (relative to motion)
@@ -308,6 +317,7 @@ bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, flo
 	}
 	return false;
 }
+
 bool CFF_SH_GameMovement::DoDownTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed )
 {
 	// AfterShock: travelling downwards onto a downward ramp - give boost horizontally
@@ -330,6 +340,7 @@ bool CFF_SH_GameMovement::DoDownTrimp( float flGroundDotProduct, float &flSpeed,
 	}
 	return false;
 }
+
 bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 {
 	CFF_SH_Player *pFFPlayer = ToFFPlayer(player);
