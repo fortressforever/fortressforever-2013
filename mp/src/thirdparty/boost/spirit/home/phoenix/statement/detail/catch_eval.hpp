@@ -41,7 +41,7 @@ namespace boost { namespace phoenix {
 
 #endif
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#else if BOOST_PP_ITERATION_DEPTH() == 1
 
 #define PHOENIX_ITERATION BOOST_PP_ITERATION()
 
@@ -65,7 +65,7 @@ namespace boost { namespace phoenix {
 
 #undef PHOENIX_ITERATION
 
-#elif BOOST_PP_ITERATION_DEPTH() == 2
+#else if BOOST_PP_ITERATION_DEPTH() == 2
 
 #define PHOENIX_ITERATION BOOST_PP_ITERATION()
 

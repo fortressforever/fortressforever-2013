@@ -54,7 +54,7 @@ class base {}; // Empty template cannot be used directly (only its spec).
 
 #   endif // #include guard
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#else if BOOST_PP_ITERATION_DEPTH() == 1
 #   define BOOST_FUNCTIONAL_DETAIL_arity BOOST_PP_FRAME_ITERATION(1)
 
 template<

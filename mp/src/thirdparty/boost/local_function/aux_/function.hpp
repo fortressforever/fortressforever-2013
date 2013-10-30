@@ -225,7 +225,7 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(boost::local_function::aux::function,
 
 #   endif // #include guard
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#else if BOOST_PP_ITERATION_DEPTH() == 1
 #   define BOOST_LOCAL_FUNCTION_AUX_arity BOOST_PP_FRAME_ITERATION(1)
 #   define BOOST_PP_ITERATION_PARAMS_2 \
             (3, (0, BOOST_LOCAL_FUNCTION_AUX_arity, \
@@ -233,7 +233,7 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(boost::local_function::aux::function,
 #   include BOOST_PP_ITERATE() // Iterate over default params count.
 #   undef BOOST_LOCAL_FUNCTION_AUX_arity
 
-#elif BOOST_PP_ITERATION_DEPTH() == 2
+#else if BOOST_PP_ITERATION_DEPTH() == 2
 #   define BOOST_LOCAL_FUNCTION_AUX_defaults BOOST_PP_FRAME_ITERATION(2)
 
 template<

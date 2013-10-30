@@ -151,7 +151,7 @@ struct substitute<
 
 ///// iteration, depth == 1
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#else if BOOST_PP_ITERATION_DEPTH() == 1
 #define i BOOST_PP_FRAME_ITERATION(1)
 
 #if i > 0

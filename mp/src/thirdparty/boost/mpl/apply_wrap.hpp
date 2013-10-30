@@ -174,7 +174,7 @@ struct BOOST_PP_CAT(apply_wrap,i_)<AUX778076_APPLY_WRAP_SPEC_PARAMS(i_, int)>
 
 ///// iteration, depth == 2
 
-#elif BOOST_PP_ITERATION_DEPTH() == 2
+#else if BOOST_PP_ITERATION_DEPTH() == 2
 
 #   define j_ BOOST_PP_FRAME_ITERATION(2)
 
