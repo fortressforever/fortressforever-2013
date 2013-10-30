@@ -113,7 +113,7 @@ struct advance_forward< BOOST_PP_FRAME_ITERATION(1) >
 
 ///// iteration, depth == 2
 
-#else if BOOST_PP_ITERATION_DEPTH() == 2
+#elif BOOST_PP_ITERATION_DEPTH() == 2
 
 #   define AUX778076_ITER_0 BOOST_PP_CAT(iter,BOOST_PP_DEC(BOOST_PP_FRAME_ITERATION(2)))
 #   define AUX778076_ITER_1 BOOST_PP_CAT(iter,BOOST_PP_FRAME_ITERATION(2))

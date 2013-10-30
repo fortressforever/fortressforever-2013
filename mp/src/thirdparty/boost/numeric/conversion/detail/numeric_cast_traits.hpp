@@ -108,12 +108,12 @@ namespace boost { namespace numeric {
 	#undef BOOST_NUMERIC_CONVERSION_SEQ_A
 	#undef BOOST_NUMERIC_CONVERSION_SEQ_B
     
-#else if BOOST_PP_ITERATION_DEPTH() == 1
+#elif BOOST_PP_ITERATION_DEPTH() == 1
 
     #define BOOST_PP_ITERATION_PARAMS_2 (3, (0, BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(BOOST_NUMERIC_CONVERSION_SEQ_B())), <boost/numeric/conversion/detail/numeric_cast_traits.hpp>))
     #include BOOST_PP_ITERATE()
 
-#else if BOOST_PP_ITERATION_DEPTH() == 2
+#elif BOOST_PP_ITERATION_DEPTH() == 2
 
     //! Generate default traits for the specified source and target.
     #define BOOST_NUMERIC_CONVERSION_A BOOST_PP_FRAME_ITERATION(1)

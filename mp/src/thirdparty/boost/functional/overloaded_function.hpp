@@ -107,7 +107,7 @@
 
 #   endif // #include guard
 
-#else if BOOST_PP_ITERATION_DEPTH() == 1
+#elif BOOST_PP_ITERATION_DEPTH() == 1
 #   define BOOST_FUNCTIONAL_overloads \
         /* iterate as OVERLOADS, OVERLOADS-1, OVERLOADS-2, ... */ \
         /* (add 2 because iteration started from 2 to MAX) */ \
