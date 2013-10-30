@@ -45,12 +45,6 @@ $Project "Server (FF)"
 				$File	"ff\ff_sv_player.cpp"
 				$File	"ff\ff_sv_player.h"
 			}
-
-			$Folder "Libraries"
-			{
-				$Lib 	lua
-				$Lib	luabind
-			}
 		}
 
 	

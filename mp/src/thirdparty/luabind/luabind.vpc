@@ -37,4 +37,9 @@ $Project "luabind"
 		$File	"weak_ref.cpp"
 		$File	"wrapper_base.cpp"
 	}
+
+	$Folder "Link Libraries"
+	{
+		$Lib "lua"
+	}
 }

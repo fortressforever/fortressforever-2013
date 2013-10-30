@@ -37,4 +37,10 @@ $Project
 			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.h"
 		}
 	}
+
+	$Folder "Link Libraries"
+	{
+		$Lib "lua"
+		$Lib "luabind"
+	}
 }
