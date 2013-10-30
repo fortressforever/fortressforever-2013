@@ -1,5 +1,9 @@
 # Fortress Forever (Source SDK 2013)
 
+##### Welcome
+
+Please have a seat and enjoy.
+
 ## Git
 
 We will be using the branching model laid out here: http://nvie.com/posts/a-successful-git-branching-model/
