@@ -1,18 +1,5 @@
 # Fortress Forever (Source SDK 2013)
 
-##### Welcome
-
-Please have a seat and enjoy.
-
-## Git
-
-We will be using the branching model laid out here: http://nvie.com/posts/a-successful-git-branching-model/
-
-* __Never push to the master branch, it should only recieve merges from the develop branch or a hotfix branch (per release)__
-* Merge any source-sdk-2013 changes into the develop branch (will probably have to deal with conflicts)
-* Only use rebase when you have unpushed local changes and someone else pushed changes to the corresponding remote branch; never rebase a remote branch (see [this](https://github.com/dchelimsky/rspec/wiki/Topic-Branches) and [this](http://ginsys.eu/git-and-github-keeping-a-feature-branch-updated-with-upstream/) and [this](http://www.jarrodspillers.com/git/2009/08/19/git-merge-vs-git-rebase-avoiding-rebase-hell.html))
-* Only merge from the develop branch to a feature branch when absolutely necessary (important bugfix, etc); features should ideally be self-contained
-
 ### Committing
 
 * Always make sure the code you are committing compiles
@@ -30,6 +17,12 @@ We will be using the branching model laid out here: http://nvie.com/posts/a-succ
 
 * __TODO__ Decide on a naming convention
 * Always make variable and function names as descriptive as possible (if 'i' stands for 'currentPlayerIndex' then use 'currentPlayerIndex')
+
+#### Class Names
+
+* New classes should always start with CFF\_, followed by either SV\_ for a server-side class, CL\_ for a client-side class, or SH\_ for a shared class, and then the ClassName
+	* Example: CFF\_CL\_Player, CFF\_SV\_Player, and CFF\_SH\_Player
+	* Note: Shared classes usually will have #define aliasing such that a class with the SH_ prefix won't actually exist, but instead will always be mapped to the respective CL_ or SV_ class
 
 #### File Names and Directory Structure
 
