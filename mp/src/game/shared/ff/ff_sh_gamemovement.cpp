@@ -70,6 +70,8 @@ bool CFF_SH_GameMovement::CheckJumpButton( void )
 	if (!CanJump())
 		return false;
 
+	CBaseEntity *pOldGroundEntity = player->GetGroundEntity();
+
 	// In the air now.
     SetGroundEntity( NULL );
 	
@@ -126,6 +128,7 @@ bool CFF_SH_GameMovement::CheckJumpButton( void )
 	
 	// we should always be able to find the ground
 	Assert(traceGround.fraction != 1.0f);
+	Assert(traceGround.m_pEnt == pOldGroundEntity);
 
 	Vector vecNormalizedHorizVelocity( mv->m_vecVelocity[0], mv->m_vecVelocity[1], 0.0f );
 	float flGroundDotProduct = DotProduct( vecNormalizedHorizVelocity, traceGround.plane.normal );
@@ -262,9 +265,9 @@ float CFF_SH_GameMovement::ApplySoftCap( float &flSpeed )
 		Assert(multi <= 1.0f);
 
 #ifdef CLIENT_DLL
-		DevMsg("[C] SoftCap\n");
+		DevMsg("[C] SoftCap from %f to %f\n", flSpeed/multi, flSpeed);
 #else
-		DevMsg("[S] SoftCap\n");
+		DevMsg("[S] SoftCap from %f to %f\n", flSpeed/multi, flSpeed);
 #endif
 	}
 
@@ -285,9 +288,9 @@ float CFF_SH_GameMovement::ApplyHardCap( float &flSpeed )
 		Assert(multi <= 1.0f);
 		
 #ifdef CLIENT_DLL
-		DevMsg("[C] HardCap\n");
+		DevMsg("[C] HardCap from %f to %f\n", flSpeed/multi, flSpeed);
 #else
-		DevMsg("[S] HardCap\n");
+		DevMsg("[S] HardCap from %f to %f\n", flSpeed/multi, flSpeed);
 #endif
 	}
 
@@ -300,6 +303,9 @@ bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, flo
 	// Changed to 0.15f to make it a bit less trimpy on only slightly uneven ground
 	if (flSpeed > SV_TRIMPTRIGGERSPEED && flGroundDotProduct < -0.15f)
 	{
+		float flOldJumpSpeed = flJumpSpeed;
+		float flOldSpeed = flSpeed;
+
    		flJumpSpeed += -flGroundDotProduct * flSpeed * SV_TRIMPMULTIPLIER;
 
 		if (SV_TRIMPMULTIPLIER > 0)
@@ -308,9 +314,9 @@ bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, flo
 		}
 		
 #ifdef CLIENT_DLL
-		DevMsg("[C] Trimp\n");
+		DevMsg("[C] Trimp from %f/%f to %f/%f (forwardspeed/jumpspeed)\n", flOldSpeed, flOldJumpSpeed, flSpeed, flJumpSpeed);
 #else
-		DevMsg("[S] Trimp\n");
+		DevMsg("[S] Trimp from %f/%f to %f/%f (forwardspeed/jumpspeed)\n", flOldSpeed, flOldJumpSpeed, flSpeed, flJumpSpeed);
 #endif
 
 		return true;
@@ -331,9 +337,9 @@ bool CFF_SH_GameMovement::DoDownTrimp( float flGroundDotProduct, float &flSpeed,
 		}
 		
 #ifdef CLIENT_DLL
-		DevMsg("[C] DownTrimp\n");
+		DevMsg("[C] DownTrimp from %f/%f to %f/%f (forwardspeed/jumpspeed)\n", flSpeed/SV_TRIMPDOWNMULTIPLIER, flJumpSpeed/SV_TRIMPDOWNMULTIPLIER, flSpeed, flJumpSpeed);
 #else
-		DevMsg("[S] DownTrimp\n");
+		DevMsg("[S] DownTrimp from %f/%f to %f/%f (forwardspeed/jumpspeed)\n", flSpeed/SV_TRIMPDOWNMULTIPLIER, flJumpSpeed/SV_TRIMPDOWNMULTIPLIER, flSpeed, flJumpSpeed);
 #endif
 
 		return true;
@@ -364,9 +370,9 @@ bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 			flJumpSpeed += 190.0f;
 
 #ifdef GAME_DLL
-			DevMsg("[S] Double jump\n");
+			DevMsg("[S] Double jump from %f to %f (jumpspeed)\n", flJumpSpeed-190.0f, flJumpSpeed);
 #else
-			DevMsg("[C] Double jump\n");
+			DevMsg("[C] Double jump from %f to %f (jumpspeed)\n", flJumpSpeed-190.0f, flJumpSpeed);
 #endif
 			bDidDoubleJump = true;
 			// FF TODO: Port the stuff that is needed for this code
