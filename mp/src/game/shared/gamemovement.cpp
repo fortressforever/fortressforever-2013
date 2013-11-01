@@ -4650,7 +4650,13 @@ void CGameMovement::PlayerMove( void )
 	}
 
 	// Now that we are "unstuck", see where we are (player->GetWaterLevel() and type, player->GetGroundEntity()).
-	if ( player->GetMoveType() != MOVETYPE_WALK ||
+	if ( 
+		// FF --> There is probably a better way to do this, but CategorizePosition needs to be called when jump is pressed to allow for trimping
+		//			This will set the player's ground entity when rampsliding, which is needed for the jump code to not return early
+		//			Note: in 2006 code, this CategorizePosition was not inside an if statement
+		mv->m_nButtons & IN_JUMP ||
+		// FF <--
+		player->GetMoveType() != MOVETYPE_WALK ||
 		mv->m_bGameCodeMovedPlayer || 
 		!sv_optimizedmovement.GetBool()  )
 	{
