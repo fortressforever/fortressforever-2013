@@ -1,48 +1,23 @@
-// standard headers
 #include "cbase.h"
 #include "ff_sh_gamemovement.h"
+
+// variables
+#include "ff_sh_vars_movement.h"
+#include "movevars_shared.h"
+
 // necessary headers
 #include "in_buttons.h"
-#include "movevars_shared.h"
 #include "rumble_shared.h"
 #include "ff_sh_gamerules.h"
-
 #ifdef CLIENT_DLL
 	#include "ff_cl_player.h"
 #else
 	#include "ff_sv_player.h"
 #endif
 
-extern bool g_bMovementOptimizations;
-
-//static ConVar ffdev_headcrush_damage("ffdev_headcrush_damage", "108", FCVAR_FF_FFDEV_REPLICATED, "Straight headcrush damage; not used if usefalldamage is on");
-#define HEADCRUSH_DAMAGE 108.0f
-//static ConVar ffdev_headcrush_usefalldamage("ffdev_headcrush_usefalldamage", "4.0", FCVAR_FF_FFDEV_REPLICATED, "0 = off, > 0 means take FALLDAMAGE * val damage");
-#define HEADCRUSH_USEFALLDAMAGE 4.0f
-
-//static ConVar sv_trimpmultiplier("sv_trimpmultiplier", "1.4", FCVAR_REPLICATED | FCVAR_CHEAT);
-#define SV_TRIMPMULTIPLIER 1.4f
-//static ConVar sv_trimpdownmultiplier("sv_trimpdownmultiplier", "1.2", FCVAR_REPLICATED | FCVAR_CHEAT);
-#define SV_TRIMPDOWNMULTIPLIER 1.2f
-//static ConVar sv_trimpmax("sv_trimpmax", "5000", FCVAR_REPLICATED);
-#define SV_TRIMPMAX 5000.0f
-//static ConVar sv_trimptriggerspeed("sv_trimptriggerspeed", "550", FCVAR_REPLICATED | FCVAR_CHEAT);
-#define SV_TRIMPTRIGGERSPEED 550.0f
-//static ConVar sv_trimptriggerspeeddown("sv_trimptriggerspeeddown", "50", FCVAR_REPLICATED | FCVAR_CHEAT);
-#define SV_TRIMPTRIGGERSPEEDDOWN 50.0f
-
-//static ConVar bhop_cap_soft("ffdev_bhop_cap_soft", "1.4", FCVAR_FF_FFDEV_REPLICATED); // bhop_cap_soft.GetFloat()
-#define BHOP_CAP_SOFT 1.4f // also defined in ff_hud_speedometer - change it there too! 
-//static ConVar bhop_cap_hard("ffdev_bhop_cap_hard", "2.0", FCVAR_FF_FFDEV_REPLICATED); // bhop_cap_hard.GetFloat()
-#define BHOP_CAP_HARD 1.8f // also defined in ff_hud_speedometer - change it there too!
-//static ConVar bhop_pcfactor("ffdev_bhop_pcfactor", "0.65", FCVAR_FF_FFDEV_REPLICATED); // bhop_pcfactor.GetFloat()
-#define BHOP_PCFACTOR 0.65 
-
-#ifdef CLIENT_DLL
-ConVar cl_jumpqueue( "cl_jumpqueue", "0.0", FCVAR_ARCHIVE | FCVAR_USERINFO, "Enables jump queue (have to let go and press jump in between concurrent jumps) if set to 1" );
-#endif
-
-// debug purposes
+/** Prints any changes to m_surfaceFriction. Extended for temporary/debug purposes only.
+	Overwritten from CGameMovement.
+*/
 void CFF_SH_GameMovement::PlayerMove( void )
 {
 #ifdef GAME_DLL
@@ -57,6 +32,11 @@ void CFF_SH_GameMovement::PlayerMove( void )
 	BaseClass::PlayerMove();
 }
 
+/** Executes all FF-specific jump-related logic. 
+	Overwritten from CGameMovement.
+
+	@returns Whether or not a jump was performed
+*/
 bool CFF_SH_GameMovement::CheckJumpButton( void )
 {
 	// FF --> Use the base class in the case of a non-FFPlayer object
@@ -180,6 +160,10 @@ bool CFF_SH_GameMovement::CheckJumpButton( void )
 	return true;
 }
 
+/** Checks to see if the player is able to jump
+
+	@returns Whether or not a jump is able to be performed
+*/
 bool CFF_SH_GameMovement::CanJump( void )
 {
 	if (player->pl.deadflag)
@@ -250,6 +234,11 @@ bool CFF_SH_GameMovement::CanJump( void )
 	return true;
 }
 
+/** If flSpeed is above the soft cap, alters flSpeed accordingly
+
+	@param flSpeed Horizontal speed of the player, altered directly
+	@returns Multiplier used to alter flSpeed
+*/
 float CFF_SH_GameMovement::ApplySoftCap( float &flSpeed )
 {
 	const float flSoftCapSpeed = BHOP_CAP_SOFT * mv->m_flMaxSpeed;
@@ -274,6 +263,11 @@ float CFF_SH_GameMovement::ApplySoftCap( float &flSpeed )
 	return multi;
 }
 
+/** Sets flSpeed to the hard cap if flSpeed is > the hard cap
+
+	@param flSpeed Horizontal speed of the player, altered directly
+	@returns Multiplier used to alter flSpeed
+*/
 float CFF_SH_GameMovement::ApplyHardCap( float &flSpeed )
 {
 	const float flHardCapSpeed = BHOP_CAP_HARD * mv->m_flMaxSpeed;
@@ -297,6 +291,13 @@ float CFF_SH_GameMovement::ApplyHardCap( float &flSpeed )
 	return multi;
 }
 
+/** Performs a trimp only if it's currently possible
+
+	@param flGroundDotProduct DotProduct of player's vertical velocity vector and their current ground surface's normal
+	@param flSpeed Horizontal speed of the player, altered directly
+	@param flJumpSpeed Vertical speed of the player, altered directly
+	@returns Whether or not a trimp was performed
+*/
 bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed )
 {
 	// Don't do anything for flat ground or downwardly sloping (relative to motion)
@@ -324,6 +325,13 @@ bool CFF_SH_GameMovement::DoTrimp( float flGroundDotProduct, float &flSpeed, flo
 	return false;
 }
 
+/** Performs a downtrimp only if it's currently possible
+
+	@param flGroundDotProduct DotProduct of player's vertical velocity vector and their current ground surface's normal
+	@param flSpeed Horizontal speed of the player, altered directly
+	@param flJumpSpeed Vertical speed of the player, altered directly
+	@returns Whether or not a downtrimp was performed
+*/
 bool CFF_SH_GameMovement::DoDownTrimp( float flGroundDotProduct, float &flSpeed, float &flJumpSpeed )
 {
 	// AfterShock: travelling downwards onto a downward ramp - give boost horizontally
@@ -347,6 +355,11 @@ bool CFF_SH_GameMovement::DoDownTrimp( float flGroundDotProduct, float &flSpeed,
 	return false;
 }
 
+/** Performs a double jump only if it's currently possible
+
+	@param flJumpSpeed Vertical speed of the player, altered directly
+	@returns Whether or not a double jump was performed
+*/
 bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 {
 	CFF_SH_Player *pFFPlayer = ToFFPlayer(player);
@@ -386,6 +399,11 @@ bool CFF_SH_GameMovement::DoDoubleJump( float &flJumpSpeed )
 	return bDidDoubleJump;
 }
 
+/** Handles landing after falling from any height
+	Extended from CGameMovement
+
+	Implements headcrushing
+*/
 void CFF_SH_GameMovement::OnLand( float flFallVelocity )
 {
 	BaseClass::OnLand( flFallVelocity );
@@ -418,6 +436,11 @@ void CFF_SH_GameMovement::OnLand( float flFallVelocity )
 #endif
 }
 
+/** Handles effects from landing after falling from any height
+	Overwritten from CGameMovement
+
+	@param fvol Volume of the effect sound (between 0 and 1)
+*/
 void CFF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
 {
 	if ( fvol > 0.0 )
@@ -466,6 +489,9 @@ void CFF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
 	}
 }
 
+/** Handles unducking
+	Overwritten from CGameMovement
+*/
 void CFF_SH_GameMovement::FinishUnDuck( void )
 {
 	int i;
@@ -549,6 +575,9 @@ void CFF_SH_GameMovement::FinishUnDuck( void )
 	*/
 }
 
+/** Handles ducking
+	Overwritten from CGameMovement
+*/
 void CFF_SH_GameMovement::Duck( void )
 {
 	// FF TODO: Port these changes, this function was totally rewritten
@@ -867,6 +896,7 @@ void CFF_SH_GameMovement::Duck( void )
 }
 
 // Expose our interface.
+// Note: There can only be one IGameMovement exposed at a time
 static CFF_SH_GameMovement g_GameMovement;
 IGameMovement *g_pGameMovement = ( IGameMovement * )&g_GameMovement;
 

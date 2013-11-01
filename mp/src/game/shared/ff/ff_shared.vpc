@@ -16,6 +16,8 @@ $Project
 			{
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamemovement.h"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_vars_movement.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_vars_movement.h"
 			}
 			$Folder "Player"
 			{
