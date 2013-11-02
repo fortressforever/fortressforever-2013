@@ -13,13 +13,21 @@
 #include "ndebugoverlay.h"
 #include "saverestore_utlvector.h"
 #include "vstdlib/random.h"
+#ifndef FF
 #include "gameinterface.h"
+#else
+#include "ff_sv_dll_interface.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 
+#ifndef FF
 extern CServerGameDLL g_ServerGameDLL;
+#else
+extern CFF_SV_DLL_Interface g_sServerGameDLL;
+#endif
 
 
 //-----------------------------------------------------------------------------

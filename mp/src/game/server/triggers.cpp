@@ -32,7 +32,11 @@
 #include "in_buttons.h"
 #include "ai_behavior_follow.h"
 #include "ai_behavior_lead.h"
+#ifndef FF
 #include "gameinterface.h"
+#else
+#include "ff_sv_dll_interface.h"
+#endif
 
 #ifdef HL2_DLL
 #include "hl2_player.h"
@@ -48,7 +52,12 @@ ConVar g_debug_transitions( "g_debug_transitions", "0", FCVAR_NONE, "Set to 1 an
 // Doesn't need saving, the triggers re-add themselves on restore.
 CUtlVector< CHandle<CTriggerMultiple> >	g_hWeaponFireTriggers;
 
-extern CServerGameDLL	g_ServerGameDLL;
+#ifndef FF
+extern CServerGameDLL g_ServerGameDLL;
+#else
+extern CFF_SV_DLL_Interface g_sServerGameDLL;
+#endif
+
 extern bool				g_fGameOver;
 ConVar showtriggers( "showtriggers", "0", FCVAR_CHEAT, "Shows trigger brushes" );
 

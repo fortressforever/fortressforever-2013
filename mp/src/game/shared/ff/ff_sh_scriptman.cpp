@@ -27,12 +27,15 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef CLIENT_DLL
+#define LUA_CURRENT_CONTEXT "Client"
+#else
+#define LUA_CURRENT_CONTEXT "Server"
+#endif
 
-#ifdef FF
 // custom game modes made so damn easy
 ConVar sv_mapluasuffix( "sv_mapluasuffix", "0", FCVAR_NOTIFY, "Have a custom lua file (game mode) loaded when the map loads. If this suffix string is set, maps\\mapname__suffix__.lua (if it exists) is used instead of maps\\mapname.lua. To reset this cvar, make it 0.");
 ConVar sv_luaglobalscript( "sv_globalluascript", "0", FCVAR_NOTIFY, "Load a custom lua file globally after map scripts. Will overwrite map script. Will be loaded from maps\\globalscripts. To disable, set to 0.");
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 using namespace luabind;
@@ -86,13 +89,13 @@ void CFF_SH_ScriptManager::Init()
 	}
 
 	// initialize VM
-	Msg("[SCRIPT] Attempting to start up the entity system...\n");
+	Msg("[SCRIPT:%s] Attempting to start the Lua VM...\n", LUA_CURRENT_CONTEXT);
 	L = lua_open();
 
 	// no need to continue if VM failed to initialize
 	if(!L)
 	{
-		Msg("[SCRIPT] Unable to initialize Lua VM.\n");
+		Msg("[SCRIPT:%s] Unable to initialize Lua VM.\n", LUA_CURRENT_CONTEXT);
 		return;
 	}
 
@@ -108,7 +111,7 @@ void CFF_SH_ScriptManager::Init()
 	// initialize game-specific library
 	//FF_TODO: CFFLuaLib::Init(L); 
 	
-	Msg("[SCRIPT] Entity system initialization successful.\n");
+	Msg("[SCRIPT:%s] Lua VM initialization successful.\n", LUA_CURRENT_CONTEXT);
 }
 
 void CFF_SH_ScriptManager::LevelInit(const char* szMapName)

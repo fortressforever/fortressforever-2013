@@ -32,8 +32,8 @@ $Project "Server (FF)"
 			$Folder "Game"
 			{
 				$File	"FF\ff_sv_client.cpp"
-				$File	"FF\ff_sv_gameinterface.cpp"
-				$File	"FF\ff_sv_gameinterface.h"
+				$File	"ff\ff_sv_dll_interface.cpp"
+				$File	"ff\ff_sv_dll_interface.h"
 			}
 			$Folder "Player"
 			{

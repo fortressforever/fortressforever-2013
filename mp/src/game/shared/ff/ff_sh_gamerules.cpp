@@ -30,7 +30,7 @@
 	#include "weapon_hl2mpbasehlmpcombatweapon.h"
 	#include "team.h"
 	#include "voice_gamemgr.h"
-	#include "ff_sv_gameinterface.h"
+	#include "ff_sv_dll_interface.h"
 	#include "hl2mp_cvars.h"
 
 #ifdef DEBUG	

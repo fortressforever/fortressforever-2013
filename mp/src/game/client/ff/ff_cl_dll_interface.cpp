@@ -10,8 +10,9 @@ int CFF_CL_DLL_Interface::Init( CreateInterfaceFn appSystemFactory, CreateInterf
 {
 	int ret = BaseClass::Init( appSystemFactory, physicsFactory, pGlobals );
 
-	// initialize UI Lua VM
+	// start the Lua VM
 	g_UIScriptManager.Init();
+	g_GameScriptManager.Init();
 	
 	// Test steam API
 	uint32 appId = steamapicontext->SteamUtils()->GetAppID();
@@ -39,8 +40,9 @@ int CFF_CL_DLL_Interface::Init( CreateInterfaceFn appSystemFactory, CreateInterf
 
 void CFF_CL_DLL_Interface::Shutdown( void )
 {
-	// shutdown UI Lua VM
+	// close the Lua VM
 	g_UIScriptManager.Shutdown();
+	g_GameScriptManager.Shutdown();
 
 	BaseClass::Shutdown();
 }

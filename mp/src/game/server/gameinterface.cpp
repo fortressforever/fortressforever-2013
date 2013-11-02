@@ -125,6 +125,10 @@ extern ConVar tf_mm_servermode;
 #include "portal_player.h"
 #endif
 
+#ifdef FF
+#include "ff_sv_dll_interface.h"
+#endif
+
 #if defined( REPLAY_ENABLED )
 #include "replay/ireplaysystem.h"
 #endif
@@ -557,6 +561,7 @@ void DrawAllDebugOverlays( void )
 	DrawMessageEntities();
 }
 
+#ifndef FF // FF exposes its own interface
 CServerGameDLL g_ServerGameDLL;
 // INTERFACEVERSION_SERVERGAMEDLL_VERSION_8 is compatible with the latest since we're only adding things to the end, so expose that as well.
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CServerGameDLL, IServerGameDLL008, INTERFACEVERSION_SERVERGAMEDLL_VERSION_8, g_ServerGameDLL );
@@ -564,6 +569,7 @@ EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CServerGameDLL, IServerGameDLL, INTERFACEVERSI
 
 // When bumping the version to this interface, check that our assumption is still valid and expose the older version in the same way
 COMPILE_TIME_ASSERT( INTERFACEVERSION_SERVERGAMEDLL_INT == 9 );
+#endif
 
 bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory, 
 		CreateInterfaceFn physicsFactory, CreateInterfaceFn fileSystemFactory, 

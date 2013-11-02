@@ -64,7 +64,11 @@
 #include "hintsystem.h"
 #include "env_debughistory.h"
 #include "fogcontroller.h"
+#ifndef FF
 #include "gameinterface.h"
+#else
+#include "ff_sv_dll_interface.h"
+#endif
 #include "hl2orange.spa.h"
 #include "dt_utlvector_send.h"
 #include "vote_controller.h"
@@ -120,7 +124,11 @@ extern ConVar sv_maxunlag;
 extern ConVar sv_turbophysics;
 extern ConVar *sv_maxreplay;
 
+#ifndef FF
 extern CServerGameDLL g_ServerGameDLL;
+#else
+extern CFF_SV_DLL_Interface g_sServerGameDLL;
+#endif
 
 // TIME BASED DAMAGE AMOUNT
 // tweak these values based on gameplay feedback:
