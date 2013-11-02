@@ -9,12 +9,7 @@ $Macro GAMENAME 	"ff" [!$SOURCESDK]
 $Macro GAMENAME 	"FortressForever" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_hl2mp.vpc"
-$Include "$SRCDIR\game\server\nav_mesh.vpc" [$SOURCESDK]
-
 $Include "$SRCDIR\game\shared\ff\ff_shared.vpc"
-
-$Macro VSLIBDIR  "." [!$VS2010]
-$Macro VSLIBDIR  "VS2010" [$VS2010]
 
 $Macro THIRDPARTYDIR	"$SRCDIR\thirdparty"
 
