@@ -10,8 +10,10 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"
+		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"		
 		$EnableC++Exceptions			"Yes (/EHsc)" 
+		//$PreprocessorDefinitions		"LUABIND_CPLUSPLUS_LUA"
+		//$CompileAs					"Compile as C Code (/TC)"
 	}
 }
 

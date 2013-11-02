@@ -39,12 +39,6 @@ $Project "Client (FF)"
 				$File	"ff\ff_cl_player.cpp"
 				$File	"ff\ff_cl_player.h"
 			}
-
-			$Folder "Libraries"
-			{
-				$Lib 	lua
-				$Lib	luabind
-			}
 		}
 		
 		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!
