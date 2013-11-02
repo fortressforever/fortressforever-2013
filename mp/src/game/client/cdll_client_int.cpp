@@ -147,10 +147,6 @@
 #include "fbxsystem/fbxsystem.h"
 #endif
 
-#ifdef FF
-//#include "lua/luaman.h"
-#endif
-
 extern vgui::IInputInternal *g_InputInternal;
 const char *COM_GetModDirectory(); // return the mod dir (rather than the complete -game param, which can be a path)
 
@@ -172,6 +168,11 @@ const char *COM_GetModDirectory(); // return the mod dir (rather than the comple
 
 #ifdef SIXENSE
 #include "sixense/in_sixense.h"
+#endif
+
+#ifdef FF
+#include "ff_cl_dll_interface.h"
+extern CFF_CL_DLL_Interface gFFClient;
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -588,6 +589,7 @@ void DisplayBoneSetupEnts()
 #endif
 }
 
+#ifndef FF // Moved class definition to .h so we can inherit from it
 //-----------------------------------------------------------------------------
 // Purpose: engine to client .dll interface
 //-----------------------------------------------------------------------------
@@ -734,14 +736,17 @@ private:
 
 	CUtlVector< IMaterial * > m_CachedMaterials;
 };
+#endif
 
-
+#ifndef FF // FF exposes its own interface
 CHLClient gHLClient;
 IBaseClientDLL *clientdll = &gHLClient;
 
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR( CHLClient, IBaseClientDLL, CLIENT_DLL_INTERFACE_VERSION, gHLClient );
+#endif
 
 
+#ifndef FF
 //-----------------------------------------------------------------------------
 // Precaches a material
 //-----------------------------------------------------------------------------
@@ -749,6 +754,15 @@ void PrecacheMaterial( const char *pMaterialName )
 {
 	gHLClient.PrecacheMaterial( pMaterialName );
 }
+#else
+//-----------------------------------------------------------------------------
+// Precaches a material
+//-----------------------------------------------------------------------------
+void PrecacheMaterial( const char *pMaterialName )
+{
+	gFFClient.PrecacheMaterial( pMaterialName );
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Converts a previously precached material into an index
@@ -871,27 +885,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	ConnectTier3Libraries( &appSystemFactory, 1 );
 
 #ifndef NO_STEAM
-	//assert ( false );
 	ClientSteamContext().Activate();
-	uint32 appId = steamapicontext->SteamUtils()->GetAppID();
-	char msg[128];
-	Q_snprintf(msg, 128,"Steam AppID = %i\n", appId);
-	DevMsg(msg);
-	/*
-	// careful: you might want to use a long long if you're a internet celeb like squeek 
-	int numFriends = steamapicontext->SteamFriends()->GetFriendCount(k_EFriendFlagImmediate);
-	for (int i = 0; i < numFriends; i++)
-	{
-		CSteamID steamFrendzor = steamapicontext->SteamFriends()->GetFriendByIndex(i, k_EFriendFlagImmediate);
-		AccountID_t acctId = steamFrendzor.GetAccountID();
-		//const char *steamName = steamapicontext->SteamFriends()->GetFriendPersonaName(steamFrendzor);		
-		if (acctId == 5800795)
-		{
-			//5800795 is my old steam acct running on my laptop to test this shit
-			steamapicontext->SteamFriends()->InviteUserToGame(steamFrendzor, "connect 1.2.3.4;password barf");
-		}
-
-	}*/
 #endif
 
 	// We aren't happy unless we get all of our interfaces.
@@ -1115,11 +1109,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 #ifndef _X360
 	HookHapticMessages(); // Always hook the messages
 #endif
-
-#ifdef FF
-	//lua_init();
-#endif
-
 	return true;
 }
 
@@ -1200,10 +1189,6 @@ void CHLClient::PostInit()
 //-----------------------------------------------------------------------------
 void CHLClient::Shutdown( void )
 {
-#ifdef FF
-	//lua_shutdown();
-#endif
-
     if (g_pAchievementsAndStatsInterface)
     {
         g_pAchievementsAndStatsInterface->ReleasePanel();
@@ -1839,6 +1824,7 @@ void CHLClient::VoiceStatus( int entindex, qboolean bTalking )
 }
 
 
+#ifndef FF
 //-----------------------------------------------------------------------------
 // Called when the string table for materials changes
 //-----------------------------------------------------------------------------
@@ -1848,6 +1834,17 @@ void OnMaterialStringTableChanged( void *object, INetworkStringTable *stringTabl
 	gHLClient.PrecacheMaterial( newString );
 	RequestCacheUsedMaterials();
 }
+#else
+//-----------------------------------------------------------------------------
+// Called when the string table for materials changes
+//-----------------------------------------------------------------------------
+void OnMaterialStringTableChanged( void *object, INetworkStringTable *stringTable, int stringNumber, const char *newString, void const *newData )
+{
+	// Make sure this puppy is precached
+	gFFClient.PrecacheMaterial( newString );
+	RequestCacheUsedMaterials();
+}
+#endif
 
 
 //-----------------------------------------------------------------------------

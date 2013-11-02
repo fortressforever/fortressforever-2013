@@ -36,20 +36,20 @@ public:
 
 public:
 	// inserts the lua file into the script environment
-	static bool LoadFile(lua_State*, const char* filePath);
+	bool LoadFile(lua_State*, const char* filePath);
 
 public:
+	// initializes the script VM
+	void Init();
+	// closes the script VM
+	void Shutdown();
+
 	// loads the scripts for the level
 	void LevelInit(const char* szMapName);
-
 	// cleans up the scripts for the most recent level
 	void LevelShutdown();
 
 private:
-	// initializes the script VM
-	void Init();
-	void Shutdown();
-
 	// surround code that loads scripts to capture crc checksum
 	// of the scripts that are loaded
 	void BeginScriptLoad();
@@ -107,7 +107,10 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 // global externs
-extern CFF_SH_ScriptManager _scriptman;
+extern CFF_SH_ScriptManager g_GameScriptManager;
+#ifdef CLIENT_DLL
+extern CFF_SH_ScriptManager g_UIScriptManager;
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #endif

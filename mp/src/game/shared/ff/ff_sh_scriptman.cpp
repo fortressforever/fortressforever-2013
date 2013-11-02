@@ -28,10 +28,10 @@
 #include "tier0/memdbgon.h"
 
 
-#if FF_DLL
+#ifdef FF
 // custom game modes made so damn easy
-ConVar sv_mapluasuffix( "sv_mapluasuffix", "0", FCVAR_ARCHIVE, "Have a custom lua file (game mode) loaded when the map loads. If this suffix string is set, maps\\mapname__suffix__.lua (if it exists) is used instead of maps\\mapname.lua. To reset this cvar, make it 0.");
-ConVar sv_luaglobalscript( "sv_globalluascript", "0", FCVAR_ARCHIVE, "Load a custom lua file globally after map scripts. Will overwrite map script. Will be loaded from maps\\globalscripts. To disable, set to 0.");
+ConVar sv_mapluasuffix( "sv_mapluasuffix", "0", FCVAR_NOTIFY, "Have a custom lua file (game mode) loaded when the map loads. If this suffix string is set, maps\\mapname__suffix__.lua (if it exists) is used instead of maps\\mapname.lua. To reset this cvar, make it 0.");
+ConVar sv_luaglobalscript( "sv_globalluascript", "0", FCVAR_NOTIFY, "Load a custom lua file globally after map scripts. Will overwrite map script. Will be loaded from maps\\globalscripts. To disable, set to 0.");
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,10 @@ using namespace luabind;
 
 /////////////////////////////////////////////////////////////////////////////
 // globals
-CFF_SH_ScriptManager _scriptman;
+CFF_SH_ScriptManager g_GameScriptManager;
+#ifdef CLIENT_DLL
+CFF_SH_ScriptManager g_UIScriptManager;
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,7 +111,6 @@ void CFF_SH_ScriptManager::Init()
 	Msg("[SCRIPT] Entity system initialization successful.\n");
 }
 
-#ifdef FF_DLL
 void CFF_SH_ScriptManager::LevelInit(const char* szMapName)
 {
 	const char* default_luafile = "maps/default.lua";
@@ -133,7 +135,11 @@ void CFF_SH_ScriptManager::LevelInit(const char* szMapName)
 	if ( sv_mapluasuffix.GetString()[0] != '0' )
 	{
 		Msg( "[SCRIPT] sv_mapluasuffix set to %s | finding maps\\%s__%s__.lua\n", sv_mapluasuffix.GetString(), szMapName, sv_mapluasuffix.GetString() );
+#ifdef CLIENT_DLL
+		if ( filesystem->FileExists( VarArgs( "maps/%s__%s__.lua", szMapName, sv_mapluasuffix.GetString() ) ) )
+#else
 		if ( filesystem->FileExists( UTIL_VarArgs( "maps/%s__%s__.lua", szMapName, sv_mapluasuffix.GetString() ) ) )
+#endif
 		{
 			Q_snprintf( filename, sizeof(filename), "maps/%s__%s__.lua", szMapName, sv_mapluasuffix.GetString() );
 			Msg( "[SCRIPT] maps\\%s__%s__.lua found\n", szMapName, sv_mapluasuffix.GetString() );
@@ -149,7 +155,11 @@ void CFF_SH_ScriptManager::LevelInit(const char* szMapName)
 	{
 		const char* scriptname = sv_luaglobalscript.GetString();
 		Msg("[SCRIPT] sv_luaglobalscript set to %s | loading global script maps maps\\globalscripts\\%s.lua\n", scriptname, scriptname );
+#ifdef CLIENT_DLL
+		if( filesystem->FileExists( VarArgs( "maps/globalscripts/%s.lua", scriptname ) ) )
+#else
 		if( filesystem->FileExists( UTIL_VarArgs( "maps/globalscripts/%s.lua", scriptname ) ) )
+#endif
 		{
 			Q_snprintf( globalscript_filename, sizeof(globalscript_filename), "maps/globalscripts/%s.lua", scriptname );
 			Msg("[SCRIPT] maps\\globalscripts\\%s.lua found\n", scriptname );\
@@ -231,9 +241,7 @@ void CFF_SH_ScriptManager::LevelInit(const char* szMapName)
 	// spawn the helper entity
 	//FF_TODO: CFFEntitySystemHelper::Create();
 }
-#endif
 
-#ifdef FF_DLL
 /////////////////////////////////////////////////////////////////////////////
 void CFF_SH_ScriptManager::LevelShutdown()
 {
@@ -244,8 +252,6 @@ void CFF_SH_ScriptManager::LevelShutdown()
 		L = NULL;
 	}
 }
-
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 void CFF_SH_ScriptManager::OnScriptLoad(const char* szFileName,
@@ -282,7 +288,7 @@ bool CFF_SH_ScriptManager::LoadFile( lua_State *L, const char *filename)
 	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFile", VPROF_BUDGETGROUP_FF_LUA );
 
 	// don't allow scripters to sneak in scripts after the initial load
-	if(!_scriptman.m_isLoading)
+	if(!m_isLoading)
 	{
 		Warning("[SCRIPT] Loading of scripts after initial map load is not allowed.\n");
 		return false;
@@ -309,7 +315,7 @@ bool CFF_SH_ScriptManager::LoadFile( lua_State *L, const char *filename)
 	filesystem->Close(hFile);
 
 	// preprocess script data
-	_scriptman.OnScriptLoad(filename, buffer);
+	OnScriptLoad(filename, buffer);
 
 	// load script
 	int errorCode = luaL_loadbuffer(L, buffer, fileSize, filename);

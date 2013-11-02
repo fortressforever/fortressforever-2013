@@ -32,7 +32,8 @@ $Project "Client (FF)"
 		{
 			$Folder "Game"
 			{
-
+				$File	"ff\ff_cl_dll_interface.cpp"
+				$File	"ff\ff_cl_dll_interface.h"
 			}
 			$Folder "Player"
 			{
