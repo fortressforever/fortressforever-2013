@@ -58,8 +58,8 @@ public:
 	void SetName( const char *pName );
 	void SetFortPoints( int iFortPoints );
 	void SetTeamLimits( int );
-	void UpdateLimit( int idx );
-	void UpdateAllLimits( void );
+	void UpdateClassLimit( int idx );
+	void UpdateAllClassLimits( void );
 
 #endif // GAME_DLL
 

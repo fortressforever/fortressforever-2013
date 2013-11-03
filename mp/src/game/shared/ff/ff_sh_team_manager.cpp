@@ -68,7 +68,7 @@ static void ClassRestrictionChange( IConVar *var, const char *pOldString, float 
 		
 		if ( idx == -1  )
 			return;
-		pTeam->UpdateLimit( idx );
+		pTeam->UpdateClassLimit( idx );
 	}
 }
 
@@ -143,10 +143,10 @@ void CFF_SH_TeamManager::SetClassLimit( int iClass, int iLimit )
 		return;
 	
 	m_iClassesMap[iClass] = iLimit;
-	UpdateLimit( iClass );
+	UpdateClassLimit( iClass );
 }
 
-void CFF_SH_TeamManager::UpdateLimit( int iClassIdx )
+void CFF_SH_TeamManager::UpdateClassLimit( int iClassIdx )
 {
 	// if the map or cvar is 0 it will always use the other
 	int curCvar = classRestrictionCvars[iClassIdx].GetInt();
@@ -157,10 +157,10 @@ void CFF_SH_TeamManager::UpdateLimit( int iClassIdx )
 	DevMsg("CFF_SH_TeamManager::UpdateLimit: set class idx %i limit to %i\n", iClassIdx, newVal );
 }
 
-void CFF_SH_TeamManager::UpdateAllLimits( void )
+void CFF_SH_TeamManager::UpdateAllClassLimits( void )
 {
 	for ( int i = 0; i < ARRAYSIZE(m_iClassesMap); i++ )
-		UpdateLimit( i );
+		UpdateClassLimit( i );
 }
 
 void CFF_SH_TeamManager::SetDeaths( int iDeaths )
