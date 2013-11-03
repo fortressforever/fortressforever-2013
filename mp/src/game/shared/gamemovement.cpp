@@ -1407,7 +1407,8 @@ void CGameMovement::WaterMove( void )
 	}
 
 	// if we have the jump key down, move us up as well
-	if (mv->m_nButtons & IN_JUMP)
+	if (mv->m_nButtons & IN_JUMP
+		&& !player->m_flWaterJumpTime) // FF --> hlstriker: Make sure we aren't water jumping before setting velocity.
 	{
 		// FF --> Move at a standard speed
 		//wishvel[2] += mv->m_flClientMaxSpeed;
@@ -2087,7 +2088,7 @@ void CGameMovement::FullWalkMove( )
 	if ( player->GetWaterLevel() >= WL_Waist ) 
 	{
 		if ( player->GetWaterLevel() == WL_Waist
-			&& mv->m_vecVelocity[2] > 0 ) // FF --> hlstriker: Make sure the player is actually moving upwards before trying to jump out of water.
+			&& (mv->m_vecVelocity[2] > -10 || (mv->m_nButtons & IN_JUMP)) ) // FF --> hlstriker: Make sure the player is actually moving upwards OR holding jump before trying to jump out of water.
 		{
 			CheckWaterJump();
 		}
