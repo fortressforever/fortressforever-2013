@@ -13,6 +13,8 @@ int CFF_CL_DLL_Interface::Init( CreateInterfaceFn appSystemFactory, CreateInterf
 	// start the Lua VM
 	g_UIScriptManager.Init();
 	g_GameScriptManager.Init();
+
+	g_UIScriptManager.LoadFile( "ui/init.lua" );
 	
 	// Test steam API
 	uint32 appId = steamapicontext->SteamUtils()->GetAppID();

@@ -36,7 +36,8 @@ public:
 
 public:
 	// inserts the lua file into the script environment
-	bool LoadFile(lua_State*, const char* filePath);
+	bool LoadFile(const char* filePath);
+	void MakeSafe();
 
 public:
 	// initializes the script VM

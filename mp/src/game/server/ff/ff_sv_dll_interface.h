@@ -15,11 +15,6 @@ class CFF_SV_DLL_Interface : public CServerGameDLL
 	virtual void			DLLShutdown( void );
 	// --> Extended functions
 
-	// --> Not yet implemented in CServerGameDLL but required
-	//virtual void GetPlayerLimits( int& minplayers, int& maxplayers, int &defaultMaxPlayers ) const;
-	//virtual void LevelInit_ParseAllEntities( const char *pMapEntities );
-	// <--
-
 	/*
 public:
 	virtual bool			DLLInit(CreateInterfaceFn engineFactory, CreateInterfaceFn physicsFactory, 
