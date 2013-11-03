@@ -9,6 +9,72 @@
 #include "tier0/memdbgon.h"
 
 
+#ifdef GAME_DLL
+
+static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal );
+
+// we gotta do this anyway for other classes to use em directly without having to lookup
+ConVar	cr_scout( "cr_scout", "0", 0, "Max number of scouts", ClassRestrictionChange );
+ConVar	cr_sniper( "cr_sniper",	"0", 0, "Max number of snipers", ClassRestrictionChange );
+ConVar	cr_soldier( "cr_soldier", "0", 0, "Max number of soldiers", ClassRestrictionChange );
+ConVar	cr_demoman( "cr_demoman", "0", 0, "Max number of demoman", ClassRestrictionChange );
+ConVar	cr_medic( "cr_medic", "0", 0, "Max number of medic", ClassRestrictionChange );
+ConVar	cr_hwguy( "cr_hwguy", "0", 0, "Max number of hwguy", ClassRestrictionChange );
+ConVar	cr_pyro( "cr_pyro",	"0", 0, "Max number of pyro", ClassRestrictionChange );
+ConVar	cr_spy( "cr_spy", "0", 0, "Max number of spy", ClassRestrictionChange );
+ConVar	cr_engineer( "cr_engineer",	"0", 0, "Max number of engineer", ClassRestrictionChange );
+ConVar	cr_civilian( "cr_civilian",	"0", 0, "Max number of engineer", ClassRestrictionChange );
+
+//static CUtlDict<const char*, int> classCvarToIndexDict;
+// do this so we can find correct idx to pass to team manager
+// (from old CFFTeam::UpdateTeamLimits indices)
+static ConVar classRestrictionCvars[] =
+{
+	cr_scout,
+	cr_sniper,
+	cr_soldier,
+	cr_demoman,
+	cr_medic,
+	cr_hwguy,
+	cr_pyro,
+	cr_spy,
+	cr_engineer,
+	cr_civilian,
+};
+
+// Need to update the real class limits for this map
+static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal )
+{
+	// Update the team limits (skip unassigned and spec, they dont need limits applied )
+	for ( int i = TEAM_SPECTATOR + 1; i < g_Teams.Count(); i++ )
+	{
+		CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( i );
+		if ( !pTeam )
+			return;
+
+		ConVar *conVar = static_cast<ConVar*>(var);
+		if ( !conVar )
+			return;
+
+		int idx = -1;
+		for ( int i = 0; i < CLASS_COUNT; i ++)
+		{
+			if ( Q_strcmp( conVar->GetName(),  classRestrictionCvars[i].GetName() ) == 0 )
+			{
+				idx = i;
+				break;
+			}
+		}
+		
+		if ( idx == -1  )
+			return;
+		pTeam->UpdateLimit( idx );
+	}
+}
+
+#endif // GAME_DLL
+
+
 LINK_ENTITY_TO_CLASS( ff_team_manager, CFF_SH_TeamManager );
 
 #ifdef GAME_DLL
@@ -76,9 +142,29 @@ void CFF_SH_TeamManager::SetAllies( int iTeam )
 
 void CFF_SH_TeamManager::SetClassLimit( int iClass, int iLimit )
 {
+	// no change needed
+	if ( m_iClassesMap[iClass] == iLimit )
+		return;
+	
 	m_iClassesMap[iClass] = iLimit;
-	m_iClasses.Set( iClass, iLimit );
-	DevMsg( "FF Team manager::SetClassLimit (team='%s') class=%i, limit=%i\n", m_szTeamname.Get(), iClass, iLimit );
+	UpdateLimit( iClass );
+}
+
+void CFF_SH_TeamManager::UpdateLimit( int iClassIdx )
+{
+	// if the map or cvar is 0 it will always use the other
+	int curCvar = classRestrictionCvars[iClassIdx].GetInt();
+	int curMap = m_iClassesMap[iClassIdx];
+	int newVal = min ( curCvar == 0 ? curMap : curCvar, curMap == 0 ? curCvar : curMap);
+	m_iClasses.Set( iClassIdx, newVal );
+
+	DevMsg("CFF_SH_TeamManager::UpdateLimit: set class idx %i limit to %i\n", iClassIdx, newVal );
+}
+
+void CFF_SH_TeamManager::UpdateAllLimits( void )
+{
+	for ( int i = 0; i < ARRAYSIZE(m_iClassesMap); i++ )
+		UpdateLimit( i );
 }
 
 void CFF_SH_TeamManager::SetDeaths( int iDeaths )
@@ -140,75 +226,6 @@ int CFF_SH_TeamManager::GetTeamLimits( void )
 {
 	return m_iMaxPlayers;
 }
-
-#ifdef GAME_DLL
-
-static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal );
-
-// we gotta do this anyway for other classes to use em directly without having to lookup
-ConVar	cr_scout( "cr_scout", "0", 0, "Max number of scouts", ClassRestrictionChange );
-ConVar	cr_sniper( "cr_sniper",	"0", 0, "Max number of snipers", ClassRestrictionChange );
-ConVar	cr_soldier( "cr_soldier", "0", 0, "Max number of soldiers", ClassRestrictionChange );
-ConVar	cr_demoman( "cr_demoman", "0", 0, "Max number of demoman", ClassRestrictionChange );
-ConVar	cr_medic( "cr_medic", "0", 0, "Max number of medic", ClassRestrictionChange );
-ConVar	cr_hwguy( "cr_hwguy", "0", 0, "Max number of hwguy", ClassRestrictionChange );
-ConVar	cr_pyro( "cr_pyro",	"0", 0, "Max number of pyro", ClassRestrictionChange );
-ConVar	cr_spy( "cr_spy", "0", 0, "Max number of spy", ClassRestrictionChange );
-ConVar	cr_engineer( "cr_engineer",	"0", 0, "Max number of engineer", ClassRestrictionChange );
-ConVar	cr_civilian( "cr_civilian",	"0", 0, "Max number of engineer", ClassRestrictionChange );
-
-//static CUtlDict<const char*, int> classCvarToIndexDict;
-// do this so we can find correct idx to pass to team manager
-// (from old CFFTeam::UpdateTeamLimits indices)
-static ConVar classRestrictionCvars[] =
-{
-	cr_scout,
-	cr_sniper,
-	cr_soldier,
-	cr_demoman,
-	cr_medic,
-	cr_hwguy,
-	cr_pyro,
-	cr_spy,
-	cr_engineer,
-	cr_civilian,
-};
-
-// Need to update the real class limits for this map
-static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal )
-{
-	// Update the team limits (skip unassigned and spec, they dont need limits applied )
-	for ( int i = TEAM_SPECTATOR + 1; i < g_Teams.Count(); i++ )
-	{
-		CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( i );
-		if ( !pTeam )
-			return;
-
-		ConVar *conVar = static_cast<ConVar*>(var);
-		if ( !conVar )
-			return;
-
-		int idx = -1;
-		for ( int i = 0; i < CLASS_COUNT; i ++)
-		{
-			//if ( conVar == &classRestrictionCvars[i] )
-			if ( Q_strcmp( conVar->GetName(),  classRestrictionCvars[i].GetName() ) == 0 )
-			{
-				idx = i;
-				break;
-			}
-		}
-		
-		if ( idx == -1  )
-			return;
-
-		pTeam->SetClassLimit( idx, conVar->GetInt() );	
-	}
-}
-
-
-
-#endif // GAME_DLL
 
 //ConCommand ff_team( "ff_team",
 //ConCommand ff_team( "ffdbg_dump_teams",
