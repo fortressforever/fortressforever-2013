@@ -110,12 +110,8 @@ CFF_SH_TeamManager *GetGlobalFFTeam( int iIndex )
 void CFF_SH_TeamManager::Init( const char *pName, int iNumber )
 {
 	BaseClass::Init( pName, iNumber );
-	NetworkProp()->SetUpdateInterval( 0.6f ); // 0.75f
-	// dexter, tweaked old code that memset directly to use set so the disabled defaults (-1)
-	// are sent networked in next update
-	for (int i = 0; i < CLASS_COUNT; i++)
-		m_iClasses.Set(i, -1);
-	
+	NetworkProp()->SetUpdateInterval( 0.75f );
+	memset( &m_iClasses, -1, sizeof( m_iClasses ) );	
 	m_iAllies = 0;										
 }
 
