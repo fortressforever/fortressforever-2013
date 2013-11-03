@@ -34,8 +34,6 @@
 int g_iLastCitizenModel = 0;
 int g_iLastCombineModel = 0;
 
-CBaseEntity	 *g_pLastCombineSpawn = NULL;
-CBaseEntity	 *g_pLastRebelSpawn = NULL;
 extern CBaseEntity				*g_pLastSpawn;
 
 #define FF_COMMAND_MAX_RATE 0.3
@@ -46,6 +44,9 @@ LINK_ENTITY_TO_CLASS( player, CFF_SV_Player );
 
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
+
+// lets dance
+LINK_ENTITY_TO_CLASS( info_ff_teamspawn, CPointEntity );
 
 IMPLEMENT_SERVERCLASS_ST(CFF_SV_Player, DT_FF_Player)
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 11, SPROP_CHANGES_OFTEN ),
@@ -1320,27 +1321,10 @@ CBaseEntity* CFF_SV_Player::EntSelectSpawnPoint( void )
 	CBaseEntity *pSpot = NULL;
 	CBaseEntity *pLastSpawnPoint = g_pLastSpawn;
 	edict_t		*player = edict();
-	const char *pSpawnpointName = "info_player_deathmatch";
 
-	if ( FFRules()->IsTeamplay() == true )
-	{
-		if ( GetTeamNumber() == TEAM_COMBINE )
-		{
-			pSpawnpointName = "info_player_combine";
-			pLastSpawnPoint = g_pLastCombineSpawn;
-		}
-		else if ( GetTeamNumber() == TEAM_REBELS )
-		{
-			pSpawnpointName = "info_player_rebel";
-			pLastSpawnPoint = g_pLastRebelSpawn;
-		}
-
-		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
-		{
-			pSpawnpointName = "info_player_deathmatch";
-			pLastSpawnPoint = g_pLastSpawn;
-		}
-	}
+	// this is safe cuz there is always at least one
+	// team in FF and the rest is handled by lua, right?
+	const char *pSpawnpointName = "info_ff_teamspawn";
 
 	pSpot = pLastSpawnPoint;
 	// Randomize the start spot
@@ -1349,31 +1333,25 @@ CBaseEntity* CFF_SV_Player::EntSelectSpawnPoint( void )
 	if ( !pSpot )  // skip over the null point
 		pSpot = gEntList.FindEntityByClassname( pSpot, pSpawnpointName );
 
+	bool validSpawnFound = false;
+
 	CBaseEntity *pFirstSpot = pSpot;
 
+	// FF dexter note: this valve code had wacky goto and stuff, simplified
 	do 
 	{
-		if ( pSpot )
+		if ( pSpot && g_pGameRules->IsSpawnPointValid( pSpot, this ) )
 		{
-			// check if pSpot is valid
-			if ( g_pGameRules->IsSpawnPointValid( pSpot, this ) )
-			{
-				if ( pSpot->GetLocalOrigin() == vec3_origin )
-				{
-					pSpot = gEntList.FindEntityByClassname( pSpot, pSpawnpointName );
-					continue;
-				}
-
-				// if so, go to pSpot
-				goto ReturnSpot;
-			}
+			validSpawnFound = true;
+			break;
 		}
-		// increment pSpot
+
 		pSpot = gEntList.FindEntityByClassname( pSpot, pSpawnpointName );
-	} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
+
+	} while ( pSpot != pFirstSpot ); 
 
 	// we haven't found a place to spawn yet,  so kill any guy at the first spawn point and spawn there
-	if ( pSpot )
+	if ( pSpot && !validSpawnFound )
 	{
 		CBaseEntity *ent = NULL;
 		for ( CEntitySphereQuery sphere( pSpot->GetAbsOrigin(), 128 ); (ent = sphere.GetCurrentEntity()) != NULL; sphere.NextEntity() )
@@ -1382,33 +1360,13 @@ CBaseEntity* CFF_SV_Player::EntSelectSpawnPoint( void )
 			if ( ent->IsPlayer() && !(ent->edict() == player) )
 				ent->TakeDamage( CTakeDamageInfo( GetContainingEntity(INDEXENT(0)), GetContainingEntity(INDEXENT(0)), 300, DMG_GENERIC ) );
 		}
-		goto ReturnSpot;
 	}
 
-	if ( !pSpot  )
-	{
+	// note: as a last ditch effort try a default spawn ent
+	if ( !pSpot )
 		pSpot = gEntList.FindEntityByClassname( pSpot, "info_player_start" );
 
-		if ( pSpot )
-			goto ReturnSpot;
-	}
-
-ReturnSpot:
-
-	if ( FFRules()->IsTeamplay() == true )
-	{
-		if ( GetTeamNumber() == TEAM_COMBINE )
-		{
-			g_pLastCombineSpawn = pSpot;
-		}
-		else if ( GetTeamNumber() == TEAM_REBELS ) 
-		{
-			g_pLastRebelSpawn = pSpot;
-		}
-	}
-
 	g_pLastSpawn = pSpot;
-
 	m_flSlamProtectTime = gpGlobals->curtime + 0.5;
 
 	return pSpot;

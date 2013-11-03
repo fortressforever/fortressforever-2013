@@ -12,7 +12,6 @@
 #define FF_PUSHAWAY_THINK_INTERVAL		(1.0f / 20.0f)
 #include "studio.h"
 
-
 enum
 {
 	PLAYER_SOUNDS_CITIZEN = 0,

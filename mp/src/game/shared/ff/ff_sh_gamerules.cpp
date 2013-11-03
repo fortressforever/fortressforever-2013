@@ -47,9 +47,6 @@ ConVar sv_report_client_settings("sv_report_client_settings", "0", FCVAR_GAMEDLL
 
 extern ConVar mp_chattime;
 
-extern CBaseEntity	 *g_pLastCombineSpawn;
-extern CBaseEntity	 *g_pLastRebelSpawn;
-
 #define WEAPON_MAX_DISTANCE_FROM_SPAWN 64
 
 #endif
@@ -116,9 +113,8 @@ static const char *s_PreserveEnts[] =
 	"info_node",
 	"info_target",
 	"info_node_hint",
-	"info_player_deathmatch",
-	"info_player_combine",
-	"info_player_rebel",
+	// FF note, only info_ff_teamspawn is checked for spawnpoints, no fallback anymore
+	"info_ff_teamspawn",
 	"info_map_parameters",
 	"keyframe_rope",
 	"move_rope",
@@ -240,9 +236,6 @@ void CFF_SH_Rules::CreateStandardEntities( void )
 	// Create the entity that will send our data to the client.
 
 	BaseClass::CreateStandardEntities();
-
-	g_pLastCombineSpawn = NULL;
-	g_pLastRebelSpawn = NULL;
 
 #ifdef DBGFLAG_ASSERT
 	CBaseEntity *pEnt = 
@@ -1281,4 +1274,35 @@ const char *CFF_SH_Rules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	return pszFormat;
 }
 
-#endif
+bool CFF_SH_Rules::IsSpawnPointValid( CBaseEntity *pSpot, CBasePlayer *pPlayer  )
+{
+	if ( !pSpot || pSpot->GetLocalOrigin() == vec3_origin )
+		return false;
+
+	// check base class (is there any dudes on the point ? )
+	if ( !BaseClass::IsSpawnPointValid( pSpot, pPlayer ) )
+		return false;
+
+	// might want to challenge this, not sure its really needed to check we're getting a FF player here
+	CFF_SV_Player *pFFPlayer = ToFFPlayer ( pPlayer );
+	if ( !pFFPlayer )
+		return false;
+
+	// FF TODO: run lua predicate against spot
+	/*
+	CFFLuaSC hAllowed;
+		hAllowed.Push( pFFPlayer );
+		if( _scriptman.RunPredicates_LUA( pSpot, &hAllowed, "validspawn" ) )
+		{
+			// Spot is a valid place for us to spawn
+			if( hAllowed.GetBool() )
+			{
+				return true;
+			}
+		}
+
+	*/
+	return true;
+}
+
+#endif // client 

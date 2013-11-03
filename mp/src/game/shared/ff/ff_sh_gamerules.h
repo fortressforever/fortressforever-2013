@@ -136,6 +136,7 @@ public:
 	void	ManageObjectRelocation( void );
 	void    CheckChatForReadySignal( CFF_SH_Player *pPlayer, const char *chatmsg );
 	const char *GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer );
+	bool  IsSpawnPointValid( CBaseEntity *pSpot, CBasePlayer *pPlayer  );
 
 #endif
 	virtual void ClientDisconnected( edict_t *pClient );
