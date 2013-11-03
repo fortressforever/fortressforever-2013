@@ -2080,26 +2080,19 @@ void CGameMovement::FullWalkMove( )
 		TryPlayerMove();
 		// See if we are still in water?
 		CheckWater();
-
-		// FF --> hlstriker: Make sure player isn't swimming before we return
-		if( player->GetWaterLevel() < WL_Waist )
-		{
-			player->m_flWaterJumpTime = 0;
-			return;
-		}
-		// FF <--
 	}
 
 	// If we are swimming in the water, see if we are nudging against a place we can jump up out
 	//  of, and, if so, start out jump.  Otherwise, if we are not moving up, then reset jump timer to 0
 	if ( player->GetWaterLevel() >= WL_Waist ) 
 	{
-		if ( player->GetWaterLevel() == WL_Waist )
+		if ( player->GetWaterLevel() == WL_Waist
+			&& mv->m_vecVelocity[2] > 0 ) // FF --> hlstriker: Make sure the player is actually moving upwards before trying to jump out of water.
 		{
 			CheckWaterJump();
 		}
 
-			// If we are falling again, then we must not trying to jump out of water any more.
+		// If we are falling again, then we must not trying to jump out of water any more.
 		if ( mv->m_vecVelocity[2] < 0 && 
 			 player->m_flWaterJumpTime )
 		{
