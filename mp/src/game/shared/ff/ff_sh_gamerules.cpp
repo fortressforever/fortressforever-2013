@@ -28,10 +28,10 @@
 	#include "iscorer.h"
 	#include "ff_sv_player.h"
 	#include "weapon_hl2mpbasehlmpcombatweapon.h"
-	#include "team.h"
 	#include "voice_gamemgr.h"
 	#include "ff_sv_dll_interface.h"
 	#include "hl2mp_cvars.h"
+	#include "ff_sh_team_manager.h"
 
 #ifdef DEBUG	
 	#include "hl2mp_bot_temp.h"
@@ -96,7 +96,7 @@ static const char *s_PreserveEnts[] =
 	"ai_network",
 	"ai_hint",
 	"ff_gamerules",
-	"team_manager",
+	"ff_team_manager",
 	"player_manager",
 	"env_soundscape",
 	"env_soundscape_proxy",
@@ -113,8 +113,8 @@ static const char *s_PreserveEnts[] =
 	"info_node",
 	"info_target",
 	"info_node_hint",
-	// FF note, only info_ff_teamspawn is checked for spawnpoints, no fallback anymore
 	"info_ff_teamspawn",
+	"info_player_start",
 	"info_map_parameters",
 	"keyframe_rope",
 	"move_rope",
@@ -174,14 +174,26 @@ static const char *s_PreserveEnts[] =
 
 #endif
 
+#ifdef GAME_DLL
 // NOTE: the indices here must match TEAM_TERRORIST, TEAM_CT, TEAM_SPECTATOR, etc.
 char *sTeamNames[] =
 {
 	"Unassigned",
 	"Spectator",
-	"Combine",
-	"Rebels",
+	"Blue",
+	"Red",
+	"Yellow",
+	"Green",
+	"Custom1",
+	"Custom2",
+	"Custom3",
+	"Custom4",
+	"Custom5",
+	"Custom6",
+	"Custom7",
+	"Custom8",
 };
+#endif
 
 CFF_SH_Rules::CFF_SH_Rules()
 {
@@ -189,7 +201,7 @@ CFF_SH_Rules::CFF_SH_Rules()
 	// Create the team managers
 	for ( int i = 0; i < ARRAYSIZE( sTeamNames ); i++ )
 	{
-		CTeam *pTeam = static_cast<CTeam*>(CreateEntityByName( "team_manager" ));
+		CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
 		pTeam->Init( sTeamNames[i], i );
 
 		g_Teams.AddToTail( pTeam );

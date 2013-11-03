@@ -28,8 +28,10 @@ $Project
 			{
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_gamerules.h"
+				$File   "$SRCDIR\game\shared\ff\ff_sh_shareddefs.h"
+				$File   "$SRCDIR\game\shared\ff\ff_sh_team_manager.h"
+				$File   "$SRCDIR\game\shared\ff\ff_sh_team_manager.cpp"
 			}
-
 		}
 
 		// folder structure has to match for remove to work correctly..

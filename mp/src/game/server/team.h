@@ -86,8 +86,8 @@ public:
 	CNetworkString( m_szTeamname, MAX_TEAM_NAME_LENGTH );
 	CNetworkVar( int, m_iScore );
 	CNetworkVar( int, m_iRoundsWon );
-	int		m_iDeaths;
-
+	//FF: network deaths cuz scoreboard (and MANY players) care int		m_iDeaths;
+	CNetworkVar( int, m_iDeaths );
 	// Spawnpoints
 	int		m_iLastSpawn;		// Index of the last spawnpoint used
 
