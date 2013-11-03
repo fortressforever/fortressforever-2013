@@ -9,9 +9,9 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE"
-		$EnableC++Exceptions			"Yes (/EHsc)" 
-		$PreprocessorDefinitions		"LUA_OPNAMES"
-		$CompileAs						"Compile as C Code (/TC)"
+		$PreprocessorDefinitions	"LUA_OPNAMES"
+		$CompileAs			"Compile as C Code (/TC)"
+		$GCC_ExtraCompilerFlags		"-x c" [$LINUXALL] // force compile as C on linux, it will build with G++ by default
 	}
 }
 
