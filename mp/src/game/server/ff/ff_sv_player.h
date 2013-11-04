@@ -58,7 +58,7 @@ public:
 	virtual void PreThink( void );
 	virtual void PlayerDeathThink( void );
 	virtual void SetAnimation( PLAYER_ANIM playerAnim );
-	virtual bool HandleCommand_JoinTeam( int team );
+	//virtual bool HandleCommand_Class( const char* className );
 	virtual bool ClientCommand( const CCommand &args );
 	virtual void CreateViewModel( int viewmodelindex = 0 );
 	virtual bool BecomeRagdollOnClient( const Vector &force );
@@ -137,7 +137,10 @@ public:
 
 	virtual bool	CanHearAndReadChatFrom( CBasePlayer *pPlayer );
 
-		
+	// called by team manager once a valid team is found, but before switching
+	void PreChangeTeam( int iOldTeam, int iNewTeam );
+	// called by team manager once a valid team is found, and after new team set
+	void PostChangeTeam( int iOldTeam, int iNewTeam );
 private:
 
 	CNetworkQAngle( m_angEyeAngles );

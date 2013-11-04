@@ -8,7 +8,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-
 #ifdef GAME_DLL
 
 static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal );
@@ -59,7 +58,7 @@ static void ClassRestrictionChange( IConVar *var, const char *pOldString, float 
 		int idx = -1;
 		for ( int i = 0; i < CLASS_COUNT; i ++)
 		{
-			if ( Q_strcmp( conVar->GetName(),  classRestrictionCvars[i].GetName() ) == 0 )
+			if ( FStrEq( conVar->GetName(), classRestrictionCvars[i].GetName() ) )
 			{
 				idx = i;
 				break;
@@ -223,6 +222,148 @@ int CFF_SH_TeamManager::GetTeamLimits( void )
 	return m_iMaxPlayers;
 }
 
+#ifdef GAME_DLL
+bool CFF_SH_TeamManager::HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const char *pTeamName )
+{
+	if ( !pTeamName )
+		return false;
+
+	int iOldTeam = pPlayer.GetTeamNumber();
+	int iTeam = TEAM_UNASSIGNED;
+
+	if ( FStrEq( pTeamName, "auto" ) )
+	{
+		iTeam = PickAutoJoinTeam( );
+	}
+	else if ( FStrEq( pTeamName, "spec" ) )
+	{
+		iTeam = TEAM_SPECTATOR;
+	}
+	else if ( FStrEq( pTeamName, "red" ) ) 
+	{
+		iTeam = TEAM_RED;
+	}
+	else if ( FStrEq( pTeamName, "blue" ) ) 
+	{
+		iTeam = TEAM_BLUE;
+	}
+	else if ( FStrEq( pTeamName, "yellow" ) ) 
+	{
+		iTeam = TEAM_YELLOW;
+	}
+	else if ( FStrEq( pTeamName, "green" ) ) 
+	{
+		iTeam = TEAM_GREEN;
+	}
+	else if ( FStrEq( pTeamName, "custom1" ) ) 
+	{
+		iTeam = TEAM_CUSTOM1;
+	}
+	else if ( FStrEq( pTeamName, "custom2" ) ) 
+	{
+		iTeam = TEAM_CUSTOM2;
+	}
+	else if ( FStrEq( pTeamName, "custom3" ) ) 
+	{
+		iTeam = TEAM_CUSTOM3;
+	}
+	else if ( FStrEq( pTeamName, "custom4" ) ) 
+	{
+		iTeam = TEAM_CUSTOM4;
+	}
+	else if ( FStrEq( pTeamName, "custom5" ) ) 
+	{
+		iTeam = TEAM_CUSTOM5;
+	}
+	else if ( FStrEq( pTeamName, "custom6" ) ) 
+	{
+		iTeam = TEAM_CUSTOM6;
+	}
+	else if ( FStrEq( pTeamName, "custom7" ) ) 
+	{
+		iTeam = TEAM_CUSTOM7;
+	}
+	else if ( FStrEq( pTeamName, "custom8" ) ) 
+	{
+		iTeam = TEAM_CUSTOM8;
+	}
+	else 
+	{
+		// no known hardcoded team name, 
+		// try to find team by current team names just for the hell of it
+		for ( int i = 0; i < g_Teams.Count(); ++i )
+		{
+			if (!g_Teams[i])
+				continue;
+			if ( FStrEq( g_Teams[i]->GetName(), pTeamName ) )
+			{
+				iTeam = g_Teams[i]->GetTeamNumber( );
+				break;
+			}
+		}
+	}
+
+	if ( iTeam == TEAM_UNASSIGNED )
+	{
+		// TODO: say nothin' found poor sap
+		return false;
+	}
+
+	// check stupid stuff first
+	if ( iOldTeam == iTeam )
+	{
+		// wants to join same team
+		return false;
+	}
+
+	CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( iTeam );
+	if ( !pTeam )
+	{
+		// non active team or something fucked
+		return false;
+	}
+
+	// make sure isnt full 
+	if ( pTeam->IsTeamFull() )
+	{
+		return false;
+	}
+
+	// TODO: Lua player_switchteam predicate here
+
+	// refactored this, so each step of the process is seperate chunks,
+	// since so much per-class state is handled in each
+	pPlayer.PreChangeTeam( iOldTeam, iTeam );
+	pPlayer.ChangeTeam( iTeam );
+	pPlayer.PostChangeTeam( iOldTeam, iTeam );
+	return true;
+}
+
+// fun fact, on ep1 code this was called UTIL_PickRandomTeam, but it wasnt random, it was auto join
+int CFF_SH_TeamManager::PickAutoJoinTeam( )
+{
+	// TODO:
+	return TEAM_BLUE;
+}
+
+bool CFF_SH_TeamManager::IsTeamFull() const
+{
+	if (m_iMaxPlayers == 0)
+		return false;
+
+	int numActive = 0;	
+	for( int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		CFF_SV_Player *pPlayer = (CFF_SV_Player *) UTIL_PlayerByIndex( i );
+		if( pPlayer && pPlayer->GetTeamNumber( ) == GetTeamNumber( ) )
+			numActive++;
+	}
+
+	return numActive > m_iMaxPlayers;
+}
+
+#endif
+
 //ConCommand ff_team( "ff_team",
 //ConCommand ff_team( "ffdbg_dump_teams",
 #if defined (_DEBUG) && defined (GAME_DLL)
@@ -246,3 +387,5 @@ void DebugSetTeamName_f( const CCommand &args )
 }
 ConCommand cc_ffdbg_setteamname("ffdbg_set_team_name",  DebugSetTeamName_f);
 #endif
+
+

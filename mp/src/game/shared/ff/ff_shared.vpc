@@ -27,6 +27,7 @@ $Project
 			{
 				$File	"$SRCDIR\game\shared\ff\ff_sh_player.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_player.h"
+				$File 	"$SRCDIR\game\shared\ff\ff_sh_playercommands.h"
 			}
 			$Folder "Game"
 			{

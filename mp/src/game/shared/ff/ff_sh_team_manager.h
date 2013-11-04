@@ -5,10 +5,12 @@
 #pragma once
 #endif
 
+#include "cbase.h"
 #include "ff_sh_shareddefs.h"
 
 #ifdef GAME_DLL
 #include "team.h"
+#include "ff_sv_player.h"
 #else
 #include "c_team.h"
 #define CTeam C_Team
@@ -61,6 +63,10 @@ public:
 	void UpdateClassLimit( int idx );
 	void UpdateAllClassLimits( void );
 
+	static bool HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const char* pTeam );
+	static int PickAutoJoinTeam( );
+
+	bool IsTeamFull() const;
 #endif // GAME_DLL
 
 	// shared getters

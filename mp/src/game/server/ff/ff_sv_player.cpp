@@ -25,6 +25,7 @@
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 
 #include "ilagcompensationmanager.h"
+#include "ff_sh_team_manager.h"
 
 // Don't alias here
 #if defined( CFF_SH_Player )
@@ -947,79 +948,26 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 	}
 }
 
-bool CFF_SV_Player::HandleCommand_JoinTeam( int team )
-{
-	if ( !GetGlobalTeam( team ) || team == 0 )
-	{
-		Warning( "HandleCommand_JoinTeam( %d ) - invalid team index.\n", team );
-		return false;
-	}
-
-	if ( team == TEAM_SPECTATOR )
-	{
-		// Prevent this is the cvar is set
-		if ( !mp_allowspectators.GetInt() )
-		{
-			ClientPrint( this, HUD_PRINTCENTER, "#Cannot_Be_Spectator" );
-			return false;
-		}
-
-		if ( GetTeamNumber() != TEAM_UNASSIGNED && !IsDead() )
-		{
-			m_fNextSuicideTime = gpGlobals->curtime;	// allow the suicide to work
-
-			CommitSuicide();
-
-			// add 1 to frags to balance out the 1 subtracted for killing yourself
-			IncrementFragCount( 1 );
-		}
-
-		ChangeTeam( TEAM_SPECTATOR );
-
-		return true;
-	}
-	else
-	{
-		StopObserverMode();
-		State_Transition(STATE_ACTIVE);
-	}
-
-	// Switch their actual team...
-	ChangeTeam( team );
-
-	return true;
-}
-
 bool CFF_SV_Player::ClientCommand( const CCommand &args )
 {
-	if ( FStrEq( args[0], "spectate" ) )
+	if ( FStrEq( args[0], "spectate" ) || FStrEq( args[0], "team" ) )
 	{
 		if ( ShouldRunRateLimitedCommand( args ) )
 		{
-			// instantly join spectators
-			HandleCommand_JoinTeam( TEAM_SPECTATOR );	
-		}
-		return true;
-	}
-	else if ( FStrEq( args[0], "jointeam" ) ) 
-	{
-		if ( args.ArgC() < 2 )
-		{
-			Warning( "Player sent bad jointeam syntax\n" );
-		}
+			const char *team;
 
-		if ( ShouldRunRateLimitedCommand( args ) )
-		{
-			int iTeam = atoi( args[1] );
-			HandleCommand_JoinTeam( iTeam );
+			if ( args.ArgC() < 2) // || FStrEq( args[0], "spectate" ) )
+				return false;
+			if ( FStrEq( args[0], "spectate" ) )
+				team = "spec";
+			else 
+				team = args[1];
+			// let the team manager earn its namesake and handle that crap
+			return CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, team );
 		}
 		return true;
 	}
-	else if ( FStrEq( args[0], "joingame" ) )
-	{
-		return true;
-	}
-
+	
 	return BaseClass::ClientCommand( args );
 }
 
@@ -1589,4 +1537,27 @@ bool CFF_SV_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 		return false;
 
 	return true;
+}
+
+
+// called by team manager once a valid team is found, but before switching,
+// do any eg class cleanup here etc
+void CFF_SV_Player::PreChangeTeam( int iOldTeam, int iNewTeam )
+{
+	// set team unassigned
+	// set class unassigned
+	// remove items
+	// special infection stuff, 
+	// force uncloak lol
+	// clear state (might do w/ player func)
+	// check kill
+	// lua player_killed
+}
+
+// called by team manager once a valid team is found, and after new team set
+// do any init and respawn etc
+void CFF_SV_Player::PostChangeTeam( int iOldTeam, int iNewTeam )
+{
+	// reset state
+	// spawn called
 }

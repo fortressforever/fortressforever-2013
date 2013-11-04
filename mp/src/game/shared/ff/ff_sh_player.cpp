@@ -15,6 +15,7 @@
 #include "ff_sv_player.h"
 #endif
 
+#include "ff_sh_playercommands.h"
 #include "engine/IEngineSound.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 
