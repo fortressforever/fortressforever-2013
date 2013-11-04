@@ -40,6 +40,9 @@ $Project "Server (FF)"
 				$File	"ff\ff_sv_player.cpp"
 				$File	"ff\ff_sv_player.h"
 			}
+
+			$File	"ff\ff_sv_util.cpp"
+			$File	"ff\ff_sv_util.h"
 		}
 
 	
