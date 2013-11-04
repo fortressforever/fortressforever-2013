@@ -600,5 +600,10 @@ bool				UTIL_IsHolidayActive( /*EHoliday*/ int eHoliday );
 // holidays overlapping, the list order will act as priority.
 const char		   *UTIL_GetActiveHolidayString();
 
+#ifdef CLIENT_DLL
+#define UTIL_VarArgs VarArgs
+#else
+#define VarArgs UTIL_VarArgs
+#endif
 
 #endif // UTIL_SHARED_H
