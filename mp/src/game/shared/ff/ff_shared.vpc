@@ -11,6 +11,10 @@ $Project
 			{
 				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman.h"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman_game.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman_game.h"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_luautil.cpp"
+				$File	"$SRCDIR\game\shared\ff\ff_sh_luautil.h"
 			}
 			$Folder "Movement"
 			{

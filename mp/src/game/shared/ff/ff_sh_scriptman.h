@@ -1,8 +1,6 @@
-
-// ff_sh_scriptman.h
-
 #ifndef FF_SH_SCRIPTMAN_H
 #define FF_SH_SCRIPTMAN_H
+#pragma once
 
 /////////////////////////////////////////////////////////////////////////////
 // includes
@@ -30,37 +28,36 @@ class CFFLuaSC;
 class CFF_SH_ScriptManager
 {
 public:
+	DECLARE_CLASS_NOBASE( CFF_SH_ScriptManager );
 	// 'structors
 	CFF_SH_ScriptManager();
 	~CFF_SH_ScriptManager();
 
-public:
 	// inserts the lua file into the script environment
-	bool LoadFile(const char* filePath);
-	void MakeSafe();
+	virtual bool LoadFile(const char* filePath);
+	// removes unsafe functions from the Lua environment or makes them safer
+	virtual void MakeEnvironmentSafe();
+	virtual void SetupEnvironmentForFF();
 
-public:
 	// initializes the script VM
-	void Init();
+	virtual bool Init();
 	// closes the script VM
-	void Shutdown();
+	virtual void Shutdown();
+	
+	virtual void LevelInit(const char* szMapName) {};
+	virtual void LevelShutdown() {};
 
-	// loads the scripts for the level
-	void LevelInit(const char* szMapName);
-	// cleans up the scripts for the most recent level
-	void LevelShutdown();
+	void LuaMsg( const tchar* pMsg, ... ) FMTFUNCTION( 1, 2 );
+	void LuaWarning( const tchar* pMsg, ... ) FMTFUNCTION( 1, 2 );
 
-private:
-	// surround code that loads scripts to capture crc checksum
-	// of the scripts that are loaded
-	void BeginScriptLoad();
-	void EndScriptLoad();
+protected:
+	virtual const char* GetMsgIdentifier() { return "Generic"; };
+	virtual const char* GetPackagePathRoot() { return "/"; };
+	
+	/// Called from LoadFile
+	virtual void OnScriptLoad(const char* szFileName, const char* szFileContents) {};
 
-private:
-	// called when a script is loaded. internally computes the
-	// crc checksum of the file contents
-	void OnScriptLoad(const char* szFileName, const char* szFileContents);
-
+/*
 public:
 	// sets a global variable in the script environment
 	static void SetVar( lua_State *L, const char *name, const char *value );
@@ -89,29 +86,15 @@ public:
 public:
 	int RunPredicates( CBaseEntity *pObject, CBaseEntity *pEntity, const char *szFunctionName = NULL);
 	bool RunPredicates_LUA( CBaseEntity *pObject, CFFLuaSC *pContext, const char *szFunctionName );
+*/
 
 public:
 	// returns the lua interpreter
 	lua_State* GetLuaState() const { return L; }
-	bool ScriptExists( void ) const { return m_ScriptExists; }
 
-	// returns the crc checksum of the currently active script
-	CRC32_t GetScriptCRC() const { return m_scriptCRC; }
-
-private:
-	// private data
-	lua_State*	L;				// lua VM
-	bool		m_ScriptExists;
-	bool		m_isLoading;
-	CRC32_t		m_scriptCRC;
+protected:
+	lua_State*	L;					///< Lua VM
 };
-
-/////////////////////////////////////////////////////////////////////////////
-// global externs
-extern CFF_SH_ScriptManager g_GameScriptManager;
-#ifdef CLIENT_DLL
-extern CFF_SH_ScriptManager g_UIScriptManager;
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #endif

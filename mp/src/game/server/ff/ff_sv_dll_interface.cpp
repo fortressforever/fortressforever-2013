@@ -1,7 +1,7 @@
 #include "cbase.h"
 #include "ff_sv_dll_interface.h"
 
-#include "ff_sh_scriptman.h"
+#include "ff_sh_scriptman_game.h"
 
 bool CFF_SV_DLL_Interface::DLLInit(CreateInterfaceFn engineFactory, CreateInterfaceFn physicsFactory, CreateInterfaceFn fileSystemFactory, CGlobalVars *pGlobals)
 {

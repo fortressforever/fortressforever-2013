@@ -2,7 +2,8 @@
 #include "ff_cl_dll_interface.h"
 
 #include "steam/steam_api.h"
-#include "ff_sh_scriptman.h"
+#include "ff_cl_scriptman_ui.h"
+#include "ff_sh_scriptman_game.h"
 
 #define CLIENT_DLL_INTERFACE_VERSION		"VClient017"
 
@@ -13,8 +14,6 @@ int CFF_CL_DLL_Interface::Init( CreateInterfaceFn appSystemFactory, CreateInterf
 	// start the Lua VM
 	g_UIScriptManager.Init();
 	g_GameScriptManager.Init();
-
-	g_UIScriptManager.LoadFile( "ui/init.lua" );
 	
 	// Test steam API
 	uint32 appId = steamapicontext->SteamUtils()->GetAppID();

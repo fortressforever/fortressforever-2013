@@ -35,6 +35,11 @@ $Project "Client (FF)"
 				$File	"ff\ff_cl_dll_interface.cpp"
 				$File	"ff\ff_cl_dll_interface.h"
 			}
+			$Folder "Lua"
+			{
+				$File 	"ff\ff_cl_scriptman_ui.cpp"
+				$File 	"ff\ff_cl_scriptman_ui.h"
+			}
 			$Folder "Player"
 			{
 				$File	"ff\ff_cl_player.cpp"
