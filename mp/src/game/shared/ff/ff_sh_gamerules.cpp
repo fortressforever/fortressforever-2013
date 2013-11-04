@@ -178,20 +178,20 @@ static const char *s_PreserveEnts[] =
 // NOTE: the indices here must match TEAM_TERRORIST, TEAM_CT, TEAM_SPECTATOR, etc.
 char *sTeamNames[] =
 {
-	"Unassigned",
-	"Spectator",
-	"Blue",
-	"Red",
-	"Yellow",
-	"Green",
-	"Custom1",
-	"Custom2",
-	"Custom3",
-	"Custom4",
-	"Custom5",
-	"Custom6",
-	"Custom7",
-	"Custom8",
+	"#FF_TEAM_UNASSIGNED",
+	"#FF_TEAM_SPECTATOR",
+	"#FF_TEAM_BLUE",
+	"#FF_TEAM_RED",
+	"#FF_TEAM_YELLOW",
+	"#FF_TEAM_GREEN",
+	"#FF_TEAM_CUSTOM1",
+	"#FF_TEAM_CUSTOM2",
+	"#FF_TEAM_CUSTOM3",
+	"#FF_TEAM_CUSTOM4",
+	"#FF_TEAM_CUSTOM5",
+	"#FF_TEAM_CUSTOM6",
+	"#FF_TEAM_CUSTOM7",
+	"#FF_TEAM_CUSTOM8",
 };
 #endif
 

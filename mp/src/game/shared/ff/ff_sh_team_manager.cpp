@@ -225,7 +225,7 @@ int CFF_SH_TeamManager::GetTeamLimits( void )
 
 //ConCommand ff_team( "ff_team",
 //ConCommand ff_team( "ffdbg_dump_teams",
-#if defined (DEBUG) && defined (GAME_DLL)
+#if defined (_DEBUG) && defined (GAME_DLL)
 void DebugSetTeamName_f( const CCommand &args ) 
 {
 	if ( args.ArgC() < 2 )
