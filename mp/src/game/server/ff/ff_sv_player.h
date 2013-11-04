@@ -141,6 +141,8 @@ public:
 	void PreChangeTeam( int iOldTeam, int iNewTeam );
 	// called by team manager once a valid team is found, and after new team set
 	void PostChangeTeam( int iOldTeam, int iNewTeam );
+
+	void KillPlayer( void );
 private:
 
 	CNetworkQAngle( m_angEyeAngles );

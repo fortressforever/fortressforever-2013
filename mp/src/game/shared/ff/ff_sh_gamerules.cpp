@@ -199,6 +199,9 @@ CFF_SH_Rules::CFF_SH_Rules()
 {
 #ifndef CLIENT_DLL
 	// Create the team managers
+	// TODO: right now this creates a team for every team name string,
+	// hook this into lua and have it create teams as needed per map
+	// or something cool like that 
 	for ( int i = 0; i < ARRAYSIZE( sTeamNames ); i++ )
 	{
 		CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
@@ -207,7 +210,9 @@ CFF_SH_Rules::CFF_SH_Rules()
 		g_Teams.AddToTail( pTeam );
 	}
 
-	m_bTeamPlayEnabled = teamplay.GetBool();
+	// Dexter: slammed this to always true instead of the cvar for now
+	//m_bTeamPlayEnabled = teamplay.GetBool();
+	m_bTeamPlayEnabled = true;
 	m_flIntermissionEndTime = 0.0f;
 	m_flGameStartTime = 0;
 

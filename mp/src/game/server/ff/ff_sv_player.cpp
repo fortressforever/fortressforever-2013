@@ -1544,7 +1544,6 @@ bool CFF_SV_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 // do any eg class cleanup here etc
 void CFF_SV_Player::PreChangeTeam( int iOldTeam, int iNewTeam )
 {
-	// set team unassigned
 	// set class unassigned
 	// remove items
 	// special infection stuff, 
@@ -1552,6 +1551,14 @@ void CFF_SV_Player::PreChangeTeam( int iOldTeam, int iNewTeam )
 	// clear state (might do w/ player func)
 	// check kill
 	// lua player_killed
+	RemoveAllItems( true );
+
+	if ( IsAlive() && GetTeamNumber( ) >= TEAM_BLUE )
+	{
+		KillPlayer( );
+
+		// TODO: lua killed predicate
+	}
 }
 
 // called by team manager once a valid team is found, and after new team set
@@ -1560,4 +1567,22 @@ void CFF_SV_Player::PostChangeTeam( int iOldTeam, int iNewTeam )
 {
 	// reset state
 	// spawn called
+
+	if ( iOldTeam == TEAM_SPECTATOR )
+	{
+		StopObserverMode( );
+	}
+
+	// dont force spawn here right now, death think will spawn the player
+	//Spawn( );
+}
+
+
+void CFF_SV_Player::KillPlayer( void ) 
+{
+	// TODO: FF stuff
+	m_iHealth = 0;
+	// slam it
+	SetThink(&CBasePlayer::PlayerDeathThink);
+	SetNextThink(gpGlobals->curtime);
 }

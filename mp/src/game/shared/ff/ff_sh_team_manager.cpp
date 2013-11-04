@@ -343,6 +343,9 @@ bool CFF_SH_TeamManager::HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const 
 int CFF_SH_TeamManager::PickAutoJoinTeam( )
 {
 	// TODO:
+	// it is me, the auto picker thingy majig
+
+
 	return TEAM_BLUE;
 }
 
@@ -351,7 +354,7 @@ bool CFF_SH_TeamManager::IsTeamFull() const
 	if (m_iMaxPlayers == 0)
 		return false;
 
-	int numActive = 0;	
+	int numActive = 0; 
 	for( int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
 		CFF_SV_Player *pPlayer = (CFF_SV_Player *) UTIL_PlayerByIndex( i );
@@ -359,7 +362,7 @@ bool CFF_SH_TeamManager::IsTeamFull() const
 			numActive++;
 	}
 
-	return numActive > m_iMaxPlayers;
+	return m_iMaxPlayers == 0 ||numActive > m_iMaxPlayers; // GetNumPlayers( ) > m_iMaxPlayers;
 }
 
 #endif
@@ -386,6 +389,19 @@ void DebugSetTeamName_f( const CCommand &args )
 	DevMsg("Team name after set ='%s'\n", pTeam->GetName());
 }
 ConCommand cc_ffdbg_setteamname("ffdbg_set_team_name",  DebugSetTeamName_f);
+
+void DebugCurTeam_f( const CCommand &args )
+{
+	CBasePlayer* pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer ) 
+		return;
+	CTeam *pPlayerTeam = pPlayer->GetTeam();
+	if ( !pPlayerTeam )
+		return;
+	pPlayerTeam->GetNumPlayers( );
+	DevMsg("Player team=%i name='%s' players on team=%d\n", pPlayerTeam->GetTeamNumber( ), pPlayerTeam->GetName( ), pPlayerTeam->GetNumPlayers( ) );
+}
+ConCommand cc_ffdbg_curteam("ffdbg_curteam",  DebugCurTeam_f);
 #endif
 
 
