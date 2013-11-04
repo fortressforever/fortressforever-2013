@@ -21,6 +21,21 @@ void CFF_SV_DLL_Interface::DLLShutdown( void )
 	BaseClass::DLLShutdown();
 }
 
+bool CFF_SV_DLL_Interface::LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background )
+{
+	bool ret = BaseClass::LevelInit( pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background );
+
+	g_GameScriptManager.LevelInit( pMapName );
+
+	return ret;
+}
+void CFF_SV_DLL_Interface::LevelShutdown()
+{
+	g_GameScriptManager.LevelShutdown();
+
+	BaseClass::LevelShutdown();
+}
+
 /** Sets player limits, required implementation
 */
 void CServerGameClients::GetPlayerLimits( int& minplayers, int& maxplayers, int &defaultMaxPlayers ) const

@@ -3,6 +3,15 @@
 
 #include "lua.hpp"
 
+void LUAUTIL_RemoveVarsFromGlobal( lua_State *L, const char** ppszVars )
+{
+	for( int i=0; ppszVars[i] != NULL; ++i )
+	{
+		lua_pushnil(L);
+		lua_setglobal(L, ppszVars[i]);
+	}
+}
+
 void LUAUTIL_RemoveKeysFromTable( lua_State *L, const char *pszTableName, const char** ppszKeys )
 {
 	lua_getglobal(L, pszTableName);

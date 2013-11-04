@@ -48,6 +48,27 @@ void CFF_CL_DLL_Interface::Shutdown( void )
 	BaseClass::Shutdown();
 }
 
+void CFF_CL_DLL_Interface::LevelInitPreEntity( const char *pMapName )
+{
+	BaseClass::LevelInitPreEntity( pMapName );
+
+	g_UIScriptManager.LevelInit( pMapName );
+	g_GameScriptManager.LevelInit( pMapName );
+}
+
+void CFF_CL_DLL_Interface::LevelInitPostEntity()
+{
+	BaseClass::LevelInitPostEntity();
+}
+
+void CFF_CL_DLL_Interface::LevelShutdown( void )
+{
+	g_UIScriptManager.LevelShutdown();
+	g_GameScriptManager.LevelShutdown();
+
+	BaseClass::LevelShutdown();
+}
+
 CFF_CL_DLL_Interface gFFClient;
 IBaseClientDLL *clientdll = &gFFClient;
 

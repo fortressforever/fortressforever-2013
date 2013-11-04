@@ -47,8 +47,8 @@ public:
 	virtual void LevelInit(const char* szMapName) {};
 	virtual void LevelShutdown() {};
 
-	void LuaMsg( const tchar* pMsg, ... ) FMTFUNCTION( 1, 2 );
-	void LuaWarning( const tchar* pMsg, ... ) FMTFUNCTION( 1, 2 );
+	void LuaMsg( const tchar* pMsg, ... );
+	void LuaWarning( const tchar* pMsg, ... );
 
 protected:
 	virtual const char* GetMsgIdentifier() { return "Generic"; };

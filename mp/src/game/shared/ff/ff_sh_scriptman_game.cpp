@@ -62,6 +62,7 @@ bool CFF_SH_ScriptManager_Game::Init()
 	return bInitSuccessful;
 }
 
+/////////////////////////////////////////////////////////////////////////////
 void CFF_SH_ScriptManager_Game::LevelInit(const char* szMapName)
 {
 	const char* default_luafile = "maps/default.lua";
@@ -85,15 +86,15 @@ void CFF_SH_ScriptManager_Game::LevelInit(const char* szMapName)
 	// That way servers can keep their suffix set without worrying about every map having whatever game mode they always want to use.
 	if ( sv_mapluasuffix.GetString()[0] != '0' )
 	{
-		Msg( "[SCRIPT] sv_mapluasuffix set to %s | finding maps\\%s__%s__.lua\n", sv_mapluasuffix.GetString(), szMapName, sv_mapluasuffix.GetString() );
+		LuaMsg( "sv_mapluasuffix set to %s | finding maps\\%s__%s__.lua\n", sv_mapluasuffix.GetString(), szMapName, sv_mapluasuffix.GetString() );
 		if ( filesystem->FileExists( UTIL_VarArgs( "maps/%s__%s__.lua", szMapName, sv_mapluasuffix.GetString() ) ) )
 		{
 			Q_snprintf( filename, sizeof(filename), "maps/%s__%s__.lua", szMapName, sv_mapluasuffix.GetString() );
-			Msg( "[SCRIPT] maps\\%s__%s__.lua found\n", szMapName, sv_mapluasuffix.GetString() );
+			LuaMsg( "maps\\%s__%s__.lua found\n", szMapName, sv_mapluasuffix.GetString() );
 		}
 		else
 		{
-			Msg( "[SCRIPT] maps\\%s__%s__.lua not found | reverting to maps\\%s.lua\n", szMapName, sv_mapluasuffix.GetString(), szMapName);
+			LuaMsg( "maps\\%s__%s__.lua not found | reverting to maps\\%s.lua\n", szMapName, sv_mapluasuffix.GetString(), szMapName);
 		}
 	}
 
@@ -101,15 +102,15 @@ void CFF_SH_ScriptManager_Game::LevelInit(const char* szMapName)
 	if( sv_luaglobalscript.GetString()[0] != '0' )
 	{
 		const char* scriptname = sv_luaglobalscript.GetString();
-		Msg("[SCRIPT] sv_luaglobalscript set to %s | loading global script maps maps\\globalscripts\\%s.lua\n", scriptname, scriptname );
+		LuaMsg("sv_luaglobalscript set to %s | loading global script maps maps\\globalscripts\\%s.lua\n", scriptname, scriptname );
 		if( filesystem->FileExists( UTIL_VarArgs( "maps/globalscripts/%s.lua", scriptname ) ) )
 		{
 			Q_snprintf( globalscript_filename, sizeof(globalscript_filename), "maps/globalscripts/%s.lua", scriptname );
-			Msg("[SCRIPT] maps\\globalscripts\\%s.lua found\n", scriptname );\
+			LuaMsg("maps\\globalscripts\\%s.lua found\n", scriptname );\
 		}
 		else
 		{
-			Msg("[SCRIPT] global script maps\\globalscripts\\%s.lua not found - nothing loaded post map lua.\n", scriptname );
+			LuaMsg("global script maps\\globalscripts\\%s.lua not found - nothing loaded post map lua.\n", scriptname );
 		}
 	}
 
@@ -120,7 +121,7 @@ void CFF_SH_ScriptManager_Game::LevelInit(const char* szMapName)
 		m_bScriptLoaded = LoadFile(filename);
 	else
 	{
-		Msg("[SCRIPT] File %s not found! Loaded fallback lua %s\n", filename, default_luafile);
+		LuaMsg("File %s not found! Loaded fallback lua %s\n", filename, default_luafile);
 		m_bScriptLoaded = LoadFile(default_luafile);
 	}
 

@@ -56,6 +56,7 @@ bool CFF_CL_ScriptManager_UI::Init()
 	return bInitSuccessful;
 }
 
+/////////////////////////////////////////////////////////////////////////////
 void CFF_CL_ScriptManager_UI::LevelInit(const char* szMapName)
 {
 

@@ -13,21 +13,19 @@ class CFF_SV_DLL_Interface : public CServerGameDLL
 	// <-- Extended functions (meaning the BaseClass function is always called)
 	virtual bool			DLLInit(CreateInterfaceFn engineFactory, CreateInterfaceFn physicsFactory, CreateInterfaceFn fileSystemFactory, CGlobalVars *pGlobals);
 	virtual void			DLLShutdown( void );
+
+	virtual bool			LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background );
+	virtual void			LevelShutdown( void );
 	// --> Extended functions
 
 	/*
 public:
-	virtual bool			DLLInit(CreateInterfaceFn engineFactory, CreateInterfaceFn physicsFactory, 
-										CreateInterfaceFn fileSystemFactory, CGlobalVars *pGlobals);
-	virtual void			DLLShutdown( void );
 	// Get the simulation interval (must be compiled with identical values into both client and game .dll for MOD!!!)
 	virtual bool			ReplayInit( CreateInterfaceFn fnReplayFactory );
 	virtual float			GetTickInterval( void ) const;
 	virtual bool			GameInit( void );
 	virtual void			GameShutdown( void );
-	virtual bool			LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background );
 	virtual void			ServerActivate( edict_t *pEdictList, int edictCount, int clientMax );
-	virtual void			LevelShutdown( void );
 	virtual void			GameFrame( bool simulating ); // could be called multiple times before sending data to clients
 	virtual void			PreClientUpdate( bool simulating ); // called after all GameFrame() calls, before sending data to clients
 

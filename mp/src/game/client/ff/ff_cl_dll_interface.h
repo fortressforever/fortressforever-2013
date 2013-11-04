@@ -19,6 +19,10 @@ public:
 	// <-- Extended functions (meaning the BaseClass function is always called)
 	virtual int						Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physicsFactory, CGlobalVarsBase *pGlobals );
 	virtual void					Shutdown( void );
+	
+	virtual void					LevelInitPreEntity( const char *pMapName );
+	virtual void					LevelInitPostEntity();
+	virtual void					LevelShutdown( void );
 	// --> Extended functions
 	
 	/*
@@ -26,10 +30,6 @@ public:
 
 	virtual bool					ReplayInit( CreateInterfaceFn fnReplayFactory );
 	virtual bool					ReplayPostInit();
-
-	virtual void					LevelInitPreEntity( const char *pMapName );
-	virtual void					LevelInitPostEntity();
-	virtual void					LevelShutdown( void );
 
 	virtual ClientClass				*GetAllClasses( void );
 

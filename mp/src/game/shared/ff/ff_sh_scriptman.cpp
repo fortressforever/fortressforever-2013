@@ -157,6 +157,10 @@ void CFF_SH_ScriptManager::MakeEnvironmentSafe()
 
 	// See: http://lua-users.org/wiki/SandBoxes for a general overview of the safety of Lua functions
 
+	// dofile, load, loadfile, loadstring
+	const char* ppszUnsafeGlobalFunctions[] = { "dofile", "load", "loadfile", "loadstring", NULL };
+	LUAUTIL_RemoveVarsFromGlobal( L, ppszUnsafeGlobalFunctions );
+
 	// os.*
 	const char* ppszUnsafeOSFunctions[] = { "execute", "exit", "getenv", "remove", "rename", "setlocale", NULL };
 	LUAUTIL_RemoveKeysFromTable( L, LUA_OSLIBNAME, ppszUnsafeOSFunctions );
