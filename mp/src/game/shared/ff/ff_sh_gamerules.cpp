@@ -1356,7 +1356,11 @@ bool CFF_SH_Rules::IsSpawnPointValid( CBaseEntity *pSpot, CBasePlayer *pPlayer  
 	if ( !pFFPlayer )
 		return false;
 
+
 	// FF TODO: run lua predicate against spot
+	// in meantime: check team
+	if ( pSpot->GetTeamNumber( ) != pFFPlayer->GetTeamNumber( ) )
+		return false;
 	/*
 	CFFLuaSC hAllowed;
 		hAllowed.Push( pFFPlayer );
