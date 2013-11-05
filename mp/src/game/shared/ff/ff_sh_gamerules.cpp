@@ -32,6 +32,7 @@
 	#include "ff_sv_dll_interface.h"
 	#include "hl2mp_cvars.h"
 	#include "ff_sh_team_manager.h"
+	#include <vector>
 
 #ifdef DEBUG	
 	#include "hl2mp_bot_temp.h"
@@ -193,7 +194,57 @@ char *sTeamNames[] =
 	"#FF_TEAM_CUSTOM7",
 	"#FF_TEAM_CUSTOM8",
 };
-#endif
+
+
+void CFF_SH_Rules::AddTeam( const char *pTeamName, const int iNum )
+{
+	CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
+	if ( pTeam )
+	{
+		pTeam->Init( pTeamName, iNum );
+		g_Teams.AddToTail( pTeam );
+	}
+}
+
+// add a new team and use next available unused team number
+void CFF_SH_Rules::AddTeam( const char *pTeamName )
+{
+	CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
+	if ( !pTeam )
+		return;
+
+	int iNum = 0;
+		
+	for ( int i = 0; i < g_Teams.Count(); ++i )
+		iNum = max ( g_Teams[i]->GetTeamNumber(), iNum );
+	
+	pTeam->Init( pTeamName, ++iNum );
+	g_Teams.AddToTail( pTeam );	
+}
+
+void CFF_SH_Rules::RemoveTeam( const char *pTeamName )
+{
+	int foundIdx = -1;
+	for ( int i = 0; i < g_Teams.Count(); ++i )
+	{
+		if ( g_Teams[i] && FStrEq( pTeamName, g_Teams[i]->GetName( ) ) )
+		{
+			foundIdx = i;
+			break;
+		}
+	}
+	
+	if ( foundIdx != -1 )
+		g_Teams.Remove( foundIdx );
+}
+
+void CFF_SH_Rules::RemoveTeam( const int iIndex )
+{
+	if ( iIndex >= 0 && iIndex < g_Teams.Count( ) )
+		g_Teams.Remove( iIndex );
+}
+
+#endif // GAME_DLL
 
 CFF_SH_Rules::CFF_SH_Rules()
 {

@@ -123,7 +123,7 @@ public:
 	void CleanUpMap();
 	void CheckRestartGame();
 	void RestartGame();
-	
+
 #ifndef CLIENT_DLL
 	virtual Vector VecItemRespawnSpot( CItem *pItem );
 	virtual QAngle VecItemRespawnAngles( CItem *pItem );
@@ -137,6 +137,11 @@ public:
 	void    CheckChatForReadySignal( CFF_SH_Player *pPlayer, const char *chatmsg );
 	const char *GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer );
 	bool  IsSpawnPointValid( CBaseEntity *pSpot, CBasePlayer *pPlayer  );
+
+	void AddTeam( const char *pTeamName, const int iNum );
+	void AddTeam( const char *pTeamName );
+	void RemoveTeam( const char *pTeamName );
+	void RemoveTeam( const int iIndex );
 
 #endif
 	virtual void ClientDisconnected( edict_t *pClient );
