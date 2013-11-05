@@ -44,16 +44,16 @@ static void ClassRestrictionChange( IConVar *var, const char *pOldString, float 
 		int idx = -1;
 		const char *cvarName = conVar->GetName();
 
-		if (FStrEq(cvarName, "cr_scout"))			idx = CLASS_SCOUT;
-		else if (FStrEq(cvarName, "cr_sniper"))		idx = CLASS_SNIPER;
-		else if (FStrEq(cvarName, "cr_soldier"))	idx = CLASS_SOLDIER;
-		else if (FStrEq(cvarName, "cr_demoman"))	idx = CLASS_DEMOMAN;
-		else if (FStrEq(cvarName, "cr_medic"))		idx = CLASS_MEDIC;
-		else if (FStrEq(cvarName, "cr_hwguy"))		idx = CLASS_HWGUY;
-		else if (FStrEq(cvarName, "cr_pyro"))		idx = CLASS_PYRO;
-		else if (FStrEq(cvarName, "cr_spy"))		idx = CLASS_SPY;
-		else if (FStrEq(cvarName, "cr_engineer"))	idx = CLASS_ENGINEER;
-		else if (FStrEq(cvarName, "cr_civilian"))	idx = CLASS_CIVILIAN;
+		if (FStrEq(cvarName, "cr_scout"))			idx = FF_CLASS_SCOUT;
+		else if (FStrEq(cvarName, "cr_sniper"))		idx = FF_CLASS_SNIPER;
+		else if (FStrEq(cvarName, "cr_soldier"))	idx = FF_CLASS_SOLDIER;
+		else if (FStrEq(cvarName, "cr_demoman"))	idx = FF_CLASS_DEMOMAN;
+		else if (FStrEq(cvarName, "cr_medic"))		idx = FF_CLASS_MEDIC;
+		else if (FStrEq(cvarName, "cr_hwguy"))		idx = FF_CLASS_HWGUY;
+		else if (FStrEq(cvarName, "cr_pyro"))		idx = FF_CLASS_PYRO;
+		else if (FStrEq(cvarName, "cr_spy"))		idx = FF_CLASS_SPY;
+		else if (FStrEq(cvarName, "cr_engineer"))	idx = FF_CLASS_ENGINEER;
+		else if (FStrEq(cvarName, "cr_civilian"))	idx = FF_CLASS_CIVILIAN;
 
 		pTeam->UpdateClassLimit( idx, conVar->GetInt() );
 	}
@@ -69,7 +69,7 @@ LINK_ENTITY_TO_CLASS( ff_team_manager, CFF_SH_TeamManager );
 IMPLEMENT_SERVERCLASS_ST( CFF_SH_TeamManager, DT_FFTeamManager )
 	SendPropInt( SENDINFO( m_iAllies ) ), 
 	SendPropInt( SENDINFO( m_iFortPoints ) ),
-	SendPropArray3( SENDINFO_ARRAY3(m_iClasses), SendPropInt( SENDINFO_ARRAY(m_iClasses), 4 ) ),
+	SendPropArray3( SENDINFO_ARRAY3( m_iClasses ), SendPropInt( SENDINFO_ARRAY( m_iClasses ), 4 ) ),
 	SendPropInt( SENDINFO( m_iMaxPlayers ) ),
 	//SendPropString( SENDINFO( m_szTeamname ) ), already done in base data table
 	SendPropInt( SENDINFO( m_iDeaths ) ),
@@ -78,7 +78,7 @@ END_SEND_TABLE()
 IMPLEMENT_CLIENTCLASS_DT( CFF_CL_TeamManager, DT_FFTeamManager, CFF_SV_TeamManager )
 	RecvPropInt( RECVINFO( m_iAllies ) ), 
 	RecvPropInt( RECVINFO( m_iFortPoints ) ),
-	RecvPropArray3( RECVINFO_ARRAY(m_iClasses), RecvPropInt( RECVINFO(m_iClasses[0]))),
+	RecvPropArray3( RECVINFO_ARRAY(m_iClasses), RecvPropInt( RECVINFO( m_iClasses[0] ) ) ),
 	RecvPropInt( RECVINFO( m_iMaxPlayers ) ),
 	//RecvPropString( RECVINFO( m_szTeamname ) ), already done in base data table
 	RecvPropInt( RECVINFO( m_iDeaths ) ),
@@ -149,16 +149,16 @@ void CFF_SH_TeamManager::UpdateClassLimit( int iClassIdx )
 	ConVar *conVar = NULL;
 	switch ( iClassIdx )
 	{
-		case CLASS_SCOUT:		conVar = &cr_scout;		break;
-		case CLASS_SNIPER:		conVar = &cr_sniper;	break;
-		case CLASS_SOLDIER:		conVar = &cr_soldier;	break;
-		case CLASS_DEMOMAN:		conVar = &cr_demoman;	break;
-		case CLASS_MEDIC:		conVar = &cr_medic;		break;
-		case CLASS_HWGUY:		conVar = &cr_hwguy;		break;
-		case CLASS_PYRO:		conVar = &cr_pyro;		break;
-		case CLASS_SPY:			conVar = &cr_spy;		break;
-		case CLASS_ENGINEER:	conVar = &cr_engineer;	break;
-		case CLASS_CIVILIAN:	conVar = &cr_civilian;	break;
+		case FF_CLASS_SCOUT:	conVar = &cr_scout;		break;
+		case FF_CLASS_SNIPER:	conVar = &cr_sniper;	break;
+		case FF_CLASS_SOLDIER:	conVar = &cr_soldier;	break;
+		case FF_CLASS_DEMOMAN:	conVar = &cr_demoman;	break;
+		case FF_CLASS_MEDIC:	conVar = &cr_medic;		break;
+		case FF_CLASS_HWGUY:	conVar = &cr_hwguy;		break;
+		case FF_CLASS_PYRO:		conVar = &cr_pyro;		break;
+		case FF_CLASS_SPY:		conVar = &cr_spy;		break;
+		case FF_CLASS_ENGINEER:	conVar = &cr_engineer;	break;
+		case FF_CLASS_CIVILIAN:	conVar = &cr_civilian;	break;
 		default: return;
 	}
 
@@ -205,7 +205,7 @@ int CFF_SH_TeamManager::GetAllies( void )
 
 int CFF_SH_TeamManager::GetClassLimit ( int iClass )
 {
-	if ( iClass < 0 || iClass > CLASS_COUNT )
+	if ( iClass < 0 || iClass > FF_CLASS_COUNT )
 		return -1;
 #ifdef CLIENT_DLL
 	return m_iClasses[iClass];

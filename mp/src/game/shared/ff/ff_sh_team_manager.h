@@ -35,15 +35,15 @@ class CFF_SH_TeamManager : public CTeam
 public:
 // variables
 #ifdef GAME_DLL
-	int m_iClassesMap[CLASS_COUNT];					// this is just the map limits
+	int m_iClassesMap[FF_CLASS_COUNT];					// this is just the map limits
 	CNetworkVar( int, m_iAllies ); 
 	CNetworkVar( int, m_iFortPoints );
-	CNetworkArray( int, m_iClasses, CLASS_COUNT );	// this is the actual limit, needed by the client	
+	CNetworkArray( int, m_iClasses, FF_CLASS_COUNT );	// this is the actual limit, needed by the client	
 	CNetworkVar( int, m_iMaxPlayers );
 #else
 	int m_iAllies;
 	int m_iFortPoints;
-	int m_iClasses[CLASS_COUNT];
+	int m_iClasses[FF_CLASS_COUNT];
 	int m_iMaxPlayers;
 #endif
 
