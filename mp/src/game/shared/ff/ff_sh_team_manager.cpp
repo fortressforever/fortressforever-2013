@@ -1,9 +1,12 @@
 #include "cbase.h"
 #include "ff_sh_team_manager.h"
+#include <map>
 
 #ifdef GAME_DLL
 #include "entitylist.h"
 #endif
+
+//#include "boost/assign.hpp"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -24,23 +27,6 @@ ConVar	cr_spy( "cr_spy", "0", 0, "Max number of spy", ClassRestrictionChange );
 ConVar	cr_engineer( "cr_engineer",	"0", 0, "Max number of engineer", ClassRestrictionChange );
 ConVar	cr_civilian( "cr_civilian",	"0", 0, "Max number of engineer", ClassRestrictionChange );
 
-//static CUtlDict<const char*, int> classCvarToIndexDict;
-// do this so we can find correct idx to pass to team manager
-// (from old CFFTeam::UpdateTeamLimits indices)
-static ConVar classRestrictionCvars[] =
-{
-	cr_scout,
-	cr_sniper,
-	cr_soldier,
-	cr_demoman,
-	cr_medic,
-	cr_hwguy,
-	cr_pyro,
-	cr_spy,
-	cr_engineer,
-	cr_civilian,
-};
-
 // Need to update the real class limits for this map
 static void ClassRestrictionChange( IConVar *var, const char *pOldString, float fOldVal )
 {
@@ -56,18 +42,20 @@ static void ClassRestrictionChange( IConVar *var, const char *pOldString, float 
 			return;
 
 		int idx = -1;
-		for ( int i = 0; i < CLASS_COUNT; i ++)
-		{
-			if ( FStrEq( conVar->GetName(), classRestrictionCvars[i].GetName() ) )
-			{
-				idx = i;
-				break;
-			}
-		}
-		
-		if ( idx == -1  )
-			return;
-		pTeam->UpdateClassLimit( idx );
+		const char *cvarName = conVar->GetName();
+
+		if (FStrEq(cvarName, "cr_scout"))			idx = CLASS_SCOUT;
+		else if (FStrEq(cvarName, "cr_sniper"))		idx = CLASS_SNIPER;
+		else if (FStrEq(cvarName, "cr_soldier"))	idx = CLASS_SOLDIER;
+		else if (FStrEq(cvarName, "cr_demoman"))	idx = CLASS_DEMOMAN;
+		else if (FStrEq(cvarName, "cr_medic"))		idx = CLASS_MEDIC;
+		else if (FStrEq(cvarName, "cr_hwguy"))		idx = CLASS_HWGUY;
+		else if (FStrEq(cvarName, "cr_pyro"))		idx = CLASS_PYRO;
+		else if (FStrEq(cvarName, "cr_spy"))		idx = CLASS_SPY;
+		else if (FStrEq(cvarName, "cr_engineer"))	idx = CLASS_ENGINEER;
+		else if (FStrEq(cvarName, "cr_civilian"))	idx = CLASS_CIVILIAN;
+
+		pTeam->UpdateClassLimit( idx, conVar->GetInt() );
 	}
 }
 
@@ -145,15 +133,38 @@ void CFF_SH_TeamManager::SetClassLimit( int iClass, int iLimit )
 	UpdateClassLimit( iClass );
 }
 
-void CFF_SH_TeamManager::UpdateClassLimit( int iClassIdx )
+void CFF_SH_TeamManager::UpdateClassLimit( int iClassIdx, int conVarVal )
 {
 	// if the map or cvar is 0 it will always use the other
-	int curCvar = classRestrictionCvars[iClassIdx].GetInt();
 	int curMap = m_iClassesMap[iClassIdx];
-	int newVal = min ( curCvar == 0 ? curMap : curCvar, curMap == 0 ? curCvar : curMap);
+	int newVal = min ( conVarVal == 0 ? curMap : conVarVal, curMap == 0 ? conVarVal : curMap);
 	m_iClasses.Set( iClassIdx, newVal );
-
 	DevMsg("CFF_SH_TeamManager::UpdateLimit: set class idx %i limit to %i\n", iClassIdx, newVal );
+
+}
+
+void CFF_SH_TeamManager::UpdateClassLimit( int iClassIdx )
+{
+	// dont ask me about using boost::assign::map_list_of 
+	ConVar *conVar = NULL;
+	switch ( iClassIdx )
+	{
+		case CLASS_SCOUT:		conVar = &cr_scout;		break;
+		case CLASS_SNIPER:		conVar = &cr_sniper;	break;
+		case CLASS_SOLDIER:		conVar = &cr_soldier;	break;
+		case CLASS_DEMOMAN:		conVar = &cr_demoman;	break;
+		case CLASS_MEDIC:		conVar = &cr_medic;		break;
+		case CLASS_HWGUY:		conVar = &cr_hwguy;		break;
+		case CLASS_PYRO:		conVar = &cr_pyro;		break;
+		case CLASS_SPY:			conVar = &cr_spy;		break;
+		case CLASS_ENGINEER:	conVar = &cr_engineer;	break;
+		case CLASS_CIVILIAN:	conVar = &cr_civilian;	break;
+		default: return;
+	}
+
+	if (conVar == NULL)
+		return;
+	UpdateClassLimit( iClassIdx, conVar->GetInt () );
 }
 
 void CFF_SH_TeamManager::UpdateAllClassLimits( void )

@@ -26,7 +26,8 @@ typedef enum
 
 typedef enum 
 {
-	CLASS_SCOUT = 1,
+	CLASS_UNASSIGNED = 0,
+	CLASS_SCOUT,
 	CLASS_SNIPER,
 	CLASS_SOLDIER,
 	CLASS_DEMOMAN,

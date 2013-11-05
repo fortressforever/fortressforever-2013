@@ -61,6 +61,7 @@ public:
 	void SetFortPoints( int iFortPoints );
 	void SetTeamLimits( int );
 	void UpdateClassLimit( int idx );
+	void UpdateClassLimit( int iClassIdx, int conVarVal );
 	void UpdateAllClassLimits( void );
 
 	static bool HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const char* pTeam );
