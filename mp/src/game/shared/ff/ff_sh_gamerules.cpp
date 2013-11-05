@@ -1311,18 +1311,18 @@ const char *CFF_SH_Rules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	{
 		if ( pPlayer->GetTeamNumber() == TEAM_SPECTATOR )
 		{
-			pszFormat = "HL2MP_Chat_Spec";
+			pszFormat = "FF_Chat_Spec";
 		}
 		else
 		{
 			const char *chatLocation = GetChatLocation( bTeamOnly, pPlayer );
 			if ( chatLocation && *chatLocation )
 			{
-				pszFormat = "HL2MP_Chat_Team_Loc";
+				pszFormat = "FF_Chat_Team_Loc";
 			}
 			else
 			{
-				pszFormat = "HL2MP_Chat_Team";
+				pszFormat = "FF_Chat_Team";
 			}
 		}
 	}
@@ -1331,15 +1331,21 @@ const char *CFF_SH_Rules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	{
 		if ( pPlayer->GetTeamNumber() != TEAM_SPECTATOR )
 		{
-			pszFormat = "HL2MP_Chat_All";	
+			pszFormat = "FF_Chat_All";	
 		}
 		else
 		{
-			pszFormat = "HL2MP_Chat_AllSpec";
+			pszFormat = "FF_Chat_AllSpec";
 		}
 	}
 
 	return pszFormat;
+}
+
+const char *CFF_SH_Rules::GetChatLocation( bool bTeamOnly, CBasePlayer *pPlayer )
+{
+	// TODO:
+	return "FF LUA LOCATION HERE";
 }
 
 bool CFF_SH_Rules::IsSpawnPointValid( CBaseEntity *pSpot, CBasePlayer *pPlayer  )
