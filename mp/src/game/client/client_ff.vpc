@@ -18,8 +18,8 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories		"$BASE;ff\ui,.\ff,$SRCDIR\game\shared\ff,.\ff,.\ff\elements,$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
-		$PreprocessorDefinitions			"$BASE;FF;FF_CLIENT_DLL"
+		$AdditionalIncludeDirectories		"$BASE;.\ff;$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
+		$PreprocessorDefinitions		"$BASE;FF;FF_CLIENT_DLL"
 	}
 }
 

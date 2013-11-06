@@ -6,7 +6,7 @@
 
 // FF Team stuff
 // note, when ported i switched to an enum so we have our custom team stuff a little more obvious
-typedef enum 
+typedef enum
 {
 	TEAM_BLUE = 2,
 	TEAM_RED,
@@ -24,7 +24,7 @@ typedef enum
 } FF_TEAM;
 
 
-typedef enum 
+typedef enum
 {
 	FF_CLASS_UNASSIGNED = 0,
 	FF_CLASS_SCOUT,
@@ -39,5 +39,54 @@ typedef enum
 	FF_CLASS_CIVILIAN,
 	FF_CLASS_COUNT
 } FF_CLASS;
+
+
+enum
+{
+	FF_TEAM_NUM_UNASSIGNED = 0,
+	FF_TEAM_NUM_SPECTATE,
+	FF_TEAM_NUM_ONE,
+	FF_TEAM_NUM_TWO,
+	FF_TEAM_NUM_THREE,
+	FF_TEAM_NUM_FOUR,
+	FF_TEAM_NUM_FIVE,
+	FF_TEAM_NUM_SIX,
+	FF_TEAM_NUM_SEVEN,
+	FF_TEAM_NUM_EIGHT,
+	FF_TEAM_NUM_NINE,
+	FF_TEAM_NUM_TEN,
+	FF_TEAM_NUM_ELEVEN,
+	FF_TEAM_NUM_TWELVE,
+	FF_TEAM_NUM_THIRTEEN,
+	FF_TEAM_NUM_FOURTEEN,
+	FF_TEAM_NUM_FIFTEEN,
+	FF_TEAM_NUM_SIXTEEN,
+	FF_TEAM_NUM_SEVENTEEN,
+	FF_TEAM_NUM_EIGHTEEN,
+	FF_TEAM_NUM_NINETEEN,
+	FF_TEAM_NUM_TWENTY,
+	FF_TEAM_NUM_TWENTYONE,
+	FF_TEAM_NUM_TWENTYTWO,
+	FF_TEAM_NUM_TWENTYTHREE,
+	FF_TEAM_NUM_TWENTYFOUR,
+	FF_TEAM_NUM_TWENTYFIVE,
+	FF_TEAM_NUM_TWENTYSIX,
+	FF_TEAM_NUM_TWENTYSEVEN,
+	FF_TEAM_NUM_TWENTYEIGHT,
+	FF_TEAM_NUM_TWENTYNINE,
+	FF_TEAM_NUM_THIRTY,
+	FF_TEAM_NUM_THIRTYONE
+};
+
+const int FF_TEAM_BITS[] =
+{
+	0,			0,			(1<<0),		(1<<1),		(1<<2),
+	(1<<3),		(1<<4),		(1<<5),		(1<<6),		(1<<7),
+	(1<<8),		(1<<9),		(1<<10),	(1<<11),	(1<<12),
+	(1<<13),	(1<<14),	(1<<15),	(1<<16),	(1<<17),
+	(1<<18),	(1<<19),	(1<<20),	(1<<21),	(1<<22),
+	(1<<23),	(1<<24),	(1<<25),	(1<<26),	(1<<27),
+	(1<<28),	(1<<29),	(1<<30)
+};
 
 #endif // FF_SH_SHAREDDEFS_H

@@ -1,4 +1,4 @@
-// VPC included in client/server FF VPCs containing all shared 
+// VPC included in client/server FF VPCs containing all shared
 
 // expects $SRCDIR macro to exist
 $Project
@@ -36,6 +36,11 @@ $Project
 				$File   "$SRCDIR\game\shared\ff\ff_sh_shareddefs.h"
 				$File   "$SRCDIR\game\shared\ff\ff_sh_team_manager.h"
 				$File   "$SRCDIR\game\shared\ff\ff_sh_team_manager.cpp"
+			}
+			$Folder "Other"
+			{
+				$File	"$SRCDIR\game\shared\ff\other\ff_sh_util.cpp"
+				$File	"$SRCDIR\game\shared\ff\other\ff_sh_util.h"
 			}
 		}
 

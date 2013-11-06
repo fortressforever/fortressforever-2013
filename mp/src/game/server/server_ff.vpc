@@ -17,8 +17,8 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\ff,.\ff,.\ff,$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
-		$PreprocessorDefinitions		"$BASE;FF;FF_DLL"
+		$AdditionalIncludeDirectories	"$BASE;.\ff;.\ff\other;.\ff\entities;$SRCDIR\game\shared\ff;$SRCDIR\game\shared\ff\other;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
+		$PreprocessorDefinitions	"$BASE;FF;FF_DLL"
 	}
 }
 
@@ -40,9 +40,19 @@ $Project "Server (FF)"
 				$File	"ff\ff_sv_player.cpp"
 				$File	"ff\ff_sv_player.h"
 			}
-
-			$File	"ff\ff_sv_util.cpp"
-			$File	"ff\ff_sv_util.h"
+			$Folder "Entities"
+			{
+				$File	"ff\entities\ff_sv_item_ff_goal.cpp"
+				$File	"ff\entities\ff_sv_point_ff_teamcheck.cpp"
+				$File	"ff\entities\ff_sv_point_ff_teamcheck.h"
+				$File	"ff\entities\ff_sv_teamcheck_target.h"
+				$File	"ff\entities\ff_sv_teamcheck_target.cpp"
+			}
+			$Folder "Other"
+			{
+				$File	"ff\other\ff_sv_util.cpp"
+				$File	"ff\other\ff_sv_util.h"
+			}
 		}
 
 	
