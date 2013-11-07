@@ -37,6 +37,15 @@ $Project "Client (FF)"
 			}
 			$Folder "Lua"
 			{
+				$Folder "UI"
+				{
+					$file "ff\ui\ff_cl_luaui_basepanel.cpp"
+					$file "ff\ui\ff_cl_luaui_basepanel.h"
+				}
+				$folder "Binding"
+				{
+					$file "ff\ff_cl_luabind_ui.cpp"
+				}
 				$File 	"ff\ff_cl_scriptman_ui.cpp"
 				$File 	"ff\ff_cl_scriptman_ui.h"
 			}

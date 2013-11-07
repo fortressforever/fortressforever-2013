@@ -18,6 +18,9 @@
 //#include "luabind/object.hpp"
 //#include "luabind/iterator_policy.hpp"
 
+// binding
+#include "ff_sh_luabind.h"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -35,6 +38,12 @@ CFF_CL_ScriptManager_UI::~CFF_CL_ScriptManager_UI()
 {
 }
 
+void CFF_CL_ScriptManager_UI::SetupEnvironmentForFF()
+{
+	BaseClass::SetupEnvironmentForFF();
+
+	FF_Lua_InitUI( L );
+}
 
 /////////////////////////////////////////////////////////////////////////////
 void CFF_CL_ScriptManager_UI::Shutdown()

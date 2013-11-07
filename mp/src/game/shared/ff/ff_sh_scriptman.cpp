@@ -26,6 +26,9 @@
 //#include "luabind/object.hpp"
 //#include "luabind/iterator_policy.hpp"
 
+// binding
+#include "ff_sh_luabind.h"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 

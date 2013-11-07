@@ -15,6 +15,11 @@ $Project
 				$File	"$SRCDIR\game\shared\ff\ff_sh_scriptman_game.h"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_luautil.cpp"
 				$File	"$SRCDIR\game\shared\ff\ff_sh_luautil.h"
+
+				$Folder "Binding"
+				{
+					$File	"$SRCDIR\game\shared\ff\ff_sh_luabind.h"
+				}
 			}
 			$Folder "Movement"
 			{

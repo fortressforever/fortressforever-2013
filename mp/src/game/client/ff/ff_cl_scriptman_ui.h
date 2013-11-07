@@ -17,6 +17,8 @@ protected:
 	virtual const char* GetPackagePathRoot() { return "/ui/"; };
 
 public:
+	virtual void SetupEnvironmentForFF();
+
 	virtual bool Init();
 	virtual void Shutdown();
 
