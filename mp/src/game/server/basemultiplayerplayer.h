@@ -117,7 +117,7 @@ inline CBaseMultiplayerPlayer *ToBaseMultiplayerPlayer( CBaseEntity *pEntity )
 	if ( !pEntity || !pEntity->IsPlayer() )
 		return NULL;
 #if _DEBUG
-	return dynamic_cast<CBaseMultiplayerPlayer *>( pEntity );
+	return static_cast<CBaseMultiplayerPlayer *>( pEntity ); // FF --> hlstriker: Changed to static_cast. Not sure why dynamic_cast wasn't working for this.
 #else
 	return static_cast<CBaseMultiplayerPlayer *>( pEntity );
 #endif
