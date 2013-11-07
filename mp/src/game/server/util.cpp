@@ -1017,20 +1017,23 @@ void UTIL_ScreenFade( CBaseEntity *pEntity, const color32 &color, float fadeTime
 	UTIL_ScreenFadeWrite( fade, pEntity );
 }
 
-
+// FF --> hlstriker: Modified
 void UTIL_HudMessage( CBasePlayer *pToPlayer, const hudtextparms_t &textparms, const char *pMessage )
 {
 	CRecipientFilter filter;
 	
 	if( pToPlayer )
-	{
 		filter.AddRecipient( pToPlayer );
-	}
 	else
-	{
 		filter.AddAllPlayers();
-	}
 
+	UTIL_HudMessage( filter, textparms, pMessage );
+}
+// FF <--
+
+// FF --> hlstriker: Added
+void UTIL_HudMessage( CRecipientFilter &filter, const hudtextparms_t &textparms, const char *pMessage )
+{
 	filter.MakeReliable();
 
 	UserMessageBegin( filter, "HudMsg" );
@@ -1053,6 +1056,7 @@ void UTIL_HudMessage( CBasePlayer *pToPlayer, const hudtextparms_t &textparms, c
 		WRITE_STRING( pMessage );
 	MessageEnd();
 }
+// FF <--
 
 void UTIL_HudMessageAll( const hudtextparms_t &textparms, const char *pMessage )
 {

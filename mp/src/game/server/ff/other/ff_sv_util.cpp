@@ -32,6 +32,18 @@ void FF_UTIL_HudMessageFormat(CBasePlayer *pToPlayer, float x, float y, HUD_MSG_
 
 void FF_UTIL_HudMessage(CBasePlayer *pToPlayer, float x, float y, HUD_MSG_EFFECT effect, color32 color1, color32 color2, float fadeInTime, float fadeOutTime, float holdTime, float fxTime, int channel, const char *pszMessage)
 {
+	CRecipientFilter filter;
+
+	if( pToPlayer )
+		filter.AddRecipient( pToPlayer );
+	else
+		filter.AddAllPlayers();
+
+	FF_UTIL_HudMessage(filter, x, y, effect, color1, color2, fadeInTime, fadeOutTime, holdTime, fxTime, channel, pszMessage);
+}
+
+void FF_UTIL_HudMessage(CRecipientFilter &filter, float x, float y, HUD_MSG_EFFECT effect, color32 color1, color32 color2, float fadeInTime, float fadeOutTime, float holdTime, float fxTime, int channel, const char *pszMessage)
+{
 	hudtextparms_s params;
 	params.x		= x;
 	params.y		= y;
@@ -50,5 +62,5 @@ void FF_UTIL_HudMessage(CBasePlayer *pToPlayer, float x, float y, HUD_MSG_EFFECT
 	params.fxTime	= fxTime;
 	params.channel	= channel;
 
-	UTIL_HudMessage(pToPlayer, params, pszMessage);
+	UTIL_HudMessage(filter, params, pszMessage);
 }
