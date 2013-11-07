@@ -27,6 +27,7 @@
 #include "ilagcompensationmanager.h"
 #include "ff_sh_team_manager.h"
 
+
 // Don't alias here
 #if defined( CFF_SH_Player )
 #undef CFF_SH_Player
@@ -418,6 +419,8 @@ void CFF_SV_Player::SetPlayerTeamModel( void )
 	SetupPlayerSoundsByModel( szModelName );
 
 	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;
+
+	AddGlowEffect();
 }
 
 void CFF_SV_Player::SetPlayerModel( void )

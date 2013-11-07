@@ -18,7 +18,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\ff;.\ff\other;.\ff\entities;$SRCDIR\game\shared\ff;$SRCDIR\game\shared\ff\other;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
-		$PreprocessorDefinitions	"$BASE;FF;FF_DLL"
+		$PreprocessorDefinitions	"$BASE;FF;FF_DLL;GLOWS_ENABLE"
 	}
 }
 
@@ -47,6 +47,7 @@ $Project "Server (FF)"
 				$File	"ff\entities\ff_sv_point_ff_teamcheck.h"
 				$File	"ff\entities\ff_sv_teamcheck_target.h"
 				$File	"ff\entities\ff_sv_teamcheck_target.cpp"
+				$File	"ff\entities\ff_sv_point_ff_message.cpp"
 			}
 			$Folder "Other"
 			{

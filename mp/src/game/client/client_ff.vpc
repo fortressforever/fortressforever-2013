@@ -19,7 +19,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories		"$BASE;.\ff;$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
-		$PreprocessorDefinitions		"$BASE;FF;FF_CLIENT_DLL;SOURCE_2013"
+		$PreprocessorDefinitions		"$BASE;FF;FF_CLIENT_DLL;SOURCE_2013;GLOWS_ENABLE"
 	}
 }
 

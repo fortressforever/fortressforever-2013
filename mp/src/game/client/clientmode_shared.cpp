@@ -745,6 +745,8 @@ int ClientModeShared::HudElementKeyInput( int down, ButtonCode_t keynum, const c
 //-----------------------------------------------------------------------------
 bool ClientModeShared::DoPostScreenSpaceEffects( const CViewSetup *pSetup )
 {
+	g_GlowObjectManager.RenderGlowEffects( pSetup, 0 /*GetSplitScreenPlayerSlot()*/ ); // FF --> hlstriker: Added
+
 #if defined( REPLAY_ENABLED )
 	if ( engine->IsPlayingDemo() )
 	{

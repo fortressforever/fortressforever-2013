@@ -806,6 +806,12 @@ CLIENTEFFECT_REGISTER_BEGIN( PrecachePostProcessingEffects )
 	CLIENTEFFECT_MATERIAL( "dev/pyro_post" )
 #endif
 
+	// FF --> hlstriker: Added.
+#ifdef GLOWS_ENABLE
+	CLIENTEFFECT_MATERIAL( "dev/glow_color" )
+	CLIENTEFFECT_MATERIAL( "dev/halo_add_to_screen" )
+#endif
+	// FF <--
 CLIENTEFFECT_REGISTER_END_CONDITIONAL( engine->GetDXSupportLevel() >= 90 )
 
 //-----------------------------------------------------------------------------
