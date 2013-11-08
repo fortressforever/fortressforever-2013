@@ -21,28 +21,44 @@
 #include "ui/ff_cl_luaui_basepanel.h"
 #include "hud.h"
 #include "hudelement.h"
+#include "ff_cl_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 using namespace luabind;
 
-void RegisterHudElement( CHudElement *pHudElement )
+namespace FFLuaLib_UI
 {
-	gHUD.AddHudElement( pHudElement );
 
-	pHudElement->Init();
-}
+	void RegisterHudElement( CHudElement *pHudElement )
+	{
+		gHUD.AddHudElement( pHudElement );
 
-/* Alternate method of creating a Panel, might be needed if Lua starts garbage collecting Panels and we cant adopt them from their constructor
-object CreatePanel( lua_State *L, const char *szPanelName )
-{
-	CFF_CL_LuaUI_BasePanel *pPanel = new CFF_CL_LuaUI_BasePanel( szPanelName );
-	object LuaPanel( L, pPanel );
-	pPanel->m_luaobjDefinedFunctions = LuaPanel;
-	return LuaPanel;
-}
-*/
+		pHudElement->Init();
+	}
+
+	/* Alternate method of creating a Panel, might be needed if Lua starts garbage collecting Panels and we cant adopt them from their constructor
+	object CreatePanel( lua_State *L, const char *szPanelName )
+	{
+		CFF_CL_LuaUI_BasePanel *pPanel = new CFF_CL_LuaUI_BasePanel( szPanelName );
+		object LuaPanel( L, pPanel );
+		pPanel->m_luaobjDefinedFunctions = LuaPanel;
+		return LuaPanel;
+	}
+	*/
+
+	float GetSpeed( const C_BaseEntity *pEntity )
+	{
+		return pEntity->GetAbsVelocity().Length2D();
+	}
+
+	CFF_CL_Player *GetLocalPlayer()
+	{
+		return CFF_CL_Player::GetLocalFFPlayer();
+	}
+
+};
 
 void FF_Lua_InitUI( lua_State *L )
 {
@@ -50,8 +66,10 @@ void FF_Lua_InitUI( lua_State *L )
 
 	module(L)
 	[
-		def( "RegisterHudElement", &RegisterHudElement ),
+		// globals
+		def( "RegisterHudElement",					&FFLuaLib_UI::RegisterHudElement ),
 
+		// UI elements
 		class_<CHudElement>("HudElement")
 			.def("ListenForGameEvent",				&CHudElement::ListenForGameEvent),
 
@@ -71,5 +89,21 @@ void FF_Lua_InitUI( lua_State *L )
 
 		class_<CFF_CL_LuaUI_BasePanel, bases<CHudElement, vgui::Panel>>("Panel")
 			.def(constructor<lua_State *, const char *>())
+			.def("DrawText",						&CFF_CL_LuaUI_BasePanel::DrawText)
+			.def("DrawBox",							&CFF_CL_LuaUI_BasePanel::DrawBox),
+
+		// base entity
+		class_<C_BaseEntity>("BaseEntity")
+			.def("GetVelocity",						&C_BaseEntity::GetAbsVelocity)
+			.def("GetSpeed",						&FFLuaLib_UI::GetSpeed),
+
+		class_<C_BasePlayer, C_BaseEntity>("BasePlayer"),
+
+		class_<CFF_CL_Player, C_BasePlayer>("Player")
+			.def("GetMaxSpeed",						&CFF_CL_Player::MaxSpeed)
+			.def("GetHealth",						&CFF_CL_Player::GetHealth)
+			.def("GetMaxHealth",					&CFF_CL_Player::GetMaxHealth),
+
+		def("LocalPlayer",							&FFLuaLib_UI::GetLocalPlayer)
 	];
 }

@@ -4,17 +4,17 @@
 #include "ff_cl_scriptman_ui.h"
 
 #include "iclientmode.h"
+#include <vgui/ISurface.h>
+#include <vgui/ILocalize.h>
 /*
 #include "hud.h"
 #include "hud_macros.h"
 #include "view.h"
 
 #include <KeyValues.h>
-#include <vgui/ISurface.h>
 #include <vgui/ISystem.h>
 #include <vgui_controls/AnimationController.h>
 
-#include <vgui/ILocalize.h>
 */
 
 #include "luabind/luabind.hpp"
@@ -93,4 +93,20 @@ void CFF_CL_LuaUI_BasePanel::Paint()
 	{
 		luabind::call_function<void>( m_LuaObject["Paint"], this );
 	}
+}
+
+void CFF_CL_LuaUI_BasePanel::DrawText( const char *szText, int xpos, int ypos )
+{
+	wchar_t wszText[255];
+	g_pVGuiLocalize->ConvertANSIToUnicode( szText, wszText, sizeof(wszText) );
+
+	IScheme *pScheme = scheme()->GetIScheme( GetScheme() );
+	Assert( pScheme );
+
+	HFont font = pScheme->GetFont( "Default", IsProportional() );
+
+	surface()->DrawSetTextFont(font);
+	surface()->DrawSetTextColor(GetFgColor());
+	surface()->DrawSetTextPos(xpos, ypos);
+	surface()->DrawUnicodeString( wszText );
 }

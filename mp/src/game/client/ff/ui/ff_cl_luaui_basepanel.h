@@ -23,6 +23,8 @@ public:
 	virtual void OnThink();
 	virtual void Paint();
 	// --> from vgui::Panel
+
+	void DrawText( const char *szText, int xpos, int ypos );
 	
 private:
 	luabind::object m_LuaObject;
