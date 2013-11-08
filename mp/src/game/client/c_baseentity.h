@@ -36,6 +36,12 @@
 #include "toolframework/itoolentity.h"
 #include "tier0/threadtools.h"
 
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+class CGlowObject;
+#endif // GLOWS_ENABLE
+// FF <--
+
 class C_Team;
 class IPhysicsObject;
 class IClientVehicle;
@@ -1687,6 +1693,21 @@ protected:
 	RenderMode_t m_PreviousRenderMode;
 	color32 m_PreviousRenderColor;
 #endif
+
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+private:
+	void			UpdateGlowEffect( void );
+	void			DestroyGlowEffect( void );
+	void			GetGlowEffectColor( float *r, float *g, float *b, float *a );
+
+	CGlowObject		*m_pGlowEffect;
+	bool			m_bGlowEnabled;
+	bool			m_bOldGlowEnabled;
+	color32			m_clrGlowColor;
+	color32			m_clrOldGlowColor;
+#endif // GLOWS_ENABLE
+// FF <--
 };
 
 EXTERN_RECV_TABLE(DT_BaseEntity);

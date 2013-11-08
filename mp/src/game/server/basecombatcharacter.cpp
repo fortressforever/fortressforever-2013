@@ -190,9 +190,14 @@ END_SEND_TABLE();
 // This table encodes the CBaseCombatCharacter
 //-----------------------------------------------------------------------------
 IMPLEMENT_SERVERCLASS_ST(CBaseCombatCharacter, DT_BaseCombatCharacter)
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	SendPropBool( SENDINFO( m_bGlowEnabled ) ),
 #endif // GLOWS_ENABLE
+*/
+// FF <--
+
 	// Data that only gets sent to the local player.
 	SendPropDataTable( "bcc_localdata", 0, &REFERENCE_SEND_TABLE(DT_BCCLocalPlayerExclusive), SendProxy_SendBaseCombatCharacterLocalDataTable ),
 
@@ -744,9 +749,13 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 
 	m_bForceServerRagdoll = ai_force_serverside_ragdoll.GetBool();
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	m_bGlowEnabled.Set( false );
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 }
 
 //------------------------------------------------------------------------------
@@ -851,9 +860,13 @@ void CBaseCombatCharacter::UpdateOnRemove( void )
 		SetOwnerEntity( NULL );
 	}
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	RemoveGlowEffect();
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 	// Chain at end to mimic destructor unwind order
 	BaseClass::UpdateOnRemove();
@@ -1677,9 +1690,13 @@ void CBaseCombatCharacter::Event_Killed( const CTakeDamageInfo &info )
 	TheNextBots().OnKilled( this, info );
 #endif
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	RemoveGlowEffect();
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 }
 
 void CBaseCombatCharacter::Event_Dying( const CTakeDamageInfo &info )
@@ -3230,6 +3247,8 @@ float CBaseCombatCharacter::GetSpreadBias( CBaseCombatWeapon *pWeapon, CBaseEnti
 	return 1.0;
 }
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -3256,6 +3275,8 @@ bool CBaseCombatCharacter::IsGlowEffectActive( void )
 	return m_bGlowEnabled;
 }
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 //-----------------------------------------------------------------------------
 // Assume everyone is average with every weapon. Override this to make exceptions.
@@ -3522,9 +3543,13 @@ void CBaseCombatCharacter::ChangeTeam( int iTeamNum )
 	// old team member no longer in the nav mesh
 	ClearLastKnownArea();
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	RemoveGlowEffect();
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 	BaseClass::ChangeTeam( iTeamNum );
 }

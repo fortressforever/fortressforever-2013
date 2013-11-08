@@ -306,6 +306,13 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CBaseEntity, DT_BaseEntity )
 	SendPropArray3( SENDINFO_ARRAY3(m_nModelIndexOverrides), SendPropInt( SENDINFO_ARRAY(m_nModelIndexOverrides), SP_MODEL_INDEX_BITS, SPROP_UNSIGNED ) ),
 #endif
 
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+	SendPropBool( SENDINFO( m_bGlowEnabled ) ),
+	SendPropInt( SENDINFO( m_clrGlowColor ) ),
+#endif // GLOWS_ENABLE
+// FF <--
+
 END_SEND_TABLE()
 
 
@@ -412,6 +419,14 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 #ifndef _XBOX
 	AddEFlags( EFL_USE_PARTITION_WHEN_NOT_SOLID );
 #endif
+
+	// FF --> hlstriker: Added
+	m_bGlowEnabled.Set( false );
+	m_clrGlowColor.SetR( 255 );
+	m_clrGlowColor.SetG( 255 );
+	m_clrGlowColor.SetB( 255 );
+	m_clrGlowColor.SetA( 175 );
+	// FF <--
 }
 
 //-----------------------------------------------------------------------------
@@ -1607,6 +1622,8 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 	// Character killed (only fired once)
 void CBaseEntity::Event_Killed( const CTakeDamageInfo &info )
 {
+	RemoveGlowEffect(); // FF --> hlstriker: Added
+
 	if( info.GetAttacker() )
 	{
 		info.GetAttacker()->Event_KilledOther(this, info);
@@ -2054,6 +2071,8 @@ void CBaseEntity::UpdateOnRemove( void )
 		modelinfo->ReleaseDynamicModel( m_nModelIndex ); // no-op if not dynamic
 		m_nModelIndex = -1;
 	}
+
+	RemoveGlowEffect(); // FF --> hlstriker: Added
 }
 
 //-----------------------------------------------------------------------------
@@ -7294,6 +7313,29 @@ void CBaseEntity::SetCollisionBoundsFromModel()
 	}
 }
 
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+void CBaseEntity::AddGlowEffect( int red, int green, int blue, int alpha )
+{
+	SetTransmitState( FL_EDICT_ALWAYS );
+	m_clrGlowColor.SetR( red );
+	m_clrGlowColor.SetG( green );
+	m_clrGlowColor.SetB( blue );
+	m_clrGlowColor.SetA( alpha );
+	m_bGlowEnabled.Set( true );
+}
+
+void CBaseEntity::RemoveGlowEffect( void )
+{
+	m_bGlowEnabled.Set( false );
+}
+
+bool CBaseEntity::IsGlowEffectActive( void )
+{
+	return m_bGlowEnabled;
+}
+#endif // GLOWS_ENABLE
+// FF <--
 
 //------------------------------------------------------------------------------
 // Purpose: Create an NPC of the given type

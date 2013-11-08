@@ -419,8 +419,6 @@ void CFF_SV_Player::SetPlayerTeamModel( void )
 	SetupPlayerSoundsByModel( szModelName );
 
 	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;
-
-	AddGlowEffect();
 }
 
 void CFF_SV_Player::SetPlayerModel( void )

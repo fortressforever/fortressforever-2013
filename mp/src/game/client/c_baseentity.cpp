@@ -41,6 +41,12 @@
 #include "inetchannelinfo.h"
 #include "proto_version.h"
 
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+#include "glow_outline_effect.h"
+#endif // GLOWS_ENABLE
+// FF <--
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -476,6 +482,13 @@ BEGIN_RECV_TABLE_NOBASE(C_BaseEntity, DT_BaseEntity)
 #ifdef TF_CLIENT_DLL
 	RecvPropArray3( RECVINFO_ARRAY(m_nModelIndexOverrides),	RecvPropInt( RECVINFO(m_nModelIndexOverrides[0]) ) ),
 #endif
+
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+	RecvPropBool(RECVINFO(m_bGlowEnabled)),
+	RecvPropInt(RECVINFO(m_clrGlowColor)),
+#endif // GLOWS_ENABLE
+// FF <--
 
 END_RECV_TABLE()
 
@@ -957,6 +970,14 @@ C_BaseEntity::C_BaseEntity() :
 #endif
 
 	ParticleProp()->Init( this );
+
+	// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+	m_pGlowEffect = NULL;
+	m_bGlowEnabled = false;
+	m_bOldGlowEnabled = false;
+#endif GLOWS_ENABLE
+	// FF <--
 }
 
 
@@ -967,6 +988,8 @@ C_BaseEntity::C_BaseEntity() :
 //-----------------------------------------------------------------------------
 C_BaseEntity::~C_BaseEntity()
 {
+	DestroyGlowEffect(); // FF --> hlstriker: Added
+
 	Term();
 	ClearDataChangedEvent( m_DataChangeEventRef );
 #if !defined( NO_ENTITY_PREDICTION )
@@ -3254,12 +3277,22 @@ void C_BaseEntity::AddVisibleEntities()
 //-----------------------------------------------------------------------------
 void C_BaseEntity::OnPreDataChanged( DataUpdateType_t type )
 {
+	// FF --> hlstriker: Added
+	m_bOldGlowEnabled = m_bGlowEnabled;
+	m_clrOldGlowColor = m_clrGlowColor;
+	// FF <--
+
 	m_hOldMoveParent = m_hNetworkMoveParent;
 	m_iOldParentAttachment = m_iParentAttachment;
 }
 
 void C_BaseEntity::OnDataChanged( DataUpdateType_t type )
 {
+	// FF --> hlstriker: Added
+	if ( m_bOldGlowEnabled != m_bGlowEnabled || m_clrOldGlowColor != m_clrGlowColor )
+		UpdateGlowEffect();
+	// FF <--
+
 	// See if it needs to allocate prediction stuff
 	CheckInitPredictable( "OnDataChanged" );
 
@@ -3271,6 +3304,41 @@ void C_BaseEntity::OnDataChanged( DataUpdateType_t type )
 		UpdateVisibility();
 	}
 }
+
+// FF --> hlstriker: Added
+void C_BaseEntity::GetGlowEffectColor( float *r, float *g, float *b, float *a )
+{
+	*r = m_clrGlowColor.r / 255.0f;
+	*g = m_clrGlowColor.g / 255.0f;
+	*b = m_clrGlowColor.b / 255.0f;
+	*a = m_clrGlowColor.a / 255.0f;
+}
+
+void C_BaseEntity::UpdateGlowEffect( void )
+{
+	// destroy the existing effect
+	if ( m_pGlowEffect )
+		DestroyGlowEffect();
+
+	// create a new effect
+	if ( m_bGlowEnabled )
+	{
+		float r, g, b, a;
+		GetGlowEffectColor( &r, &g, &b, &a );
+
+		m_pGlowEffect = new CGlowObject( this, Vector( r, g, b ), a, true, true );
+	}
+}
+
+void C_BaseEntity::DestroyGlowEffect( void )
+{
+	if ( m_pGlowEffect )
+	{
+		delete m_pGlowEffect;
+		m_pGlowEffect = NULL;
+	}
+}
+// FF <--
 
 ClientThinkHandle_t C_BaseEntity::GetThinkHandle()
 {

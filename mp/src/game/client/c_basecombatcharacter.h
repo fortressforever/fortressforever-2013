@@ -14,9 +14,14 @@
 
 #include "shareddefs.h"
 #include "c_baseflex.h"
+
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 #include "glow_outline_effect.h"
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 class C_BaseCombatWeapon;
 class C_WeaponCombatShield;
@@ -94,10 +99,14 @@ public:
 
 	virtual void		DoMuzzleFlash();
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	CGlowObject			*GetGlowObject( void ){ return m_pGlowEffect; }
 	virtual void		GetGlowEffectColor( float *r, float *g, float *b );
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 public:
 
@@ -105,10 +114,14 @@ public:
 
 protected:
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE	
 	virtual void		UpdateGlowEffect( void );
 	virtual void		DestroyGlowEffect( void );
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 	int			m_bloodColor;			// color of blood particless
 
@@ -120,11 +133,15 @@ private:
 	CHandle<C_BaseCombatWeapon>		m_hMyWeapons[MAX_WEAPONS];
 	CHandle< C_BaseCombatWeapon > m_hActiveWeapon;
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	bool				m_bGlowEnabled;
 	bool				m_bOldGlowEnabled;
 	CGlowObject			*m_pGlowEffect;
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 private:
 	C_BaseCombatCharacter( const C_BaseCombatCharacter & ); // not defined, not accessible

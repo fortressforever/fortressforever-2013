@@ -412,12 +412,16 @@ public:
 	// -----------------------
 	virtual void		OnPursuedBy( INextBot * RESTRICT pPursuer ){} // called every frame while pursued by a bot in DirectChase.
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 	// Glows
 	void				AddGlowEffect( void );
 	void				RemoveGlowEffect( void );
 	bool				IsGlowEffectActive( void );
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 #ifdef INVASION_DLL
 public:
@@ -456,16 +460,22 @@ protected:
 public:
 	CNetworkVar( float, m_flNextAttack );			// cannot attack again until this time
 
+// FF --> hlstriker: Commented.
+/*
 #ifdef GLOWS_ENABLE
 protected:
 	CNetworkVar( bool, m_bGlowEnabled );
 #endif // GLOWS_ENABLE
+*/
+// FF <--
 
 private:
 	Hull_t		m_eHull;
 
-	void				UpdateGlowEffect( void );
-	void				DestroyGlowEffect( void );
+	// FF --> hlstriker: Commented because they aren't used.
+	//void				UpdateGlowEffect( void );
+	//void				DestroyGlowEffect( void );
+	// FF <--
 
 protected:
 	int			m_bloodColor;			// color of blood particless

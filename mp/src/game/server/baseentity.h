@@ -1791,6 +1791,19 @@ public:
 	{
 		return s_bAbsQueriesValid;
 	}
+
+// FF --> hlstriker: Added.
+#ifdef GLOWS_ENABLE
+protected:
+	CNetworkVar( bool, m_bGlowEnabled );
+	CNetworkColor32( m_clrGlowColor );
+
+public:
+	void		AddGlowEffect( int red, int green, int blue, int alpha );
+	void		RemoveGlowEffect( void );
+	bool		IsGlowEffectActive( void );
+#endif // GLOWS_ENABLE
+// FF <--
 };
 
 // Send tables exposed in this module.

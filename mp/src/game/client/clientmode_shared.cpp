@@ -65,6 +65,12 @@ extern ConVar replay_rendersetting_renderglow;
 #include "econ_item_description.h"
 #endif
 
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+#include "glow_outline_effect.h"
+#endif // GLOWS_ENABLE
+// FF <--
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -739,13 +745,16 @@ int ClientModeShared::HudElementKeyInput( int down, ButtonCode_t keynum, const c
 	return 1;
 }
 
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 bool ClientModeShared::DoPostScreenSpaceEffects( const CViewSetup *pSetup )
 {
-	g_GlowObjectManager.RenderGlowEffects( pSetup, 0 /*GetSplitScreenPlayerSlot()*/ ); // FF --> hlstriker: Added
+// FF --> hlstriker: Added
+#ifdef GLOWS_ENABLE
+	g_GlowObjectManager.RenderGlowEffects( pSetup, 0 /*GetSplitScreenPlayerSlot()*/ );
+#endif // GLOWS_ENABLE
+// FF <--
 
 #if defined( REPLAY_ENABLED )
 	if ( engine->IsPlayingDemo() )
