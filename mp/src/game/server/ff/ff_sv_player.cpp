@@ -951,24 +951,26 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 
 bool CFF_SV_Player::ClientCommand( const CCommand &args )
 {
-	if ( FStrEq( args[0], "spectate" ) || FStrEq( args[0], "team" ) )
+	if( FStrEq(args[0], "spectate") )
 	{
-		if ( ShouldRunRateLimitedCommand( args ) )
-		{
-			const char *team;
+		if( ShouldRunRateLimitedCommand(args) )
+			CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, FF_TEAM_SPECTATE );
 
-			if ( args.ArgC() < 2) // || FStrEq( args[0], "spectate" ) )
-				return false;
-			if ( FStrEq( args[0], "spectate" ) )
-				team = "spec";
-			else 
-				team = args[1];
-			// let the team manager earn its namesake and handle that crap
-			return CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, team );
-		}
 		return true;
 	}
-	
+
+	if ( FStrEq( args[0], "team" ) )
+	{
+		if( !ShouldRunRateLimitedCommand(args) || args.ArgC() < 2 )
+			return BaseClass::ClientCommand( args );
+
+		int iNewTeam = Q_atoi(args[1]) + 1;
+		if( iNewTeam >= FF_TEAM_ONE )
+			CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, iNewTeam );
+
+		return true;
+	}
+
 	return BaseClass::ClientCommand( args );
 }
 
@@ -1554,7 +1556,7 @@ void CFF_SV_Player::PreChangeTeam( int iOldTeam, int iNewTeam )
 	// lua player_killed
 	RemoveAllItems( true );
 
-	if ( IsAlive() && GetTeamNumber( ) >= TEAM_BLUE )
+	if ( IsAlive() && GetTeamNumber( ) >= FF_TEAM_ONE )
 	{
 		KillPlayer( );
 

@@ -64,7 +64,7 @@ public:
 	void UpdateClassLimit( int iClassIdx, int conVarVal );
 	void UpdateAllClassLimits( void );
 
-	static bool HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const char* pTeam );
+	static bool HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, int iNewTeam );
 	static int PickAutoJoinTeam( );
 
 	bool IsTeamFull() const;

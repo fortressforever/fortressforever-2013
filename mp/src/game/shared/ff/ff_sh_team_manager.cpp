@@ -234,119 +234,38 @@ int CFF_SH_TeamManager::GetTeamLimits( void )
 }
 
 #ifdef GAME_DLL
-bool CFF_SH_TeamManager::HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, const char *pTeamName )
+bool CFF_SH_TeamManager::HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, int iNewTeam )
 {
-	if ( !pTeamName )
+	if( iNewTeam == FF_TEAM_AUTO_ASSIGN )
+		iNewTeam = PickAutoJoinTeam();
+
+	if ( iNewTeam < FF_TEAM_SPECTATE || iNewTeam > FF_TEAM_LAST )
 		return false;
 
 	int iOldTeam = pPlayer.GetTeamNumber();
-	int iTeam = TEAM_UNASSIGNED;
 
-	if ( FStrEq( pTeamName, "auto" ) )
-	{
-		iTeam = PickAutoJoinTeam( );
-	}
-	else if ( FStrEq( pTeamName, "spec" ) )
-	{
-		iTeam = TEAM_SPECTATOR;
-	}
-	else if ( FStrEq( pTeamName, "red" ) ) 
-	{
-		iTeam = TEAM_RED;
-	}
-	else if ( FStrEq( pTeamName, "blue" ) ) 
-	{
-		iTeam = TEAM_BLUE;
-	}
-	else if ( FStrEq( pTeamName, "yellow" ) ) 
-	{
-		iTeam = TEAM_YELLOW;
-	}
-	else if ( FStrEq( pTeamName, "green" ) ) 
-	{
-		iTeam = TEAM_GREEN;
-	}
-	else if ( FStrEq( pTeamName, "custom1" ) ) 
-	{
-		iTeam = TEAM_CUSTOM1;
-	}
-	else if ( FStrEq( pTeamName, "custom2" ) ) 
-	{
-		iTeam = TEAM_CUSTOM2;
-	}
-	else if ( FStrEq( pTeamName, "custom3" ) ) 
-	{
-		iTeam = TEAM_CUSTOM3;
-	}
-	else if ( FStrEq( pTeamName, "custom4" ) ) 
-	{
-		iTeam = TEAM_CUSTOM4;
-	}
-	else if ( FStrEq( pTeamName, "custom5" ) ) 
-	{
-		iTeam = TEAM_CUSTOM5;
-	}
-	else if ( FStrEq( pTeamName, "custom6" ) ) 
-	{
-		iTeam = TEAM_CUSTOM6;
-	}
-	else if ( FStrEq( pTeamName, "custom7" ) ) 
-	{
-		iTeam = TEAM_CUSTOM7;
-	}
-	else if ( FStrEq( pTeamName, "custom8" ) ) 
-	{
-		iTeam = TEAM_CUSTOM8;
-	}
-	else 
-	{
-		// no known hardcoded team name, 
-		// try to find team by current team names just for the hell of it
-		for ( int i = 0; i < g_Teams.Count(); ++i )
-		{
-			if (!g_Teams[i])
-				continue;
-			if ( FStrEq( g_Teams[i]->GetName(), pTeamName ) )
-			{
-				iTeam = g_Teams[i]->GetTeamNumber( );
-				break;
-			}
-		}
-	}
-
-	if ( iTeam == TEAM_UNASSIGNED )
-	{
-		// TODO: say nothin' found poor sap
+	if ( iOldTeam == iNewTeam )
 		return false;
-	}
 
-	// check stupid stuff first
-	if ( iOldTeam == iTeam )
-	{
-		// wants to join same team
-		return false;
-	}
-
-	CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( iTeam );
-	if ( !pTeam )
+	// Make sure this team exists.
+	CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( iNewTeam );
+	if( !pTeam )
 	{
 		// non active team or something fucked
 		return false;
 	}
 
-	// make sure isnt full 
-	if ( pTeam->IsTeamFull() )
-	{
+	// Make sure this team isn't full.
+	if( pTeam->IsTeamFull() )
 		return false;
-	}
 
 	// TODO: Lua player_switchteam predicate here
 
 	// refactored this, so each step of the process is seperate chunks,
 	// since so much per-class state is handled in each
-	pPlayer.PreChangeTeam( iOldTeam, iTeam );
-	pPlayer.ChangeTeam( iTeam );
-	pPlayer.PostChangeTeam( iOldTeam, iTeam );
+	pPlayer.PreChangeTeam( iOldTeam, iNewTeam );
+	pPlayer.ChangeTeam( iNewTeam );
+	pPlayer.PostChangeTeam( iOldTeam, iNewTeam );
 	return true;
 }
 
@@ -357,7 +276,7 @@ int CFF_SH_TeamManager::PickAutoJoinTeam( )
 	// it is me, the auto picker thingy majig
 
 
-	return TEAM_BLUE;
+	return FF_TEAM_ONE;
 }
 
 bool CFF_SH_TeamManager::IsTeamFull() const
@@ -388,7 +307,7 @@ void DebugSetTeamName_f( const CCommand &args )
 
 	int teamNum = Q_atoi(args.Arg(1));
 	const char* newName = args.Arg(2);
-	if ( teamNum > TEAM_COUNT )
+	if ( teamNum > FF_TEAM_LAST )
 		return;
 	
 	CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( teamNum );
