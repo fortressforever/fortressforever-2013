@@ -249,10 +249,10 @@ void CFF_CL_LuaUI_BasePanel::SetProportionalPos( const char *xstr, const char *y
 		surface()->ForceScreenSizeOverride( true, alignScreenWide, alignScreenTall );
 	}
 
+	/*
 	int parentX = 0;
 	int parentY = 0;
 
-	/*
 	// flag to cause windows to get screenWide and screenTall from their parents,
 	// this allows children windows to use fill and right/bottom alignment even
 	// if their parent does not use the full screen.
