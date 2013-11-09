@@ -181,18 +181,6 @@ char *sTeamNames[] =
 {
 	"#FF_TEAM_UNASSIGNED",
 	"#FF_TEAM_SPECTATOR",
-	"#FF_TEAM_BLUE",
-	"#FF_TEAM_RED",
-	"#FF_TEAM_YELLOW",
-	"#FF_TEAM_GREEN",
-	"#FF_TEAM_CUSTOM1",
-	"#FF_TEAM_CUSTOM2",
-	"#FF_TEAM_CUSTOM3",
-	"#FF_TEAM_CUSTOM4",
-	"#FF_TEAM_CUSTOM5",
-	"#FF_TEAM_CUSTOM6",
-	"#FF_TEAM_CUSTOM7",
-	"#FF_TEAM_CUSTOM8",
 };
 
 
@@ -250,16 +238,12 @@ CFF_SH_Rules::CFF_SH_Rules()
 {
 #ifndef CLIENT_DLL
 	// Create the team managers
-	// TODO: right now this creates a team for every team name string,
-	// hook this into lua and have it create teams as needed per map
-	// or something cool like that 
-	for ( int i = 0; i < ARRAYSIZE( sTeamNames ); i++ )
-	{
-		CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
-		pTeam->Init( sTeamNames[i], i );
+	// TODO: hook into lua
+	AddTeam( "Unassigned" );
+	AddTeam( "Spectators" );
 
-		g_Teams.AddToTail( pTeam );
-	}
+	AddTeam( "Badass guys" );
+	AddTeam( "COol dudes" );
 
 	// Dexter: slammed this to always true instead of the cvar for now
 	//m_bTeamPlayEnabled = teamplay.GetBool();

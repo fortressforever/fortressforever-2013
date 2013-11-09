@@ -279,26 +279,18 @@ int CFF_SH_TeamManager::PickAutoJoinTeam( )
 	return FF_TEAM_ONE;
 }
 
-bool CFF_SH_TeamManager::IsTeamFull() const
+bool CFF_SH_TeamManager::IsTeamFull( )
 {
 	if (m_iMaxPlayers == 0)
 		return false;
 
-	int numActive = 0; 
-	for( int i = 1; i <= gpGlobals->maxClients; i++ )
-	{
-		CFF_SV_Player *pPlayer = (CFF_SV_Player *) UTIL_PlayerByIndex( i );
-		if( pPlayer && pPlayer->GetTeamNumber( ) == GetTeamNumber( ) )
-			numActive++;
-	}
-
-	return m_iMaxPlayers == 0 ||numActive > m_iMaxPlayers; // GetNumPlayers( ) > m_iMaxPlayers;
+	// rely on gameplay to always be on which keeps count for us
+	return m_iMaxPlayers == 0 ||  GetNumPlayers( ) > m_iMaxPlayers;
 }
 
 #endif
 
-//ConCommand ff_team( "ff_team",
-//ConCommand ff_team( "ffdbg_dump_teams",
+
 #if defined (_DEBUG) && defined (GAME_DLL)
 void DebugSetTeamName_f( const CCommand &args ) 
 {

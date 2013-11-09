@@ -67,7 +67,7 @@ public:
 	static bool HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, int iNewTeam );
 	static int PickAutoJoinTeam( );
 
-	bool IsTeamFull() const;
+	bool IsTeamFull();
 #endif // GAME_DLL
 
 	// shared getters

@@ -55,13 +55,12 @@ enum FF_TEAM
 	FF_TEAM_TWENTYSIX,
 	FF_TEAM_TWENTYSEVEN,
 	FF_TEAM_TWENTYEIGHT,
-	FF_TEAM_TWENTYNINE,
+	FF_TEAM_TWENTYNINE, // WARNING: Do not add more than 31 as more will not work with a bit mask.
 	FF_TEAM_THIRTY,
-	FF_TEAM_THIRTYONE, // WARNING: Do not add more than 31 as more will not work with a bit mask.
-
-	FF_TEAM_LAST = FF_TEAM_THIRTYONE
+	FF_TEAM_LAST = FF_TEAM_THIRTY  	// if you're worried about bitmask dont forget FF_TEAM_ONE started from 2 you dork.
 };
 
+// if you really want to use int here dont forget 31 is the sign bit
 const int FF_TEAM_BITS[] =
 {
 	0,			0,			(1<<0),		(1<<1),		(1<<2),
@@ -70,7 +69,7 @@ const int FF_TEAM_BITS[] =
 	(1<<13),	(1<<14),	(1<<15),	(1<<16),	(1<<17),
 	(1<<18),	(1<<19),	(1<<20),	(1<<21),	(1<<22),
 	(1<<23),	(1<<24),	(1<<25),	(1<<26),	(1<<27),
-	(1<<28),	(1<<29),	(1<<30)
+	(1<<28),	(1<<29),	(1<<30),	(1<<31),
 };
 
 enum FF_WEAPON

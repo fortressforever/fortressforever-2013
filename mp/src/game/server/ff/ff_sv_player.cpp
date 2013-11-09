@@ -68,6 +68,7 @@ END_SEND_TABLE()
 BEGIN_DATADESC( CFF_SV_Player )
 END_DATADESC()
 
+//PrecacheModel("models/player/soldier/soldier.mdl");
 const char *g_ppszRandomCitizenModels[] = 
 {
 	"models/humans/group03/male_01.mdl",
@@ -242,52 +243,12 @@ void CFF_SV_Player::GiveDefaultItems( void )
 
 void CFF_SV_Player::PickDefaultSpawnTeam( void )
 {
-	if ( GetTeamNumber() == 0 )
-	{
-		if ( FFRules()->IsTeamplay() == false )
-		{
-			if ( GetModelPtr() == NULL )
-			{
-				const char *szModelName = NULL;
-				szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
-
-				if ( ValidatePlayerModel( szModelName ) == false )
-				{
-					char szReturnString[512];
-
-					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/combine_soldier.mdl\n" );
-					engine->ClientCommand ( edict(), szReturnString );
-				}
-
-				ChangeTeam( TEAM_UNASSIGNED );
-			}
-		}
-		else
-		{
-			CTeam *pCombine = g_Teams[TEAM_COMBINE];
-			CTeam *pRebels = g_Teams[TEAM_REBELS];
-
-			if ( pCombine == NULL || pRebels == NULL )
-			{
-				ChangeTeam( random->RandomInt( TEAM_COMBINE, TEAM_REBELS ) );
-			}
-			else
-			{
-				if ( pCombine->GetNumPlayers() > pRebels->GetNumPlayers() )
-				{
-					ChangeTeam( TEAM_REBELS );
-				}
-				else if ( pCombine->GetNumPlayers() < pRebels->GetNumPlayers() )
-				{
-					ChangeTeam( TEAM_COMBINE );
-				}
-				else
-				{
-					ChangeTeam( random->RandomInt( TEAM_COMBINE, TEAM_REBELS ) );
-				}
-			}
-		}
-	}
+	if ( GetTeamNumber() != FF_TEAM_UNASSIGNED )
+		return;
+	
+	// FF TODO: remove once team hud is in / or auto assign
+	// temp hack assumes FF_TEAM_ONE is present 
+	ChangeTeam ( FF_TEAM_ONE );
 }
 
 //-----------------------------------------------------------------------------
