@@ -49,7 +49,15 @@ void CFF_CL_LuaUI_BasePanel::Init()
 
 	if ( m_LuaObject.is_valid() && luabind::type( m_LuaObject["Init"] ) == LUA_TFUNCTION )
 	{
-		luabind::call_function<void>( m_LuaObject["Init"], this );
+		try
+		{
+			luabind::call_function<void>( m_LuaObject["Init"], this );
+		}
+		catch( error& e )
+		{
+			object error_msg(from_stack(e.state(), -1));
+			g_UIScriptManager.LuaWarning( luabind::object_cast<const char*>( error_msg ) );
+		}
 	}
 }
 
@@ -58,7 +66,15 @@ void CFF_CL_LuaUI_BasePanel::Reset()
 {
 	if ( m_LuaObject.is_valid() && luabind::type( m_LuaObject["Reset"] ) == LUA_TFUNCTION )
 	{
-		luabind::call_function<void>( m_LuaObject["Reset"], this );
+		try
+		{
+			luabind::call_function<void>( m_LuaObject["Reset"], this );
+		}
+		catch( error& e )
+		{
+			object error_msg(from_stack(e.state(), -1));
+			g_UIScriptManager.LuaWarning( "%s\n", luabind::object_cast<const char*>( error_msg ) );
+		}
 	}
 }
 
@@ -69,7 +85,15 @@ void CFF_CL_LuaUI_BasePanel::VidInit()
 	
 	if ( m_LuaObject.is_valid() && luabind::type( m_LuaObject["VidInit"] ) == LUA_TFUNCTION )
 	{
-		luabind::call_function<void>( m_LuaObject["VidInit"], this );
+		try
+		{
+			luabind::call_member<HFont>(m_LuaObject, "VidInit");
+		}
+		catch( error& e )
+		{
+			object error_msg(from_stack(e.state(), -1));
+			g_UIScriptManager.LuaWarning( "%s\n", luabind::object_cast<const char*>( error_msg ) );
+		}
 	}
 }
 
@@ -80,7 +104,15 @@ void CFF_CL_LuaUI_BasePanel::OnThink()
 
 	if ( m_LuaObject.is_valid() && luabind::type( m_LuaObject["OnThink"] ) == LUA_TFUNCTION )
 	{
-		luabind::call_function<void>( m_LuaObject["OnThink"], this );
+		try
+		{
+			luabind::call_function<void>( m_LuaObject["OnThink"], this );
+		}
+		catch( error& e )
+		{
+			object error_msg(from_stack(e.state(), -1));
+			g_UIScriptManager.LuaWarning( "%s\n", luabind::object_cast<const char*>( error_msg ) );
+		}
 	}
 }
 
@@ -91,7 +123,15 @@ void CFF_CL_LuaUI_BasePanel::Paint()
 
 	if ( m_LuaObject.is_valid() && luabind::type( m_LuaObject["Paint"] ) == LUA_TFUNCTION )
 	{
-		luabind::call_function<void>( m_LuaObject["Paint"], this );
+		try
+		{
+			luabind::call_function<void>( m_LuaObject["Paint"], this );
+		}
+		catch( error& e )
+		{
+			object error_msg(from_stack(e.state(), -1));
+			g_UIScriptManager.LuaWarning( "%s\n", luabind::object_cast<const char*>( error_msg ) );
+		}
 	}
 }
 
