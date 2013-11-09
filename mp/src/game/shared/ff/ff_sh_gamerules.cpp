@@ -239,8 +239,8 @@ CFF_SH_Rules::CFF_SH_Rules()
 #ifndef CLIENT_DLL
 	// Create the team managers
 	// TODO: hook into lua
-	AddTeam( "Unassigned" );
-	AddTeam( "Spectators" );
+	AddTeam( "Unassigned", FF_TEAM_UNASSIGNED );
+	AddTeam( "Spectators", FF_TEAM_SPECTATE );
 
 	AddTeam( "Badass guys" );
 	AddTeam( "COol dudes" );
