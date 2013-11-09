@@ -82,13 +82,21 @@ void FF_Lua_InitUI( lua_State *L )
 			.def("SetPaintBackgroundEnabled",		&vgui::Panel::SetPaintBackgroundEnabled)
 			.def("SetPaintBackgroundType",			&vgui::Panel::SetPaintBackgroundType)
 			.def("GetSize",							&vgui::Panel::GetSize, pure_out_value(_2) + pure_out_value(_3))  // _1 is the this pointer
-			.def("SetSize",							&vgui::Panel::SetSize)
+			.def("SetRawSize",						&vgui::Panel::SetSize)
 			.def("GetPos",							&vgui::Panel::GetPos, pure_out_value(_2) + pure_out_value(_3))  // _1 is the this pointer
-			.def("SetPos",							&vgui::Panel::SetPos)
+			.def("SetRawPos",						&vgui::Panel::SetPos)
 			.def("SetEnabled",						&vgui::Panel::SetEnabled),
 
 		class_<CFF_CL_LuaUI_BasePanel, bases<CHudElement, vgui::Panel>>("Panel")
 			.def(constructor<lua_State *, const char *>())
+			.def("SetPos",							(void(CFF_CL_LuaUI_BasePanel::*)(const char*, const char*))&CFF_CL_LuaUI_BasePanel::SetProportionalPos)
+			.def("SetPos",							(void(CFF_CL_LuaUI_BasePanel::*)(int, int))&CFF_CL_LuaUI_BasePanel::SetProportionalPos)
+			.def("SetWide",							(void(CFF_CL_LuaUI_BasePanel::*)(const char*))&CFF_CL_LuaUI_BasePanel::SetProportionalWide)
+			.def("SetWide",							(void(CFF_CL_LuaUI_BasePanel::*)(int))&CFF_CL_LuaUI_BasePanel::SetProportionalWide)
+			.def("SetTall",							(void(CFF_CL_LuaUI_BasePanel::*)(const char*))&CFF_CL_LuaUI_BasePanel::SetProportionalTall)
+			.def("SetTall",							(void(CFF_CL_LuaUI_BasePanel::*)(int))&CFF_CL_LuaUI_BasePanel::SetProportionalTall)
+			.def("SetSize",							(void(CFF_CL_LuaUI_BasePanel::*)(const char*, const char*))&CFF_CL_LuaUI_BasePanel::SetProportionalSize)
+			.def("SetSize",							(void(CFF_CL_LuaUI_BasePanel::*)(int, int))&CFF_CL_LuaUI_BasePanel::SetProportionalSize)
 			.def("DrawText",						&CFF_CL_LuaUI_BasePanel::DrawText)
 			.def("DrawBox",							&CFF_CL_LuaUI_BasePanel::DrawBox),
 

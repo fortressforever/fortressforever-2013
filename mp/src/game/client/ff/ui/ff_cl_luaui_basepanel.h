@@ -24,6 +24,16 @@ public:
 	virtual void Paint();
 	// --> from vgui::Panel
 
+	void SetProportionalWide( int wide );
+	void SetProportionalWide( const char *wstr );
+	void SetProportionalTall( int tall );
+	void SetProportionalTall( const char *hstr );
+	void SetProportionalSize( int w, int h );
+	void SetProportionalSize( const char *wstr, const char *hstr );
+	
+	void SetProportionalPos( int x, int y );
+	void SetProportionalPos( const char *xstr, const char *ystr );
+
 	void DrawText( const char *szText, int xpos, int ypos );
 	
 private:

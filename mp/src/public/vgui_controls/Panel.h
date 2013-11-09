@@ -722,7 +722,8 @@ protected:
 	bool m_PassUnhandledInput;
 	NAV_DIRECTION m_LastNavDirection;
 
-private:
+	// FF --> Make these accessible in derived classes
+protected:
 	enum BuildModeFlags_t
 	{
 		BUILDMODE_EDITABLE					= 0x01,
@@ -758,6 +759,8 @@ private:
 		IS_MOUSE_DISABLED_FOR_THIS_PANEL_ONLY = 0x8000,
 		ALL_FLAGS							= 0xFFFF,
 	};
+private:
+	// FF <--
 
 	// used to get the Panel * for users with only IClientPanel
 	virtual Panel *GetPanel() { return this; }
@@ -849,7 +852,11 @@ private:
 	short			m_nResizeDeltaY;
 
 	HCursor			_cursor;
+	// FF --> Make this accessible in derived classes 
+protected:
 	unsigned short	_buildModeFlags; // flags that control how the build mode dialog handles this panel
+private:
+	// FF <--
 
 	byte			_pinCorner : 4;	// the corner of the dialog this panel is pinned to
 	byte			_autoResizeDirection : 4; // the directions in which the panel will auto-resize to
