@@ -9,8 +9,9 @@
 #include "c_team.h"
 #include "gamestringpool.h"
 
-#ifdef HL2MP
+#ifdef FF
 #include "ff_sh_gamerules.h"
+#include "ff_sh_shareddefs.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -65,12 +66,16 @@ C_PlayerResource::C_PlayerResource()
 		m_Colors[i] = COLOR_GREY;
 	}
 
-#ifdef HL2MP
-	m_Colors[TEAM_COMBINE] = COLOR_BLUE;
-	m_Colors[TEAM_REBELS] = COLOR_RED;
-	m_Colors[TEAM_UNASSIGNED] = COLOR_YELLOW;
+#ifdef FF
+	// FF TODO 
+	m_Colors[FF_TEAM_ONE] = COLOR_RED;
+	m_Colors[FF_TEAM_TWO] = COLOR_GREEN;
+	m_Colors[FF_TEAM_THREE] = COLOR_BLUE;
+	m_Colors[FF_TEAM_FOUR] = COLOR_YELLOW;
+	m_Colors[FF_TEAM_FIVE] = COLOR_BLACK;
+	m_Colors[FF_TEAM_SIX] = COLOR_WHITE;
+	
 #endif
-
 	g_PR = this;
 }
 

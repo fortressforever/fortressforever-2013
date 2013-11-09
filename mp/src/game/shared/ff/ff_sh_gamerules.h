@@ -26,12 +26,6 @@
 #define VEC_CROUCH_TRACE_MIN	FFRules()->GetFFViewVectors()->m_vCrouchTraceMin
 #define VEC_CROUCH_TRACE_MAX	FFRules()->GetFFViewVectors()->m_vCrouchTraceMax
 
-enum
-{
-	TEAM_COMBINE = 2,
-	TEAM_REBELS,
-};
-
 
 #ifdef CLIENT_DLL
 	#define CFF_SH_Rules CFF_CL_Rules

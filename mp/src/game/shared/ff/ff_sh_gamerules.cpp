@@ -362,14 +362,15 @@ void CFF_SH_Rules::Think( void )
 	}
 
 //	float flTimeLimit = mp_timelimit.GetFloat() * 60;
-	float flFragLimit = fraglimit.GetFloat();
-	
 	if ( GetMapRemainingTime() < 0 )
 	{
 		GoToIntermission();
 		return;
 	}
 
+	// FF TODO: removed fraglimit checking by team crap
+	/*float flFragLimit = fraglimit.GetFloat();
+	
 	if ( flFragLimit )
 	{
 		if( IsTeamplay() == true )
@@ -397,7 +398,7 @@ void CFF_SH_Rules::Think( void )
 				}
 			}
 		}
-	}
+	}*/
 
 	if ( gpGlobals->curtime > m_tmNextPeriodicThink )
 	{		
@@ -835,7 +836,17 @@ void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 			return;
 		}
 
-		if (FFRules()->IsTeamplay() == false )
+		// FF TODO: HL2DM had some thing where it would change your team based on model , just removed
+		pFFPlayer->SetPlayerModel();
+
+		const char *pszCurrentModelName = modelinfo->GetModelName( pFFPlayer->GetModel() );
+
+		char szReturnString[128];
+		Q_snprintf( szReturnString, sizeof( szReturnString ), "Your player model is: %s\n", pszCurrentModelName );
+
+		ClientPrint( pFFPlayer, HUD_PRINTTALK, szReturnString );
+		/*
+		if ( FFRules()->IsTeamplay() == false )
 		{
 			pFFPlayer->SetPlayerModel();
 
@@ -856,7 +867,7 @@ void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 			{
 				pFFPlayer->ChangeTeam( TEAM_COMBINE );
 			}
-		}
+		}*/
 	}
 	if ( sv_report_client_settings.GetInt() == 1 )
 	{
@@ -870,6 +881,7 @@ void CFF_SH_Rules::ClientSettingsChanged( CBasePlayer *pPlayer )
 
 int CFF_SH_Rules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
 {
+	// FF TODO: expose to lua?
 #ifndef CLIENT_DLL
 	// half life multiplay has a simple concept of Player Relationships.
 	// you are either on another player's team, or you are not.
@@ -887,6 +899,7 @@ int CFF_SH_Rules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget
 
 const char *CFF_SH_Rules::GetGameDescription( void )
 { 
+	// FF TODO: expose to lua
 	if ( IsTeamplay() )
 		return "Team Deathmatch"; 
 
@@ -1008,7 +1021,7 @@ CAmmoDef *GetAmmoDef()
 		int count = 1;
 		count = clamp( count, 1, 16 );
 
-		int iTeam = TEAM_COMBINE;
+		int iTeam = FF_TEAM_ONE; // FF hack: put in first team
 				
 		// Look at -frozen.
 		bool bFrozen = false;
@@ -1078,20 +1091,17 @@ void CFF_SH_Rules::RestartGame()
 	}
 
 	// Respawn entities (glass, doors, etc..)
-
-	CTeam *pRebels = GetGlobalTeam( TEAM_REBELS );
-	CTeam *pCombine = GetGlobalTeam( TEAM_COMBINE );
-
-	if ( pRebels )
+	for ( int idx = 0; idx < g_Teams.Count(); idx++ )
 	{
-		pRebels->SetScore( 0 );
-	}
+		if ( !g_Teams[idx] )
+			continue;
+		int iTeamNum = g_Teams[idx]->GetTeamNumber( );
+		if ( iTeamNum == FF_TEAM_UNASSIGNED || iTeamNum == FF_TEAM_SPECTATE )
+			continue;
 
-	if ( pCombine )
-	{
-		pCombine->SetScore( 0 );
+		g_Teams[idx]->SetScore( 0 );
 	}
-
+	
 	m_flIntermissionEndTime = 0;
 	m_flRestartGameTime = 0.0;		
 	m_bCompleteReset = false;

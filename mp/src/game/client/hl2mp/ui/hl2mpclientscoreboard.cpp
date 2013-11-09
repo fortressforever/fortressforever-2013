@@ -12,6 +12,7 @@
 #include "c_playerresource.h"
 #include "ff_cl_player.h"
 #include "ff_sh_gamerules.h"
+#include "ff_sh_shareddefs.h"
 
 #include <KeyValues.h>
 
@@ -335,8 +336,9 @@ void CHL2MPClientScoreBoardDialog::InitScoreboardSections()
 	if ( FFRules()->IsTeamplay() )
 	{
 		// add the team sections
-		AddSection( TYPE_TEAM, TEAM_COMBINE );
-		AddSection( TYPE_TEAM, TEAM_REBELS );
+		// FF TODO: how do into dynamic teams
+		AddSection( TYPE_TEAM, FF_TEAM_ONE );
+		AddSection( TYPE_TEAM, FF_TEAM_TWO );
 	}
 	else
 	{
@@ -495,16 +497,18 @@ void CHL2MPClientScoreBoardDialog::AddSection(int teamType, int teamNumber)
 
 int CHL2MPClientScoreBoardDialog::GetSectionFromTeamNumber( int teamNumber )
 {
+	// FF hacked in, need to do proper scoreboard
 	switch ( teamNumber )
 	{
-	case TEAM_COMBINE:
+	case FF_TEAM_ONE:
 		return SCORESECTION_COMBINE;
-	case TEAM_REBELS:
+	case FF_TEAM_TWO:
 		return SCORESECTION_REBELS;
 	case TEAM_SPECTATOR:
 		return SCORESECTION_SPECTATOR;
-	default:
+	case FF_TEAM_UNASSIGNED:
 		return SCORESECTION_FREEFORALL;
+
 	}
 	return SCORESECTION_FREEFORALL;
 }

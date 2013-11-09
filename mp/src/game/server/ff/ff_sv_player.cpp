@@ -343,7 +343,7 @@ void CFF_SV_Player::SetPlayerTeamModel( void )
 	if ( modelIndex == -1 || ValidatePlayerModel( szModelName ) == false )
 	{
 		szModelName = "models/Combine_Soldier.mdl";
-		m_iModelType = TEAM_COMBINE;
+		m_iModelType = FF_TEAM_ONE;
 
 		char szReturnString[512];
 
@@ -351,6 +351,16 @@ void CFF_SV_Player::SetPlayerTeamModel( void )
 		engine->ClientCommand ( edict(), szReturnString );
 	}
 
+	if ( Q_stristr( szModelName, "models/human") )
+	{
+		int nHeads = ARRAYSIZE( g_ppszRandomCombineModels );
+		
+		g_iLastCitizenModel = ( g_iLastCitizenModel + 1 ) % nHeads;
+		szModelName = g_ppszRandomCitizenModels[g_iLastCombineModel];
+	}
+
+	m_iModelType = FF_TEAM_ONE;
+	/* FF TODO: team & class model crap here
 	if ( GetTeamNumber() == TEAM_COMBINE )
 	{
 		if ( Q_stristr( szModelName, "models/human") )
@@ -374,7 +384,7 @@ void CFF_SV_Player::SetPlayerTeamModel( void )
 		}
 
 		m_iModelType = TEAM_REBELS;
-	}
+	}*/
 	
 	SetModel( szModelName );
 	SetupPlayerSoundsByModel( szModelName );
@@ -403,55 +413,15 @@ void CFF_SV_Player::SetPlayerModel( void )
 
 		szModelName = pszCurrentModelName;
 	}
+	// FF TODO: team models and stuff
+	
+	int nHeads = ARRAYSIZE( g_ppszRandomCitizenModels );
 
-	if ( GetTeamNumber() == TEAM_COMBINE )
-	{
-		int nHeads = ARRAYSIZE( g_ppszRandomCombineModels );
-		
-		g_iLastCombineModel = ( g_iLastCombineModel + 1 ) % nHeads;
-		szModelName = g_ppszRandomCombineModels[g_iLastCombineModel];
+	g_iLastCitizenModel = ( g_iLastCitizenModel + 1 ) % nHeads;
+	szModelName = g_ppszRandomCitizenModels[g_iLastCitizenModel];
 
-		m_iModelType = TEAM_COMBINE;
-	}
-	else if ( GetTeamNumber() == TEAM_REBELS )
-	{
-		int nHeads = ARRAYSIZE( g_ppszRandomCitizenModels );
-
-		g_iLastCitizenModel = ( g_iLastCitizenModel + 1 ) % nHeads;
-		szModelName = g_ppszRandomCitizenModels[g_iLastCitizenModel];
-
-		m_iModelType = TEAM_REBELS;
-	}
-	else
-	{
-		if ( Q_strlen( szModelName ) == 0 ) 
-		{
-			szModelName = g_ppszRandomCitizenModels[0];
-		}
-
-		if ( Q_stristr( szModelName, "models/human") )
-		{
-			m_iModelType = TEAM_REBELS;
-		}
-		else
-		{
-			m_iModelType = TEAM_COMBINE;
-		}
-	}
-
-	int modelIndex = modelinfo->GetModelIndex( szModelName );
-
-	if ( modelIndex == -1 )
-	{
-		szModelName = "models/Combine_Soldier.mdl";
-		m_iModelType = TEAM_COMBINE;
-
-		char szReturnString[512];
-
-		Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel %s\n", szModelName );
-		engine->ClientCommand ( edict(), szReturnString );
-	}
-
+	m_iModelType = FF_TEAM_ONE;
+	
 	SetModel( szModelName );
 	SetupPlayerSoundsByModel( szModelName );
 
@@ -623,8 +593,8 @@ bool CFF_SV_Player::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, co
 
 Activity CFF_SV_Player::TranslateTeamActivity( Activity ActToTranslate )
 {
-	if ( m_iModelType == TEAM_COMBINE )
-		 return ActToTranslate;
+	//if ( m_iModelType == TEAM_COMBINE )
+	//	 return ActToTranslate;
 	
 	if ( ActToTranslate == ACT_RUN )
 		 return ACT_RUN_AIM_AGITATED;
