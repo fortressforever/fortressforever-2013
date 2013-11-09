@@ -47,7 +47,7 @@ $Project "Server (FF)"
 				$File	"ff\entities\ff_sv_point_ff_teamcheck.h"
 				$File	"ff\entities\ff_sv_teamcheck_target.h"
 				$File	"ff\entities\ff_sv_teamcheck_target.cpp"
-				$File	"ff\entities\ff_sv_point_ff_message.cpp"
+				//$File	"ff\entities\ff_sv_point_ff_message.cpp"
 			}
 			$Folder "Other"
 			{
