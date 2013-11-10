@@ -54,6 +54,10 @@ $Project "Client (FF)"
 				$File	"ff\ff_cl_player.cpp"
 				$File	"ff\ff_cl_player.h"
 			}
+			$Folder "Entities"
+			{
+				$File	"ff\entities\ff_cl_info_ff_weapon_spawner.cpp"
+			}
 		}
 		
 		// IMPORTANT: remove conflicting hl2dm SDK stuff as we implement our own!!

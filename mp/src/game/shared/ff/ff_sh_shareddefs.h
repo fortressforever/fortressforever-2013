@@ -18,6 +18,7 @@ enum FF_CLASS
 	FF_CLASS_SPY,
 	FF_CLASS_ENGINEER,
 	FF_CLASS_CIVILIAN,
+
 	FF_CLASS_COUNT
 };
 
@@ -55,9 +56,11 @@ enum FF_TEAM
 	FF_TEAM_TWENTYSIX,
 	FF_TEAM_TWENTYSEVEN,
 	FF_TEAM_TWENTYEIGHT,
-	FF_TEAM_TWENTYNINE, // WARNING: Do not add more than 31 as more will not work with a bit mask.
+	FF_TEAM_TWENTYNINE,
 	FF_TEAM_THIRTY,
-	FF_TEAM_LAST = FF_TEAM_THIRTY  	// if you're worried about bitmask dont forget FF_TEAM_ONE started from 2 you dork.
+	FF_TEAM_THIRTYONE, // WARNING: Do not add more than 31 as more will not work with a bit mask.
+
+	FF_TEAM_LAST = FF_TEAM_THIRTYONE
 };
 
 // if you really want to use int here dont forget 31 is the sign bit
@@ -69,7 +72,7 @@ const int FF_TEAM_BITS[] =
 	(1<<13),	(1<<14),	(1<<15),	(1<<16),	(1<<17),
 	(1<<18),	(1<<19),	(1<<20),	(1<<21),	(1<<22),
 	(1<<23),	(1<<24),	(1<<25),	(1<<26),	(1<<27),
-	(1<<28),	(1<<29),	(1<<30),	(1<<31),
+	(1<<28),	(1<<29),	(1<<30)
 };
 
 enum FF_WEAPON
@@ -77,6 +80,8 @@ enum FF_WEAPON
 	FF_WEAPON_PISTOL = 0,
 	FF_WEAPON_PHYSCANNON,
 	FF_WEAPON_SMG1,
+
+	FF_WEAPON_COUNT // WARNING: The weapon count should never be greater than 31.
 };
 
 const int FF_WEAPON_BITS[] =
