@@ -36,6 +36,10 @@
 #include "vguicenterprint.h"
 #include "text_message.h"
 
+// HL2MP HUD panels
+#include "hl2mpclientscoreboard.h"
+#include "hl2mptextwindow.h"
+
 
 void CFF_CL_HudViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
@@ -51,11 +55,21 @@ IViewPortPanel* CFF_CL_HudViewport::CreatePanelByName(const char *szPanelName)
 {
 	IViewPortPanel* newpanel = NULL;
 
-// Up here, strcmp against each type of panel we know how to create.
-//	else if ( Q_strcmp(PANEL_OVERVIEW, szPanelName) == 0 )
-//	{
-//		newpanel = new CCSMapOverview( this );
-//	}
+	if ( Q_strcmp( PANEL_SCOREBOARD, szPanelName) == 0 )
+	{
+		newpanel = new CHL2MPClientScoreBoardDialog( this );
+		return newpanel;
+	}
+	else if ( Q_strcmp(PANEL_INFO, szPanelName) == 0 )
+	{
+		newpanel = new CHL2MPTextWindow( this );
+		return newpanel;
+	}
+	else if ( Q_strcmp(PANEL_SPECGUI, szPanelName) == 0 )
+	{
+		newpanel = new CHL2MPSpectatorGUI( this );	
+		return newpanel;
+	}
 
 	// create a generic base panel, don't add twice
 	newpanel = BaseClass::CreatePanelByName( szPanelName );
