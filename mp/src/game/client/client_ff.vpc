@@ -34,6 +34,15 @@ $Project "Client (FF)"
 			{
 				$File	"ff\ff_cl_dll_interface.cpp"
 				$File	"ff\ff_cl_dll_interface.h"
+				$File	"ff\ff_cl_clientmode.cpp"
+				$File	"ff\ff_cl_clientmode.h"
+			}
+			$Folder "UI"
+			{
+				$File 	"ff\ui\ff_cl_hudviewport.cpp"
+				$File 	"ff\ui\ff_cl_hudviewport.h"
+				$File 	"ff\ui\ff_cl_vgui_rootpanel.cpp"
+				$File 	"ff\ui\ff_cl_vgui_rootpanel.h"
 			}
 			$Folder "Lua"
 			{
@@ -67,6 +76,9 @@ $Project "Client (FF)"
 		{
 			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.cpp"
 			-$File	"$SRCDIR\game\shared\hl2\hl_gamemovement.h"
+			
+			-$File	"hl2\hl2_clientmode.cpp"
+			-$File	"hl2\vgui_rootpanel_hl2.cpp"
 		}
 
 		$Folder	"HL2MP"
@@ -76,6 +88,9 @@ $Project "Client (FF)"
 			-$File	"hl2mp\c_hl2mp_player.h"
 			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_player_shared.cpp"
 			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_player_shared.h"
+			
+			-$File	"hl2mp\clientmode_hl2mpnormal.cpp"
+			-$File	"hl2mp\clientmode_hl2mpnormal.h"
 		}
 
 		$Folder "Shader Editor" [$WIN32]

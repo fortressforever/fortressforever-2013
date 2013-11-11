@@ -8,7 +8,8 @@
 #include "hudelement.h"
 #include "hud_macros.h"
 #include "c_playerresource.h"
-#include "clientmode_hl2mpnormal.h"
+//#include "clientmode_hl2mpnormal.h"
+#include "ff_cl_clientmode.h"
 #include <vgui_controls/Controls.h>
 #include <vgui_controls/Panel.h>
 #include <vgui/ISurface.h>
@@ -147,7 +148,7 @@ void CHudDeathNotice::Paint()
 	if ( !m_iconD_skull )
 		return;
 
-	int yStart = GetClientModeHL2MPNormal()->GetDeathMessageStartHeight();
+	int yStart = GetClientModeFFNormal()->GetDeathMessageStartHeight();
 
 	surface()->DrawSetTextFont( m_hTextFont );
 	surface()->DrawSetTextColor( GameResources()->GetTeamColor( 0 ) );

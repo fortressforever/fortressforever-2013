@@ -10,7 +10,7 @@
 #include <vgui/IVGui.h>
 #include <vgui_controls/Controls.h>
 #include <vgui_controls/Label.h>
-#include "clientmode_hlnormal.h"
+//#include "clientmode_hlnormal.h"
 #include "tier1/utllinkedlist.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -105,7 +105,7 @@ DECLARE_VGUI_SCREEN_FACTORY( CTeleportCountdownScreen, "teleport_countdown_scree
 // Constructor: 
 //-----------------------------------------------------------------------------
 CTeleportCountdownScreen::CTeleportCountdownScreen( vgui::Panel *parent, const char *panelName )
-	: BaseClass( parent, panelName, g_hVGuiCombineScheme ) 
+	: BaseClass( parent, panelName/*, g_hVGuiCombineScheme*/ ) // FF: This scheme no longer exists
 {
 }
 
