@@ -41,6 +41,13 @@
 #include "hl2mptextwindow.h"
 
 
+CFF_CL_HudViewport::CFF_CL_HudViewport()
+{
+	MakePopup();
+	SetKeyBoardInputEnabled( false );
+	SetMouseInputEnabled( false );
+}
+
 void CFF_CL_HudViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
@@ -49,7 +56,6 @@ void CFF_CL_HudViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 
 	SetPaintBackgroundEnabled( false );
 }
-
 
 IViewPortPanel* CFF_CL_HudViewport::CreatePanelByName(const char *szPanelName)
 {

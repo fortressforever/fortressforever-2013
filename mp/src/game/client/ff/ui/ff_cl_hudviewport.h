@@ -18,6 +18,7 @@ private:
 	DECLARE_CLASS_SIMPLE( CFF_CL_HudViewport, CBaseViewport );
 
 public:
+	CFF_CL_HudViewport();
 
 	IViewPortPanel* CreatePanelByName(const char *szPanelName);
 	void CreateDefaultPanels( void );
