@@ -41,8 +41,14 @@ extern bool			g_fGameOver;
 void FinishClientPutInServer( CFF_SV_Player *pPlayer )
 {
 	pPlayer->InitialSpawn();
-	pPlayer->Spawn();
+	pPlayer->PickDefaultSpawnTeam();
+	//pPlayer->Spawn(); // PickDefaultSpawnTeam() will call Spawn()
 
+	if( gpGlobals->eLoadType == MapLoad_Background )
+	{
+		pPlayer->m_Local.m_iHideHUD = HIDEHUD_ALL;
+		return;
+	}
 
 	char sName[128];
 	Q_strncpy( sName, pPlayer->GetPlayerName(), sizeof( sName ) );

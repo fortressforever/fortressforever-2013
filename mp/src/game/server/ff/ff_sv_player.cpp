@@ -248,12 +248,16 @@ void CFF_SV_Player::GiveDefaultItems( void )
 
 void CFF_SV_Player::PickDefaultSpawnTeam( void )
 {
+	m_flNextModelChangeTime = 0.0f;
+	m_flNextTeamChangeTime = 0.0f;
+
 	if ( GetTeamNumber() != FF_TEAM_UNASSIGNED )
 		return;
-	
-	// FF TODO: remove once team hud is in / or auto assign
-	// temp hack assumes FF_TEAM_ONE is present 
-	ChangeTeam ( FF_TEAM_ONE );
+
+	if( gpGlobals->eLoadType == MapLoad_Background )
+		ChangeTeam( FF_TEAM_UNASSIGNED );
+	else
+		ChangeTeam( FF_TEAM_UNASSIGNED );
 }
 
 //-----------------------------------------------------------------------------
@@ -261,14 +265,9 @@ void CFF_SV_Player::PickDefaultSpawnTeam( void )
 //-----------------------------------------------------------------------------
 void CFF_SV_Player::Spawn(void)
 {
-	m_flNextModelChangeTime = 0.0f;
-	m_flNextTeamChangeTime = 0.0f;
-
-	PickDefaultSpawnTeam();
-
 	BaseClass::Spawn();
 	
-	if ( !IsObserver() )
+	if ( !IsObserver() && gpGlobals->eLoadType != MapLoad_Background )
 	{
 		pl.deadflag = false;
 		RemoveSolidFlags( FSOLID_NOT_SOLID );
@@ -882,6 +881,10 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 	if ( bKill == true )
 	{
 		CommitSuicide();
+	}
+	else
+	{
+		Spawn();
 	}
 }
 
@@ -1510,7 +1513,7 @@ void CFF_SV_Player::PostChangeTeam( int iOldTeam, int iNewTeam )
 	// reset state
 	// spawn called
 
-	if ( iOldTeam == TEAM_SPECTATOR )
+	if ( iOldTeam == FF_TEAM_SPECTATE )
 	{
 		StopObserverMode( );
 	}
