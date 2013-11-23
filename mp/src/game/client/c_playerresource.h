@@ -15,6 +15,7 @@
 #include "const.h"
 #include "c_baseentity.h"
 #include <igameresources.h>
+#include "ff_sh_shareddefs.h" // FF: --> hlstriker: Added
 
 #define PLAYER_UNCONNECTED_NAME	"unconnected"
 #define PLAYER_ERROR_NAME		"ERRORNAME"
@@ -69,7 +70,7 @@ protected:
 	int		m_iTeam[MAX_PLAYERS+1];
 	bool	m_bAlive[MAX_PLAYERS+1];
 	int		m_iHealth[MAX_PLAYERS+1];
-	Color	m_Colors[MAX_TEAMS];
+	Color	m_Colors[FF_TEAM_LAST+1];
 	string_t m_szUnconnectedName;
 
 };

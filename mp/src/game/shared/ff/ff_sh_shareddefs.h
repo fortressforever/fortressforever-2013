@@ -63,7 +63,6 @@ enum FF_TEAM
 	FF_TEAM_LAST = FF_TEAM_THIRTYONE
 };
 
-// if you really want to use int here dont forget 31 is the sign bit
 const int FF_TEAM_BITS[] =
 {
 	0,			0,			(1<<0),		(1<<1),		(1<<2),
@@ -74,6 +73,7 @@ const int FF_TEAM_BITS[] =
 	(1<<23),	(1<<24),	(1<<25),	(1<<26),	(1<<27),
 	(1<<28),	(1<<29),	(1<<30)
 };
+
 
 enum FF_WEAPON
 {

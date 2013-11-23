@@ -95,7 +95,7 @@ public:
 };
 
 extern CUtlVector< CTeam * > g_Teams;
-extern CTeam *GetGlobalTeam( int iIndex );
+extern CTeam *GetGlobalTeam( int iNewTeam ); // FF: hlstriker --> Changed iIndex to iNewTeam.
 extern int GetNumberOfTeams( void );
 
 #endif // TEAM_H

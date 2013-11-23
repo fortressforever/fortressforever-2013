@@ -127,6 +127,9 @@ private:
 	CNetworkVar( FFPlayerState, m_iPlayerState );	
 
 	bool m_fIsWalking;
+
+public:
+	float m_flNextJumpTimeForDouble;
 };
 
 inline CFF_CL_Player *ToFFPlayer( CBaseEntity *pEntity )

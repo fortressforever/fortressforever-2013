@@ -4,10 +4,10 @@
 #include "ammodef.h"
 
 
-class CFF_SV_InfoFFWeaponSpawner : public CFF_SV_TeamcheckTarget
+class CFF_SV_InfoFFWeaponSpawner : public CBaseAnimating
 {
 public:
-	DECLARE_CLASS( CFF_SV_InfoFFWeaponSpawner, CFF_SV_TeamcheckTarget );
+	DECLARE_CLASS( CFF_SV_InfoFFWeaponSpawner, CBaseAnimating );
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 
@@ -17,12 +17,14 @@ public:
 		SetThink(NULL);
 	}
 
-	void Spawn( void );
-	void ForceNextSpawn( void );
-	void SetWait( void );
-	void ThinkNextSpawn( void );
+	void	Spawn( void );
+	void	Precache( void );
+	void	ForceNextSpawn( void );
+	void	SetWait( void );
+	void	ThinkNextSpawn( void );
+	int		UpdateTransmitState( void );
 
-	void OnTouch( CBaseEntity *pOther );
+	void	OnTouch( CBaseEntity *pOther );
 
 private:
 	int		m_iWeaponsAllowed;
@@ -61,8 +63,27 @@ IMPLEMENT_SERVERCLASS_ST( CFF_SV_InfoFFWeaponSpawner, DT_FF_InfoFFWeaponSpawner 
 END_SEND_TABLE()
 
 
+#define	SOUND_AMMO_PICKUP		"Player.PickupWeapon"
+#define	SOUND_WEAPON_RESPAWN	"weapons/physcannon/physcannon_drop.wav"
+
+
+void CFF_SV_InfoFFWeaponSpawner::Precache( void )
+{
+	PrecacheScriptSound(SOUND_AMMO_PICKUP);
+	PrecacheScriptSound(SOUND_WEAPON_RESPAWN);
+	BaseClass::Precache();
+}
+
+int CFF_SV_InfoFFWeaponSpawner::UpdateTransmitState()
+{
+	// We have to call this since EF_NODRAW will set it to FL_EDICT_DONTSEND.
+	return FL_EDICT_PVSCHECK;
+}
+
 void CFF_SV_InfoFFWeaponSpawner::Spawn()
 {
+	Precache();
+
 	m_iNumInArray = 0;
 	for(int iWeaponNum=0; iWeaponNum<sizeof(FF_WEAPON_BITS) && iWeaponNum<FF_WEAPON_COUNT; iWeaponNum++)
 	{
@@ -107,8 +128,6 @@ void CFF_SV_InfoFFWeaponSpawner::OnTouch( CBaseEntity *pOther )
 	if(!pPlayer)
 		return;
 
-	SetWait();
-
 	int ammoToGive = ( GetAmmoDef()->MaxCarry(m_hWeapon->GetPrimaryAmmoType()) + m_hWeapon->GetMaxClip1() ) * m_fGiveAmmoScale;
 	CBaseCombatWeapon *pOwnedWeapon = pPlayer->Weapon_OwnsThisType(m_hWeapon->GetName());
 
@@ -136,6 +155,20 @@ void CFF_SV_InfoFFWeaponSpawner::OnTouch( CBaseEntity *pOther )
 			pOwnedWeapon->m_iClip1 = pOwnedWeapon->GetMaxClip1();
 	}
 	*/
+	else
+	{
+		// Play ammo pickup sound only if they already own the weapon.
+		CRecipientFilter filter;
+		filter.AddRecipientsByPVS(GetAbsOrigin());
+		filter.MakeReliable();
+
+		EmitSound_t params;
+		params.m_pSoundName = SOUND_AMMO_PICKUP;
+		params.m_SoundLevel = SNDLVL_80dB;
+
+		if(filter.GetRecipientCount())
+			EmitSound(filter, ENTINDEX(this), params);
+	}
 
 	// Put the rest of the ammo in their reserve.
 	if(ammoToGive > 0)
@@ -144,6 +177,9 @@ void CFF_SV_InfoFFWeaponSpawner::OnTouch( CBaseEntity *pOther )
 	m_hWeapon->SetLocalOrigin( pPlayer->GetLocalOrigin() );
 	m_hWeapon->Touch(pPlayer);
 	m_hWeapon = NULL;
+
+	// Wait to respawn.
+	SetWait();
 }
 
 void CFF_SV_InfoFFWeaponSpawner::SetWait()
@@ -210,6 +246,16 @@ void CFF_SV_InfoFFWeaponSpawner::ForceNextSpawn()
 
 	RemoveEffects(EF_NODRAW);
 	SetTouch( &CFF_SV_InfoFFWeaponSpawner::OnTouch );
+
+	// Play respawn sound.
+	CRecipientFilter filter;
+	filter.AddRecipientsByPVS(GetAbsOrigin());
+	filter.MakeReliable();
+
+	EmitSound_t params;
+	params.m_pSoundName = SOUND_WEAPON_RESPAWN;
+	params.m_SoundLevel = SNDLVL_IDLE;
+	EmitSound(filter, ENTINDEX(this), params);
 }
 
 void CFF_SV_InfoFFWeaponSpawner::DeletePreviousWeapon()

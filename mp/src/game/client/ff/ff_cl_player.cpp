@@ -29,11 +29,13 @@ IMPLEMENT_CLIENTCLASS_DT(CFF_CL_Player, DT_FF_Player, CFF_SV_Player)
 	RecvPropInt( RECVINFO( m_iSpawnInterpCounter ) ),
 	RecvPropInt( RECVINFO( m_iPlayerSoundType) ),
 
-	RecvPropBool( RECVINFO( m_fIsWalking ) ),
+	//RecvPropBool( RECVINFO( m_fIsWalking ) ),
+	RecvPropFloat( RECVINFO( m_flNextJumpTimeForDouble ) ),
 END_RECV_TABLE()
 
 BEGIN_PREDICTION_DATA( CFF_CL_Player )
-	DEFINE_PRED_FIELD( m_fIsWalking, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
+	//DEFINE_PRED_FIELD( m_fIsWalking, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
+	//DEFINE_PRED_FIELD( m_flNextJumpTimeForDouble, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
 END_PREDICTION_DATA()
 
 #define	HL2_WALK_SPEED 150

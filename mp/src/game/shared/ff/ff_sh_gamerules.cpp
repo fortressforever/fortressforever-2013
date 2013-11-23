@@ -31,7 +31,8 @@
 	#include "voice_gamemgr.h"
 	#include "ff_sv_dll_interface.h"
 	#include "hl2mp_cvars.h"
-	#include "ff_sh_team_manager.h"
+	//#include "ff_sh_team_manager.h"
+	#include "ff_sv_info_ff_team_manager.h"
 	#include <vector>
 
 #ifdef DEBUG	
@@ -186,7 +187,7 @@ char *sTeamNames[] =
 
 void CFF_SH_Rules::AddTeam( const char *pTeamName, const int iNum )
 {
-	CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
+	CFF_SV_InfoFFTeamManager *pTeam = static_cast<CFF_SV_InfoFFTeamManager*>(CreateEntityByName( "info_ff_team_manager" ));
 	if ( pTeam )
 	{
 		pTeam->Init( pTeamName, iNum );
@@ -197,12 +198,12 @@ void CFF_SH_Rules::AddTeam( const char *pTeamName, const int iNum )
 // add a new team and use next available unused team number
 void CFF_SH_Rules::AddTeam( const char *pTeamName )
 {
-	CFF_SH_TeamManager *pTeam = static_cast<CFF_SH_TeamManager*>(CreateEntityByName( "ff_team_manager" ));
+	CFF_SV_InfoFFTeamManager *pTeam = static_cast<CFF_SV_InfoFFTeamManager*>(CreateEntityByName( "info_ff_team_manager" ));
 	if ( !pTeam )
 		return;
 
 	int iNum = 0;
-		
+	
 	for ( int i = 0; i < g_Teams.Count(); ++i )
 		iNum = max ( g_Teams[i]->GetTeamNumber(), iNum );
 	
@@ -242,8 +243,8 @@ CFF_SH_Rules::CFF_SH_Rules()
 	AddTeam( "Unassigned", FF_TEAM_UNASSIGNED );
 	AddTeam( "Spectators", FF_TEAM_SPECTATE );
 
-	AddTeam( "Badass guys" );
-	AddTeam( "COol dudes" );
+	//AddTeam( "Badass guys" );
+	//AddTeam( "COol dudes" );
 
 	// Dexter: slammed this to always true instead of the cvar for now
 	//m_bTeamPlayEnabled = teamplay.GetBool();
@@ -271,7 +272,7 @@ const FFViewVectors* CFF_SH_Rules::GetFFViewVectors()const
 {
 	return &g_FFViewVectors;
 }
-	
+
 CFF_SH_Rules::~CFF_SH_Rules( void )
 {
 #ifndef CLIENT_DLL

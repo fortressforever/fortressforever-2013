@@ -1034,6 +1034,9 @@ void UTIL_HudMessage( CBasePlayer *pToPlayer, const hudtextparms_t &textparms, c
 // FF --> hlstriker: Added
 void UTIL_HudMessage( CRecipientFilter &filter, const hudtextparms_t &textparms, const char *pMessage )
 {
+	if(!filter.GetRecipientCount())
+		return;
+
 	filter.MakeReliable();
 
 	UserMessageBegin( filter, "HudMsg" );

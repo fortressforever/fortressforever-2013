@@ -335,16 +335,19 @@ void CHL2MPClientScoreBoardDialog::InitScoreboardSections()
 
 	if ( FFRules()->IsTeamplay() )
 	{
-		// add the team sections
-		// FF TODO: how do into dynamic teams
-		AddSection( TYPE_TEAM, FF_TEAM_ONE );
-		AddSection( TYPE_TEAM, FF_TEAM_TWO );
+		for( int i=0; i<g_Teams.Count(); i++)
+		{
+			if( g_Teams[i]->GetTeamNumber() < FF_TEAM_ONE || g_Teams[i]->GetTeamNumber() > FF_TEAM_LAST )
+				continue;
+
+			AddSection( TYPE_TEAM, g_Teams[i]->GetTeamNumber() );
+		}
 	}
 	else
 	{
-		AddSection( TYPE_TEAM, TEAM_UNASSIGNED );
+		AddSection( TYPE_TEAM, FF_TEAM_UNASSIGNED );
 	}
-	AddSection( TYPE_TEAM, TEAM_SPECTATOR );
+	AddSection( TYPE_SPECTATORS, FF_TEAM_SPECTATE );
 }
 
 //-----------------------------------------------------------------------------
@@ -366,7 +369,7 @@ void CHL2MPClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// update the team sections in the scoreboard
-	for ( int i = TEAM_SPECTATOR; i < TEAM_MAXCOUNT; i++ )
+	for ( int i = FF_TEAM_SPECTATE; i <= FF_TEAM_LAST; i++ )
 	{
 		wchar_t *teamName = NULL;
 		int sectionID = 0;
@@ -497,20 +500,13 @@ void CHL2MPClientScoreBoardDialog::AddSection(int teamType, int teamNumber)
 
 int CHL2MPClientScoreBoardDialog::GetSectionFromTeamNumber( int teamNumber )
 {
-	// FF hacked in, need to do proper scoreboard
-	switch ( teamNumber )
-	{
-	case FF_TEAM_ONE:
-		return SCORESECTION_COMBINE;
-	case FF_TEAM_TWO:
-		return SCORESECTION_REBELS;
-	case TEAM_SPECTATOR:
-		return SCORESECTION_SPECTATOR;
-	case FF_TEAM_UNASSIGNED:
-		return SCORESECTION_FREEFORALL;
+	if( teamNumber >= FF_TEAM_ONE && teamNumber <= FF_TEAM_LAST )
+		return teamNumber - 1;
 
-	}
-	return SCORESECTION_FREEFORALL;
+	if( teamNumber == FF_TEAM_SPECTATE )
+		return FF_TEAM_LAST;
+
+	return FF_TEAM_LAST + 1;
 }
 
 //-----------------------------------------------------------------------------

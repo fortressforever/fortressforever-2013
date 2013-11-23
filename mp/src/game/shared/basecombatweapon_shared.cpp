@@ -728,6 +728,8 @@ void CBaseCombatWeapon::OnPickedUp( CBaseCombatCharacter *pNewOwner )
 	{
 		m_OnPlayerPickup.FireOutput(pNewOwner, this);
 
+		// FF --> hlstriker: Commented to use code below.
+		/*
 		// Play the pickup sound for 1st-person observers
 		CRecipientFilter filter;
 		for ( int i=1; i <= gpGlobals->maxClients; ++i )
@@ -742,6 +744,17 @@ void CBaseCombatWeapon::OnPickedUp( CBaseCombatCharacter *pNewOwner )
 		{
 			CBaseEntity::EmitSound( filter, pNewOwner->entindex(), "Player.PickupWeapon" );
 		}
+		*/
+		// FF <--
+
+		// FF --> hlstriker: Play the pickup sound for everyone in PVS instead (not to player that picked up though).
+		CRecipientFilter filter;
+		filter.AddRecipientsByPVS( GetAbsOrigin() );
+		filter.RemoveRecipient( dynamic_cast<CBasePlayer *>(pNewOwner) );
+
+		if( filter.GetRecipientCount() )
+			CBaseEntity::EmitSound( filter, pNewOwner->entindex(), "Player.PickupWeapon" );
+		// FF <--
 
 		// Robin: We don't want to delete weapons the player has picked up, so 
 		// clear the name of the weapon. This prevents wildcards that are meant 

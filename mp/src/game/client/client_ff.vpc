@@ -18,7 +18,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories		"$BASE;.\ff;$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
+		$AdditionalIncludeDirectories		"$BASE;.\ff;.\ff\entities;$SRCDIR\game\shared\ff;$THIRDPARTYDIR\lua;$THIRDPARTYDIR"
 		$PreprocessorDefinitions		"$BASE;FF;FF_CLIENT_DLL;SOURCE_2013;GLOWS_ENABLE"
 	}
 }
@@ -65,6 +65,8 @@ $Project "Client (FF)"
 			}
 			$Folder "Entities"
 			{
+				$File	"ff\entities\ff_cl_info_ff_team_manager.cpp"
+				$File	"ff\entities\ff_cl_info_ff_team_manager.h"
 				$File	"ff\entities\ff_cl_info_ff_weapon_spawner.cpp"
 			}
 		}

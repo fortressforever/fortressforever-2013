@@ -1,16 +1,16 @@
 #pragma once
 
-#ifndef FF_SV_POINT_FF_TEAMCHECK_H
-#define FF_SV_POINT_FF_TEAMCHECK_H
+#ifndef FF_SV_INFO_FF_TEAMCHECK_H
+#define FF_SV_INFO_FF_TEAMCHECK_H
 
 
-class CFF_SV_PointFFTeamCheck : public CBaseEntity
+class CFF_SV_InfoFFTeamCheck : public CBaseEntity
 {
 public:
-	DECLARE_CLASS( CFF_SV_PointFFTeamCheck, CBaseEntity );
+	DECLARE_CLASS( CFF_SV_InfoFFTeamCheck, CBaseEntity );
 	DECLARE_DATADESC();
 
-	CFF_SV_PointFFTeamCheck()
+	CFF_SV_InfoFFTeamCheck()
 	{
 	}
 
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif // FF_SV_POINT_FF_TEAMCHECK_H
+#endif // FF_SV_INFO_FF_TEAMCHECK_H

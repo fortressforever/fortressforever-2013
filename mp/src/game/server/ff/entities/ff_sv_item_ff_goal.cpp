@@ -1,12 +1,11 @@
 #include "cbase.h"
-#include "ff_sv_util.h"
 #include "ff_sv_teamcheck_target.h"
 
 
-class CFF_SV_ItemFFGoal : public CFF_SV_TeamcheckTarget
+class CFF_SV_ItemFFGoal : public CBaseAnimating
 {
 public:
-	DECLARE_CLASS( CFF_SV_ItemFFGoal, CFF_SV_TeamcheckTarget );
+	DECLARE_CLASS( CFF_SV_ItemFFGoal, CBaseAnimating );
 	DECLARE_DATADESC();
 
 	CFF_SV_ItemFFGoal()
@@ -46,11 +45,9 @@ private:
 	float m_fActiveTime;	// How long to stay in the active state.
 	float m_fActiveDelay;	// How long to wait before going in the active state.
 
+	// TODO: These probably don't need to be EHANDLEs unless we network them...
 	EHANDLE m_hGoalActivator;	// The player that activated this goal (this is not always the owner).
 	EHANDLE m_hGoalOwner;		// The player that owns this goal (this is not always the activator).
-
-	string_t m_iszActivatedMsgToAll;		// The message sent to everyone when the goal is activated.
-	string_t m_iszActivatedMsgToOwner;		// The message sent to the owner when the goal is activated.
 
 	string_t m_iszSoundName;
 };
@@ -64,9 +61,6 @@ BEGIN_DATADESC( CFF_SV_ItemFFGoal )
 	DEFINE_KEYFIELD_NOT_SAVED( m_bActive, FIELD_BOOLEAN, "active" ),
 	DEFINE_KEYFIELD_NOT_SAVED( m_fActiveTime, FIELD_FLOAT, "active_time" ),
 	DEFINE_KEYFIELD_NOT_SAVED( m_fActiveDelay, FIELD_FLOAT, "active_delay" ),
-
-	DEFINE_KEYFIELD_NOT_SAVED( m_iszActivatedMsgToAll, FIELD_STRING, "msg_activated_to_all" ),
-	DEFINE_KEYFIELD_NOT_SAVED( m_iszActivatedMsgToOwner, FIELD_STRING, "msg_activated_to_owner" ),
 
 	DEFINE_KEYFIELD_NOT_SAVED( m_iszSoundName, FIELD_SOUNDNAME, "sound" ),
 
@@ -188,13 +182,6 @@ void CFF_SV_ItemFFGoal::ThinkDoActive()
 {
 	AddEffects( EF_NODRAW );
 
-	CBasePlayer *pActivator = dynamic_cast<CBasePlayer *>(m_hGoalActivator.Get());
-	if( pActivator )
-	{
-		color32 color = {200, 200, 200, 255};
-		FF_UTIL_HudMessageFormat( pActivator, -1.0f, 0.7f, HUD_EFFECT_FADE_IN_OUT, color, color, 0.2f, 0.3f, 1.3f, 0.0f, 1, STRING(m_iszActivatedMsgToOwner) );
-	}
-
 	if( m_iszSoundName.ToCStr()[0] )
 	{
 		CRecipientFilter filter;
@@ -203,8 +190,10 @@ void CFF_SV_ItemFFGoal::ThinkDoActive()
 
 		EmitSound_t params;
 		params.m_pSoundName = m_iszSoundName.ToCStr();
+		params.m_SoundLevel = SNDLVL_NORM;
 
-		EmitSound( filter, ENTINDEX(this), params );
+		if( filter.GetRecipientCount() )
+			EmitSound( filter, ENTINDEX(this), params );
 	}
 
 	// Start setting inactive.

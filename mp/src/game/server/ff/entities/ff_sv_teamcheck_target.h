@@ -3,12 +3,13 @@
 #ifndef FF_SV_TEAMCHECK_TARGET_H
 #define FF_SV_TEAMCHECK_TARGET_H
 
+#include "ff_sv_env_ff_message.h"
 
-// NOTE: We might just have to delete this entity and place all the code in CBaseEntity. Unless we find a way to derive from multiple classes.
-class CFF_SV_TeamcheckTarget : public CBaseAnimating
+
+class CFF_SV_TeamcheckTarget : public CFF_SV_EnvFFMessage
 {
 public:
-	DECLARE_CLASS( CFF_SV_TeamcheckTarget, CBaseAnimating );
+	DECLARE_CLASS( CFF_SV_TeamcheckTarget, CFF_SV_EnvFFMessage );
 	DECLARE_DATADESC();
 
 	CFF_SV_TeamcheckTarget()

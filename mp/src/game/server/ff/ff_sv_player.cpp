@@ -25,7 +25,7 @@
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 
 #include "ilagcompensationmanager.h"
-#include "ff_sh_team_manager.h"
+#include "ff_sv_info_ff_team_manager.h"
 
 
 // Don't alias here
@@ -63,6 +63,7 @@ IMPLEMENT_SERVERCLASS_ST(CFF_SV_Player, DT_FF_Player)
 //	SendPropExclude( "DT_ServerAnimationData" , "m_flCycle" ),	
 //	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
 	
+	SendPropFloat( SENDINFO( m_flNextJumpTimeForDouble) ),
 END_SEND_TABLE()
 
 BEGIN_DATADESC( CFF_SV_Player )
@@ -844,15 +845,15 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 
 	bool bKill = false;
 
-	if ( FFRules()->IsTeamplay() != true && iTeam != TEAM_SPECTATOR )
+	if ( FFRules()->IsTeamplay() != true && iTeam != FF_TEAM_SPECTATE )
 	{
 		//don't let them try to join combine or rebels during deathmatch.
-		iTeam = TEAM_UNASSIGNED;
+		iTeam = FF_TEAM_UNASSIGNED;
 	}
 
 	if ( FFRules()->IsTeamplay() == true )
 	{
-		if ( iTeam != GetTeamNumber() && GetTeamNumber() != TEAM_UNASSIGNED )
+		if ( iTeam != GetTeamNumber() && GetTeamNumber() != FF_TEAM_UNASSIGNED )
 		{
 			bKill = true;
 		}
@@ -871,7 +872,7 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 		SetPlayerModel();
 	}
 
-	if ( iTeam == TEAM_SPECTATOR )
+	if ( iTeam == FF_TEAM_SPECTATE )
 	{
 		RemoveAllItems( true );
 
@@ -889,7 +890,7 @@ bool CFF_SV_Player::ClientCommand( const CCommand &args )
 	if( FStrEq(args[0], "spectate") )
 	{
 		if( ShouldRunRateLimitedCommand(args) )
-			CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, FF_TEAM_SPECTATE );
+			CFF_SV_InfoFFTeamManager::TryChangeTeam( *this, FF_TEAM_SPECTATE );
 
 		return true;
 	}
@@ -901,7 +902,10 @@ bool CFF_SV_Player::ClientCommand( const CCommand &args )
 
 		int iNewTeam = Q_atoi(args[1]) + 1;
 		if( iNewTeam >= FF_TEAM_ONE )
-			CFF_SH_TeamManager::HandlePlayerTeamCommand( *this, iNewTeam );
+		{
+			if( CFF_SV_InfoFFTeamManager::TryChangeTeam( *this, iNewTeam ) )
+				DevMsg("Changing to team %i\n", iNewTeam);
+		}
 
 		return true;
 	}

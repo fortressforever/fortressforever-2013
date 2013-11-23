@@ -57,6 +57,8 @@ LINK_ENTITY_TO_CLASS( team_manager, CTeam );
 //-----------------------------------------------------------------------------
 // Purpose: Get a pointer to the specified team manager
 //-----------------------------------------------------------------------------
+// FF: --> hlstriker: Added own version because it should not be checking the index.
+/*
 CTeam *GetGlobalTeam( int iIndex )
 {
 	if ( iIndex < 0 || iIndex >= GetNumberOfTeams() )
@@ -64,6 +66,23 @@ CTeam *GetGlobalTeam( int iIndex )
 
 	return g_Teams[ iIndex ];
 }
+*/
+
+CTeam *GetGlobalTeam( int iTeamNum )
+{
+	CTeam *pTeam = NULL;
+	for( int i=0; i<g_Teams.Count(); i++ )
+	{
+		if( g_Teams[i]->GetTeamNumber() != iTeamNum )
+			continue;
+
+		pTeam = g_Teams[i];
+		break;
+	}
+
+	return pTeam;
+}
+// FF: <--
 
 //-----------------------------------------------------------------------------
 // Purpose: Get the number of team managers

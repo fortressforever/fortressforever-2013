@@ -1,5 +1,5 @@
 #include "cbase.h"
-#include "ff_sv_point_ff_teamcheck.h"
+#include "ff_sv_info_ff_teamcheck.h"
 #include "ff_sv_teamcheck_target.h"
 
 
@@ -17,7 +17,7 @@ bool CFF_SV_TeamcheckTarget::IsTeamAllowed( int iTeamNum )
 	if( !m_iszTeamTarget )
 		return true;
 
-	CFF_SV_PointFFTeamCheck *pEnt = dynamic_cast<CFF_SV_PointFFTeamCheck *>( gEntList.FindEntityByName( NULL, m_iszTeamTarget ) );
+	CFF_SV_InfoFFTeamCheck *pEnt = dynamic_cast<CFF_SV_InfoFFTeamCheck *>( gEntList.FindEntityByName( NULL, m_iszTeamTarget ) );
 	if( !pEnt )
 		return true;
 

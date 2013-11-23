@@ -98,8 +98,8 @@ void CFF_SH_TeamManager::Init( const char *pName, int iNumber )
 {
 	BaseClass::Init( pName, iNumber );
 	NetworkProp()->SetUpdateInterval( 0.75f );
-	memset( &m_iClasses, -1, sizeof( m_iClasses ) );	
-	m_iAllies = 0;										
+	memset( &m_iClasses, -1, sizeof( m_iClasses ) );
+	m_iAllies = 0;	
 }
 
 void CFF_SH_TeamManager::AddDeaths( int iDeaths )
@@ -248,7 +248,16 @@ bool CFF_SH_TeamManager::HandlePlayerTeamCommand( CFF_SV_Player &pPlayer, int iN
 		return false;
 
 	// Make sure this team exists.
-	CFF_SH_TeamManager *pTeam = GetGlobalFFTeam( iNewTeam );
+	CFF_SH_TeamManager *pTeam = NULL;
+	for( int i=0; i<g_Teams.Count(); i++ )
+	{
+		if( g_Teams[i]->GetTeamNumber() != iNewTeam )
+			continue;
+
+		pTeam = dynamic_cast<CFF_SH_TeamManager *>(g_Teams[i]);
+		break;
+	}
+
 	if( !pTeam )
 	{
 		// non active team or something fucked

@@ -143,6 +143,8 @@ public:
 	void PostChangeTeam( int iOldTeam, int iNewTeam );
 
 	void KillPlayer( void );
+
+	CNetworkVar( float, m_flNextJumpTimeForDouble );
 private:
 
 	CNetworkQAngle( m_angEyeAngles );

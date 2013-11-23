@@ -1,11 +1,11 @@
 #include "cbase.h"
 #include "ff_sh_util.h"
-#include "ff_sv_point_ff_teamcheck.h"
+#include "ff_sv_info_ff_teamcheck.h"
 
 
-LINK_ENTITY_TO_CLASS( point_ff_teamcheck, CFF_SV_PointFFTeamCheck );
+LINK_ENTITY_TO_CLASS( info_ff_teamcheck, CFF_SV_InfoFFTeamCheck );
 
-BEGIN_DATADESC( CFF_SV_PointFFTeamCheck )
+BEGIN_DATADESC( CFF_SV_InfoFFTeamCheck )
 	// Keyfields.
 	DEFINE_KEYFIELD_NOT_SAVED( m_iTeamsAllowed, FIELD_INTEGER, "teams_allowed" ),
 
@@ -15,17 +15,17 @@ BEGIN_DATADESC( CFF_SV_PointFFTeamCheck )
 END_DATADESC()
 
 
-void CFF_SV_PointFFTeamCheck::InputSetTeamsAllowed( inputdata_t &inputdata )
+void CFF_SV_InfoFFTeamCheck::InputSetTeamsAllowed( inputdata_t &inputdata )
 {
 	m_iTeamsAllowed = inputdata.value.Int();
 }
 
-void CFF_SV_PointFFTeamCheck::InputSwapTeams( inputdata_t &inputdata )
+void CFF_SV_InfoFFTeamCheck::InputSwapTeams( inputdata_t &inputdata )
 {
 	m_iTeamsAllowed = ~m_iTeamsAllowed;
 }
 
-bool CFF_SV_PointFFTeamCheck::IsTeamAllowed(int iTeamNum)
+bool CFF_SV_InfoFFTeamCheck::IsTeamAllowed(int iTeamNum)
 {
 	if(!m_iTeamsAllowed)
 		return true;

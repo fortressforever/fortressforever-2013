@@ -12,6 +12,7 @@
 #ifdef FF
 #include "ff_sh_gamerules.h"
 #include "ff_sh_shareddefs.h"
+#include "ff_cl_info_ff_team_manager.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -61,17 +62,17 @@ C_PlayerResource::C_PlayerResource()
 	memset( m_iHealth, 0, sizeof( m_iHealth ) );
 	m_szUnconnectedName = 0;
 	
-	for ( int i=0; i<MAX_TEAMS; i++ )
+	for ( int i=0; i<=FF_TEAM_LAST; i++ )
 	{
 		m_Colors[i] = COLOR_GREY;
 	}
 
 #ifdef FF
 	// FF TODO 
-	m_Colors[FF_TEAM_ONE] = COLOR_RED;
-	m_Colors[FF_TEAM_TWO] = COLOR_GREEN;
-	m_Colors[FF_TEAM_THREE] = COLOR_BLUE;
-	m_Colors[FF_TEAM_FOUR] = COLOR_YELLOW;
+	m_Colors[FF_TEAM_ONE] = COLOR_BLUE;
+	m_Colors[FF_TEAM_TWO] = COLOR_RED;
+	m_Colors[FF_TEAM_THREE] = COLOR_YELLOW;
+	m_Colors[FF_TEAM_FOUR] = COLOR_GREEN;
 	m_Colors[FF_TEAM_FIVE] = COLOR_BLACK;
 	m_Colors[FF_TEAM_SIX] = COLOR_WHITE;
 	
@@ -315,16 +316,22 @@ int	C_PlayerResource::GetHealth( int iIndex )
 
 const Color &C_PlayerResource::GetTeamColor(int index )
 {
-	if ( index < 0 || index >= MAX_TEAMS )
-	{
-		Assert( false );
-		static Color blah;
-		return blah;
-	}
-	else
-	{
+	static Color teamColor;
+	teamColor = COLOR_GREY;
+
+	if ( index < 0 || index > FF_TEAM_LAST )
+		return teamColor;
+
+	if( index < FF_TEAM_ONE )
 		return m_Colors[index];
-	}
+
+	CFF_CL_InfoFFTeamManager *pTeam = dynamic_cast<CFF_CL_InfoFFTeamManager *>(GetGlobalTeam( index ));
+	if( !pTeam )
+		return teamColor;
+
+	color32 c = pTeam->m_clrTeamColor;
+	teamColor = Color(c.r, c.g, c.b, 255);
+	return teamColor;
 }
 
 //-----------------------------------------------------------------------------
