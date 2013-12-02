@@ -874,8 +874,11 @@ void CFF_SV_Player::ChangeTeam( int iTeam )
 	if ( iTeam == FF_TEAM_SPECTATE )
 	{
 		RemoveAllItems( true );
-
 		State_Transition( STATE_OBSERVER_MODE );
+	}
+	else
+	{
+		State_Transition( STATE_ACTIVE );
 	}
 
 	if ( bKill == true )

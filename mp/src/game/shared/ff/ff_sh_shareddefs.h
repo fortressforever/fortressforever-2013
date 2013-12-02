@@ -22,6 +22,21 @@ enum FF_CLASS
 	FF_CLASS_COUNT
 };
 
+const int FF_CLASS_BITS[] =
+{
+	0,
+	(1<<0),
+	(1<<1),
+	(1<<2),
+	(1<<3),
+	(1<<4),
+	(1<<5),
+	(1<<6),
+	(1<<7),
+	(1<<8),
+	(1<<9)
+};
+
 
 enum FF_TEAM
 {

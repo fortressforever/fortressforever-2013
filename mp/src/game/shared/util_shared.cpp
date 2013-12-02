@@ -19,6 +19,7 @@
 #include "particle_parse.h"
 #include "KeyValues.h"
 #include "time.h"
+#include "ff_sh_func_ff_clip.h" // FF: --> hlstriker: Added
 
 #ifdef USES_ECON_ITEMS
 	#include "econ_item_constants.h"
@@ -284,6 +285,26 @@ CTraceFilterSimple::CTraceFilterSimple( const IHandleEntity *passedict, int coll
 //-----------------------------------------------------------------------------
 bool CTraceFilterSimple::ShouldHitEntity( IHandleEntity *pHandleEntity, int contentsMask )
 {
+	// FF: --> hlstriker: Added
+	CBaseEntity *pEntity = EntityFromEntityHandle( pHandleEntity );
+	if ( !pEntity )
+		return false;
+
+	// Check to see if pEntity is a func_ff_clip. If so, check to see if the pass ent should hit it or not.
+	if( m_pPassEnt )
+	{
+		CFF_SH_FuncFFClip *pClip = dynamic_cast<CFF_SH_FuncFFClip *>(pEntity);
+		if( pClip )
+		{
+			const CBaseEntity *pActivator = EntityFromEntityHandle( m_pPassEnt );
+			if( pActivator && pClip->ShouldClipActivator( pActivator ) )
+				return true;
+
+			return false;
+		}
+	}
+	// FF: <--
+
 	if ( !StandardFilterRules( pHandleEntity, contentsMask ) )
 		return false;
 
@@ -295,10 +316,12 @@ bool CTraceFilterSimple::ShouldHitEntity( IHandleEntity *pHandleEntity, int cont
 		}
 	}
 
-	// Don't test if the game code tells us we should ignore this collision...
-	CBaseEntity *pEntity = EntityFromEntityHandle( pHandleEntity );
-	if ( !pEntity )
-		return false;
+	// FF: --> hlstriker: Commented to move this check to the very top.
+	//CBaseEntity *pEntity = EntityFromEntityHandle( pHandleEntity );
+	//if ( !pEntity )
+	//	return false;
+	// FF: <--
+
 	if ( !pEntity->ShouldCollide( m_collisionGroup, contentsMask ) )
 		return false;
 	if ( pEntity && !g_pGameRules->ShouldCollide( m_collisionGroup, pEntity->GetCollisionGroup() ) )

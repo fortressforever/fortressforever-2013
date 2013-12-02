@@ -26,6 +26,7 @@
 #include "ragdoll_shared.h"
 #include "tier0/threadtools.h"
 #include "datacache/idatacache.h"
+#include "ff_sh_base_ff_goal.h" // FF: --> hlstriker: Added
 
 #define LIPSYNC_POSEPARAM_NAME "mouth"
 #define NUM_HITBOX_FIRES	10
@@ -88,10 +89,12 @@ typedef unsigned int			ClientSideAnimationListHandle_t;
 #define		INVALID_CLIENTSIDEANIMATION_LIST_HANDLE	(ClientSideAnimationListHandle_t)~0
 
 
-class C_BaseAnimating : public C_BaseEntity, private IModelLoadCallback
+class C_BaseAnimating : public CFF_SH_BaseFFGoal, private IModelLoadCallback // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was C_BaseEntity.
+//class C_BaseAnimating : public C_BaseEntity, private IModelLoadCallback
 {
 public:
-	DECLARE_CLASS( C_BaseAnimating, C_BaseEntity );
+	DECLARE_CLASS( C_BaseAnimating, CFF_SH_BaseFFGoal ); // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was C_BaseEntity.
+	//DECLARE_CLASS( C_BaseAnimating, C_BaseEntity );
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_INTERPOLATION();

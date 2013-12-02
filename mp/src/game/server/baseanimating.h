@@ -15,7 +15,7 @@
 #include "studio.h"
 #include "datacache/idatacache.h"
 #include "tier0/threadtools.h"
-#include "ff_sv_base_ff_goal.h" // FF: --> hlstriker: Added
+#include "ff_sh_base_ff_goal.h" // FF: --> hlstriker: Added
 
 
 struct animevent_t;
@@ -27,10 +27,13 @@ FORWARD_DECLARE_HANDLE( memhandle_t );
 #define	BCF_NO_ANIMATION_SKIP	( 1 << 0 )	// Do not allow PVS animation skipping (mostly for attachments being critical to an entity)
 #define	BCF_IS_IN_SPAWN			( 1 << 1 )	// Is currently inside of spawn, always evaluate animations
 
-class CBaseAnimating : public CFF_SV_BaseFFGoal // FF: --> hlstriker: Changed to derive from CFF_SV_BaseFFGoal. It was CBaseEntity.
+
+class CBaseAnimating : public CFF_SH_BaseFFGoal // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was CBaseEntity.
+//class CBaseAnimating : public CBaseEntity
 {
 public:
-	DECLARE_CLASS( CBaseAnimating, CFF_SV_BaseFFGoal ); // FF: --> hlstriker: Changed to derive from CFF_SV_BaseFFGoal. It was CBaseEntity.
+	DECLARE_CLASS( CBaseAnimating, CFF_SH_BaseFFGoal ); // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was CBaseEntity.
+	//DECLARE_CLASS( CBaseAnimating, CBaseEntity );
 
 	CBaseAnimating();
 	~CBaseAnimating();

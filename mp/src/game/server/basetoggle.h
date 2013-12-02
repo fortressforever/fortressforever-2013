@@ -10,12 +10,14 @@
 #pragma once
 
 #include "baseentity.h"
-#include "ff_sv_base_ff_goal.h" // FF: --> hlstriker: Added
+#include "ff_sh_base_ff_goal.h" // FF: --> hlstriker: Added
 
 
-class CBaseToggle : public CFF_SV_BaseFFGoal // FF: --> hlstriker: Changed to derive from CFF_SV_BaseFFGoal. It was CBaseEntity.
+class CBaseToggle : public CFF_SH_BaseFFGoal // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was CBaseEntity.
+//class CBaseToggle : public CBaseEntity
 {
-	DECLARE_CLASS( CBaseToggle, CFF_SV_BaseFFGoal ); // FF: --> hlstriker: Changed to derive from CFF_SV_BaseFFGoal. It was CBaseEntity.
+	DECLARE_CLASS( CBaseToggle, CFF_SH_BaseFFGoal ); // FF: --> hlstriker: Changed to derive from CFF_SH_BaseFFGoal. It was CBaseEntity.
+	//DECLARE_CLASS( CBaseToggle, CBaseEntity );
 public:
 	CBaseToggle();
 

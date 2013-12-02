@@ -1,5 +1,4 @@
 #include "cbase.h"
-#include "ff_sv_teamcheck_target.h"
 #include "ff_sh_shareddefs.h"
 #include "ammodef.h"
 
@@ -77,7 +76,7 @@ void CFF_SV_InfoFFWeaponSpawner::Precache( void )
 int CFF_SV_InfoFFWeaponSpawner::UpdateTransmitState()
 {
 	// We have to call this since EF_NODRAW will set it to FL_EDICT_DONTSEND.
-	return FL_EDICT_PVSCHECK;
+	return SetTransmitState( FL_EDICT_PVSCHECK );
 }
 
 void CFF_SV_InfoFFWeaponSpawner::Spawn()

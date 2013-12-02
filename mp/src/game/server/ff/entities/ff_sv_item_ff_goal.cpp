@@ -1,4 +1,41 @@
 #include "cbase.h"
+#include "ff_sv_goal_manager.h"
+#include "ff_sv_item_ff_goal.h"
+
+
+LINK_ENTITY_TO_CLASS( item_ff_goal, CFF_SV_ItemFFGoal );
+
+BEGIN_DATADESC( CFF_SV_ItemFFGoal )
+END_DATADESC()
+
+
+CFF_SV_ItemFFGoal::CFF_SV_ItemFFGoal()
+{
+	BaseClass::InitGoal( FF_GOALTYPE_ITEM );
+}
+
+void CFF_SV_ItemFFGoal::Spawn()
+{
+	// TODO: Check if needs to drop to floor.
+	if( false )
+		UTIL_DropToFloor( this, MASK_SOLID );
+
+	m_vecSpawnOrigin = GetAbsOrigin();
+}
+
+CBasePlayer* CFF_SV_ItemFFGoal::GetCarrier()
+{
+	return m_hItemCarrier;
+}
+
+const Vector& CFF_SV_ItemFFGoal::GetSpawnOrigin()
+{
+	return m_vecSpawnOrigin;
+}
+
+
+/*
+#include "cbase.h"
 #include "ff_sv_teamcheck_target.h"
 
 
@@ -212,3 +249,4 @@ void CFF_SV_ItemFFGoal::ThinkSetInactive()
 {
 	SetInactive();
 }
+*/
