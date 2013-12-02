@@ -135,6 +135,7 @@ bool CFF_SH_BaseFFGoal::HandleCriteriaCheckResult( const CBaseEntity *pEnt, bool
 		CBasePlayer *pPlayer = dynamic_cast<CBasePlayer *>( Instance(pEnt->edict()) );
 		if( pPlayer )
 		{
+			static float m_fNextFailedCriteriaMessage[MAX_PLAYERS+1];
 			int iPlayerIndex = ENTINDEX(pPlayer);
 			if( m_fNextFailedCriteriaMessage[iPlayerIndex] <= gpGlobals->curtime )
 			{

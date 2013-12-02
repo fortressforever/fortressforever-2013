@@ -44,8 +44,8 @@ public:
 	virtual void		OnTouching( CBaseEntity *pOther ); // NOTE: This function is called from its derived classes SetTouch() function (BaseClass::OnTouching()).
 	void				TryActivateGoal( CBaseEntity *pActivator );
 	void				ActivateGoalStart( CBaseEntity *pActivator );
-	void				ActivateGoal( void );
-	void				DeactivateGoal( void );
+	virtual void		ActivateGoal( void );
+	virtual void		DeactivateGoal( void );
 #endif
 
 public:
@@ -112,9 +112,8 @@ private:
 
 	bool		m_bGoalActive;
 
-	color32		m_clrFailedCriteriaColor;
-	float		m_fNextFailedCriteriaMessage[MAX_PLAYERS+1];
-	string_t	m_iszFailedCriteriaMessage;
+	color32			m_clrFailedCriteriaColor;
+	string_t		m_iszFailedCriteriaMessage;
 
 	// NOTE: The strings below are only used for parsing the data from the map keyfields.
 	string_t	m_iszCriteria_TeamsAllowed;

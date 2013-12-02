@@ -48,6 +48,8 @@ $Project
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_base_ff_goal.h"
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_func_ff_clip.cpp"
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_func_ff_clip.h"
+				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_info_ff_goal.cpp"
+				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_info_ff_goal.h"
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_info_ff_teamcheck.cpp"
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_info_ff_teamcheck.h"
 				$File	"$SRCDIR\game\shared\ff\entities\ff_sh_item_ff_goal.cpp"
