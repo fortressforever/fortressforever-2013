@@ -9,6 +9,9 @@ LINK_ENTITY_TO_CLASS( trigger_ff_goal, CFF_SH_TriggerFFGoal );
 BEGIN_DATADESC( CFF_SH_TriggerFFGoal )
 	// Goal touch functions.
 	DEFINE_FUNCTION( OnTouching ),
+
+	// Keys.
+	DEFINE_KEYFIELD_NOT_SAVED( m_bShouldRenderBrush, FIELD_BOOLEAN, "renderbrush" ),
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST( CFF_SH_TriggerFFGoal, DT_FF_TriggerFFGoal )
@@ -28,6 +31,9 @@ void CFF_SH_TriggerFFGoal::Spawn()
 
 #ifdef GAME_DLL
 	SetTouch( &CFF_SH_TriggerFFGoal::OnTouching );
+
+	if( m_bShouldRenderBrush )
+		RemoveEffects( EF_NODRAW );
 #endif
 }
 

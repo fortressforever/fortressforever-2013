@@ -38,6 +38,9 @@ public:
 		// We don't set this in the base_goal because so many other entities are derived from it.
 		return SetTransmitState( FL_EDICT_ALWAYS );
 	}
+
+private:
+	bool	m_bShouldRenderBrush;
 #endif
 };
 
