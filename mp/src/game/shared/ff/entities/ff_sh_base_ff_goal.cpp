@@ -126,8 +126,11 @@ bool CFF_SH_BaseFFGoal::IsGoalActivated()
 	return m_bGoalActivated;
 }
 
-bool CFF_SH_BaseFFGoal::HandleCriteriaCheckResult( const CBaseEntity *pEnt, bool bIsActivator, bool bReturnValue )
+bool CFF_SH_BaseFFGoal::HandleCriteriaCheckResult( bool bReturnValue, const CBaseEntity *pEnt, bool bIsActivator, bool bIsFromTrace )
 {
+	if( bIsFromTrace )
+		return bReturnValue;
+
 #ifdef GAME_DLL
 	if( bIsActivator && !bReturnValue && m_iszFailedCriteriaMessage != NULL_STRING )
 	{
@@ -149,18 +152,18 @@ bool CFF_SH_BaseFFGoal::HandleCriteriaCheckResult( const CBaseEntity *pEnt, bool
 	return bReturnValue;
 }
 
-bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsActivator )
+bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsActivator, bool bIsFromTrace )
 {
 	// Check to see if this player needs to be on a certain team to pass.
 	if( TeamCheck_IsUsed() )
 	{
 		if( !TeamCheck_IsTeamAllowed( pEnt->GetTeamNumber() ) )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 	else
 	{
 		if( m_iCriteria_TeamsAllowed && !( m_iCriteria_TeamsAllowed & FF_TEAM_BITS[pEnt->GetTeamNumber()] ) )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 
 	// --> START: Player specific checks.
@@ -186,14 +189,14 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 		for( int i=0; i<m_Criteria_ItemsCarriedByActivator.Count(); i++ )
 		{
 			if( pPlayer != m_Criteria_ItemsCarriedByActivator[i]->GetCarrier() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to see if this player needs to NOT be carrying specific items.
 		for( int i=0; i<m_Criteria_ItemsNotCarriedByActivator.Count(); i++ )
 		{
 			if( pPlayer == m_Criteria_ItemsNotCarriedByActivator[i]->GetCarrier() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to see if this players team needs to be carrying specific items.
@@ -203,7 +206,7 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 		{
 			pCarrier = m_Criteria_ItemsCarriedByTeam[i]->GetCarrier();
 			if( !pCarrier || pPlayer->GetTeamNumber() != pCarrier->GetTeamNumber() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to see if this players team needs to NOT be carrying specific items.
@@ -211,21 +214,21 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 		{
 			pCarrier = m_Criteria_ItemsNotCarriedByTeam[i]->GetCarrier();
 			if( pCarrier && pPlayer->GetTeamNumber() == pCarrier->GetTeamNumber() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to make sure certain items are being carried by someone.
 		for( int i=0; i<m_Criteria_ItemsCarriedByAny.Count(); i++ )
 		{
 			if( !m_Criteria_ItemsCarriedByAny[i]->GetCarrier() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to make sure certain items are NOT being carried by anyone.
 		for( int i=0; i<m_Criteria_ItemsNotCarriedByAny.Count(); i++ )
 		{
 			if( m_Criteria_ItemsNotCarriedByAny[i]->GetCarrier() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to make sure certain items are being carried by one single player.
@@ -236,7 +239,7 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 			for( int i=0; i<m_Criteria_ItemsCarriedByOne.Count(); i++ )
 			{
 				if( !pCarrier || pCarrier != m_Criteria_ItemsCarriedByOne[i]->GetCarrier() )
-					return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+					return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 			}
 		}
 
@@ -253,21 +256,21 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 			}
 
 			if( iMatches == m_Criteria_ItemsNotCarriedByOne.Count() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to make sure certain items are at their spawn point.
 		for( int i=0; i<m_Criteria_ItemsAtSpawnPoint.Count(); i++ )
 		{
 			if( m_Criteria_ItemsAtSpawnPoint[i]->GetAbsOrigin() != m_Criteria_ItemsAtSpawnPoint[i]->GetSpawnOrigin() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 
 		// Check to make sure certain items are NOT at their spawn point.
 		for( int i=0; i<m_Criteria_ItemsNotAtSpawnPoint.Count(); i++ )
 		{
 			if( m_Criteria_ItemsNotAtSpawnPoint[i]->GetAbsOrigin() == m_Criteria_ItemsNotAtSpawnPoint[i]->GetSpawnOrigin() )
-				return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+				return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 		}
 	}
 	// <-- END: Player specific checks.
@@ -276,32 +279,32 @@ bool CFF_SH_BaseFFGoal::PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsAc
 	for( int i=0; i<m_Criteria_GoalsAreActive.Count(); i++ )
 	{
 		if( !m_Criteria_GoalsAreActive[i]->IsGoalActivated() )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 
 	// Check to make sure certain goals are NOT active.
 	for( int i=0; i<m_Criteria_GoalsAreInactive.Count(); i++ )
 	{
 		if( m_Criteria_GoalsAreInactive[i]->IsGoalActivated() )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 
 	// Check to make sure certain goals are enabled.
 	for( int i=0; i<m_Criteria_GoalsAreEnabled.Count(); i++ )
 	{
 		if( !m_Criteria_GoalsAreEnabled[i]->IsGoalEnabled() )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 
 	// Check to make sure certain goals are NOT enabled.
 	for( int i=0; i<m_Criteria_GoalsAreDisabled.Count(); i++ )
 	{
 		if( m_Criteria_GoalsAreDisabled[i]->IsGoalEnabled() )
-			return HandleCriteriaCheckResult( pEnt, bIsActivator, false);
+			return HandleCriteriaCheckResult( false, pEnt, bIsActivator, bIsFromTrace );
 	}
 
 	// The activator passed all criteria checks!
-	return HandleCriteriaCheckResult( pEnt, bIsActivator, true);
+	return HandleCriteriaCheckResult( true, pEnt, bIsActivator, bIsFromTrace );
 }
 
 #ifdef GAME_DLL

@@ -62,10 +62,10 @@ public:
 	bool			IsGoalActivated( void );
 
 protected:
-	bool			PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsActivator=true );
+	bool			PassesCriteriaCheck( const CBaseEntity *pEnt, bool bIsActivator=true, bool bIsFromTrace=false );
 
 private:
-	bool			HandleCriteriaCheckResult( const CBaseEntity *pEnt, bool bIsActivator, bool bReturnValue );
+	bool			HandleCriteriaCheckResult( bool bReturnValue, const CBaseEntity *pEnt, bool bIsActivator, bool bIsFromTrace );
 
 	// Goal varaibles.
 	CNetworkVar( bool, m_bGoalEnabled );

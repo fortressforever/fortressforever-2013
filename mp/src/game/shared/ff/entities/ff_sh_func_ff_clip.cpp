@@ -36,7 +36,7 @@ bool CFF_SH_FuncFFClip::ShouldClipActivator( const CBaseEntity *pActivator )
 	if( !IsGoalEnabled() )
 		return false;
 
-	if( PassesCriteriaCheck( pActivator ) )
+	if( PassesCriteriaCheck( pActivator, true, true ) )
 		return false;
 
 	return true;
