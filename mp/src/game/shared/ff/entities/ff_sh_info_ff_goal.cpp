@@ -46,6 +46,14 @@ void CFF_SH_InfoFFGoal::Spawn()
 }
 
 #ifdef GAME_DLL
+void CFF_SH_InfoFFGoal::Activate()
+{
+	BaseClass::Activate();
+
+	if( !IsGoalEnabled() )
+		AddEffects( EF_NODRAW );
+}
+
 void CFF_SH_InfoFFGoal::OnTouching( CBaseEntity *pOther )
 {
 	BaseClass::OnTouching( pOther );
@@ -59,7 +67,23 @@ void CFF_SH_InfoFFGoal::ActivateGoal()
 
 void CFF_SH_InfoFFGoal::DeactivateGoal()
 {
-	RemoveEffects( EF_NODRAW );
+	if( IsGoalEnabled() )
+		RemoveEffects( EF_NODRAW );
+
 	BaseClass::DeactivateGoal();
+}
+
+void CFF_SH_InfoFFGoal::Input_Enable( inputdata_t &inputdata )
+{
+	BaseClass::Input_Enable( inputdata );
+
+	if( !IsGoalActivated() )
+		RemoveEffects( EF_NODRAW );
+}
+
+void CFF_SH_InfoFFGoal::Input_Disable( inputdata_t &inputdata )
+{
+	BaseClass::Input_Disable( inputdata );
+	AddEffects( EF_NODRAW );
 }
 #endif

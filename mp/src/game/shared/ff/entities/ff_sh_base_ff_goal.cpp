@@ -362,7 +362,12 @@ void CFF_SH_BaseFFGoal::ActivateGoal()
 	}
 
 	// Start the deactivate timer.
-	if( m_fActiveTime )
+	if( m_fActiveTime < 0.0f )
+	{
+		// If they set the active_time to -1 we don't deactivate.
+		SetThink( NULL );
+	}
+	else if( m_fActiveTime )
 	{
 		SetThink( &CFF_SH_BaseFFGoal::DeactivateGoal );
 		SetNextThink( gpGlobals->curtime + m_fActiveTime );

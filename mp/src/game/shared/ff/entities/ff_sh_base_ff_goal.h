@@ -96,17 +96,18 @@ private:
 	CUtlVector<CHandle<CFF_SH_BaseFFGoal>>		m_Criteria_GoalsAreDisabled;
 
 #ifdef GAME_DLL
-private:
-	void		Input_Enable( inputdata_t &inputdata );
-	void		Input_Disable( inputdata_t &inputdata );
-	void		Input_Activate( inputdata_t &inputdata );
-	void		Input_Inactivate( inputdata_t &inputdata );
+protected:
+	virtual void	Input_Enable( inputdata_t &inputdata );
+	virtual void	Input_Disable( inputdata_t &inputdata );
+	void			Input_Activate( inputdata_t &inputdata );
+	void			Input_Inactivate( inputdata_t &inputdata );
 
 	COutputEvent	m_Output_OnEnabled;
 	COutputEvent	m_Output_OnDisabled;
 	COutputEvent	m_Output_OnActive;
 	COutputEvent	m_Output_OnInactive;
 
+private:
 	string_t	m_iszActivationSound;
 	string_t	m_iszResetSound;
 

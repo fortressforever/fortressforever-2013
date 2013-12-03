@@ -34,6 +34,8 @@ public:
 	virtual void	Spawn( void );
 
 #ifdef GAME_DLL
+	virtual void	Activate( void );
+
 	virtual void	OnTouching( CBaseEntity *pOther );
 	virtual void	ActivateGoal( void );
 	virtual void	DeactivateGoal( void );
@@ -44,6 +46,10 @@ public:
 		// We don't set this in the base_goal because so many other entities are derived from it.
 		return SetTransmitState( FL_EDICT_ALWAYS );
 	}
+
+protected:
+	virtual void	Input_Enable( inputdata_t &inputdata );
+	virtual void	Input_Disable( inputdata_t &inputdata );
 #endif
 };
 
