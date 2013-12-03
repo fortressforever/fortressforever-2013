@@ -61,7 +61,7 @@ ConVar	sv_maxspeed		( "sv_maxspeed", "600", FCVAR_NOTIFY | FCVAR_REPLICATED | FC
 #if defined( CSTRIKE_DLL )
 	ConVar	sv_accelerate	( "sv_accelerate", "10", FCVAR_NOTIFY | FCVAR_REPLICATED);
 #else
-	ConVar	sv_accelerate	( "sv_accelerate", "14", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY);
+	ConVar	sv_accelerate	( "sv_accelerate", "9", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY);
 #endif // CSTRIKE_DLL
 	
 #endif//_XBOX

@@ -4,19 +4,16 @@
 #define FF_SH_ITEM_FF_GOAL_H
 
 
-#ifdef GAME_DLL
-#include "baseanimating.h"
-#else
-#include "c_baseanimating.h"
-#endif
+#include "ff_sh_info_ff_goal.h"
 
 
-class CFF_SH_ItemFFGoal : public CBaseAnimating	// TODO: Derive from info_ version. Note: info_ should still derive from CBaseAnimating.
+class CFF_SH_ItemFFGoal : public CFF_SH_InfoFFGoal
 {
 public:
-	DECLARE_CLASS( CFF_SH_ItemFFGoal, CBaseAnimating );	// TODO: Derive from info_ version. Note: info_ should still derive from CBaseAnimating.
+	DECLARE_CLASS( CFF_SH_ItemFFGoal, CFF_SH_InfoFFGoal );
 
 #ifdef GAME_DLL
+	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 #else
 	DECLARE_CLIENTCLASS();
@@ -27,8 +24,13 @@ public:
 	CBasePlayer*	GetCarrier( void );
 	const Vector&	GetSpawnOrigin( void );
 
-#ifdef GAME_DLL
 	void			Spawn( void );
+
+#ifdef GAME_DLL
+	virtual void	OnTouching( CBaseEntity *pOther );
+	virtual void	ActivateGoalStart( CBaseEntity *pActivator );
+	virtual void	ActivateGoal( void );
+	virtual void	DeactivateGoal( void );
 
 	int UpdateTransmitState( void )
 	{
@@ -39,8 +41,8 @@ public:
 #endif
 
 private:
-	CHandle<CBasePlayer>	m_hItemCarrier;		// TODO: network this.
-	Vector					m_vecSpawnOrigin;	// TODO: network this.
+	CNetworkHandle( CBasePlayer, m_hItemCarrier );
+	CNetworkVector( m_vecSpawnOrigin );
 };
 
 

@@ -43,7 +43,7 @@ public:
 
 	virtual void		OnTouching( CBaseEntity *pOther ); // NOTE: This function is called from its derived classes SetTouch() function (BaseClass::OnTouching()).
 	void				TryActivateGoal( CBaseEntity *pActivator );
-	void				ActivateGoalStart( CBaseEntity *pActivator );
+	virtual void		ActivateGoalStart( CBaseEntity *pActivator );
 	virtual void		ActivateGoal( void );
 	virtual void		DeactivateGoal( void );
 #endif

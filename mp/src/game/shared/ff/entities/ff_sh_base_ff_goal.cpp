@@ -36,7 +36,7 @@ BEGIN_DATADESC( CFF_SH_BaseFFGoal )
 	DEFINE_KEYFIELD_NOT_SAVED( m_iszActivationSound, FIELD_SOUNDNAME, "activation_sound" ),
 	DEFINE_KEYFIELD_NOT_SAVED( m_iszResetSound, FIELD_SOUNDNAME, "reset_sound" ),
 
-	DEFINE_KEYFIELD_NOT_SAVED( m_iszFailedCriteriaMessage, FIELD_STRING, "msg_if_activator_fails_criteria" ),
+	DEFINE_KEYFIELD_NOT_SAVED( m_iszFailedCriteriaMessage, FIELD_STRING, "msg_if_ap_fails_criteria" ),
 
 	// Criteria check keys.
 	DEFINE_KEYFIELD_NOT_SAVED( m_iszCriteria_TeamsAllowed, FIELD_STRING, "teams_allowed" ),
@@ -428,7 +428,7 @@ void CFF_SH_BaseFFGoal::Spawn()
 	Precache();
 
 	ParseCriteriaKeyValues();
-	BaseClass::Activate();
+	BaseClass::Spawn();
 }
 
 void CFF_SH_BaseFFGoal::Activate()
