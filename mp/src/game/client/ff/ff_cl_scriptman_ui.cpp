@@ -60,6 +60,21 @@ bool CFF_CL_ScriptManager_UI::Init()
 	if (bInitSuccessful)
 	{
 		LoadFile( "ui/init.lua" );
+
+		// load layout settings
+		luabind::object luaobjLayoutSettings;
+		LoadFileIntoObject( "ui/settings/layout.lua", luaobjLayoutSettings );
+
+		// set global variable LAYOUT to the loaded settings
+		(luabind::globals(L))["LAYOUT"] = luaobjLayoutSettings;
+		
+		// load theme settings
+		luabind::object luaobjThemeSettings;
+		LoadFileIntoObject( "ui/settings/theme_default.lua", luaobjThemeSettings );
+		LoadFileIntoObject( "ui/settings/theme.lua", luaobjThemeSettings ); // custom theme settings
+		
+		// set global variable THEME to the loaded settings
+		(luabind::globals(L))["THEME"] = luaobjThemeSettings;
 	}
 
 	return bInitSuccessful;

@@ -188,12 +188,12 @@ void CFF_SH_ScriptManager::MakeEnvironmentSafe()
 	// FF TODO: somehow protect package.path? not sure if it's necessary, the "risk" would be allowing execution of .lua files in arbitrary locations
 }
 
-/** Loads a Lua file into the current environment relative to a "MOD" search path
-	@returns True if file successfully loaded, false if there were any errors (syntax or execution)
+/** Loads a Lua file into a function that is pushed on the top of the Lua stack (only when the file is succesfully loaded)
+	@returns True if file is successfully loaded, false if there were any errors
 */
-bool CFF_SH_ScriptManager::LoadFile(const char *filename)
+bool CFF_SH_ScriptManager::LoadFileIntoFunction( const char *filename )
 {
-	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFile", VPROF_BUDGETGROUP_FF_LUA );
+	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFileIntoFunction", VPROF_BUDGETGROUP_FF_LUA );
 
 	// open the file
 	LuaMsg("Loading Lua File: %s\n", filename);
@@ -214,12 +214,12 @@ bool CFF_SH_ScriptManager::LoadFile(const char *filename)
 	filesystem->Read(buffer, fileSize, hFile);
 	buffer[fileSize] = 0;
 	filesystem->Close(hFile);
-
-	// preprocess script data
-	OnScriptLoad(filename, buffer);
-
-	// load script
+	
+	// load the buffer into a function that is pushed to the top of the stack
 	int errorCode = luaL_loadbuffer(L, buffer, fileSize, filename);
+	
+	// cleanup buffer
+	MemFreeScratch();
 
 	// check if load was successful
 	if (errorCode != 0)
@@ -229,9 +229,22 @@ bool CFF_SH_ScriptManager::LoadFile(const char *filename)
 		lua_pop( L, 1 );
 		return false;
 	}
+	
+	return true;
+}
 
-	// execute script. script at top scrop gets exectued
-	errorCode = lua_pcall(L, 0, 0, 0);
+/** Loads a Lua file into the current environment relative to a "MOD" search path
+	@returns True if file successfully loaded, false if there were any errors (syntax or execution)
+*/
+bool CFF_SH_ScriptManager::LoadFile(const char *filename)
+{
+	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFile", VPROF_BUDGETGROUP_FF_LUA );
+
+	if (!LoadFileIntoFunction( filename ))
+		return false;
+
+	// execute the loaded function
+	int errorCode = lua_pcall(L, 0, 0, 0);
 	
 	// check if execution was successful
 	if (errorCode != 0)
@@ -243,9 +256,60 @@ bool CFF_SH_ScriptManager::LoadFile(const char *filename)
 	}
 
 	LuaMsg( "Successfully loaded %s\n", filename );
+	return true;
+}
 
-	// cleanup
-	MemFreeScratch();
+/** Loads a Lua file into an object, leaving the current environment intact
+	@param object The Luabind object that the results of the file will be loaded into
+	@returns True if file successfully loaded, false if there were any errors (syntax or execution)
+*/
+bool CFF_SH_ScriptManager::LoadFileIntoObject(const char *filename, luabind::object &object)
+{
+	//FF_TODO: VPROF_BUDGET( "CFF_SH_ScriptManager::LoadFileIntoObject", VPROF_BUDGETGROUP_FF_LUA );
+	
+	if (!LoadFileIntoFunction( filename ))
+		return false;
+
+	// if object is nil, then make it a table
+	if (!object.is_valid())
+		object = luabind::newtable(L);
+
+	// make the index of our table the global table so we can access global stuff
+	luabind::object luaobjObjectMetaTable = luabind::newtable(L);
+	luaobjObjectMetaTable["__index"] = luabind::globals(L);
+	luabind::setmetatable( object, luaobjObjectMetaTable );
+
+	// create a proxy table for our environment
+	luabind::object luaobjEnvironment = luabind::newtable(L);
+	
+	// setup the environment so that any set variables get added to our object
+	luabind::object luaobjEnvironmentMetaTable = luabind::newtable(L);
+	luaobjEnvironmentMetaTable["__index"] = object;
+	luaobjEnvironmentMetaTable["__newindex"] = object;
+	luabind::setmetatable( luaobjEnvironment, luaobjEnvironmentMetaTable );
+
+	// push the object onto the stack so that setfenv can access it
+	object.push(L);
+
+	// set the environment of the function
+	lua_setfenv(L, -2); // -2 is the function
+
+	// execute our loaded function
+	int errorCode = lua_pcall(L, 0, 0, 0);
+	
+	// check if execution was successful
+	if (errorCode != 0)
+	{
+		const char *error = lua_tostring(L, -1);
+		LuaWarning( "Error loading %s: %s\n", filename, error );
+		lua_pop( L, 1 );
+		return false;
+	}
+	
+	// reset the metatable of the object so it doesn't keep indexing _G afterwards
+	luabind::setmetatable( object, luabind::newtable(L) );
+
+	LuaMsg( "Successfully loaded %s\n", filename );
 	return true;
 }
 

@@ -35,6 +35,8 @@ public:
 
 	// inserts the lua file into the script environment
 	virtual bool LoadFile(const char* filePath);
+	virtual bool LoadFileIntoFunction(const char *filename);
+	virtual bool LoadFileIntoObject(const char *filename, luabind::adl::object &object);
 	// removes unsafe functions from the Lua environment or makes them safer
 	virtual void MakeEnvironmentSafe();
 	virtual void SetupEnvironmentForFF();
