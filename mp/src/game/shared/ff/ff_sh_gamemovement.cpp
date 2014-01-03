@@ -203,33 +203,43 @@ bool CFF_SH_GameMovement::CanJump( void )
 
 		return false;
 	}
+
+	bool bUseJumpQueue;
+#ifdef CLIENT_DLL
+	bUseJumpQueue = cl_jumpqueue.GetBool();
+#else
+	bUseJumpQueue = (Q_atoi( engine->GetClientConVarValue( player->entindex(), "cl_jumpqueue" ) ) ) != 0;
+#endif
 	
 	// No more effect
  	if (player->GetGroundEntity() == NULL)
 	{
 		// FF --> Allow holding jump in the air to make you jump when you land
-		if(!(mv->m_nOldButtons & IN_JUMP))
+		if( bUseJumpQueue && !(mv->m_nOldButtons & IN_JUMP) )
 		{
 			// FF Port Note: For only allowing holding jump while in the downward part of a jump, do a (mv->m_vecVelocity[2] < 0.0f) check here
+			// Jump wasn't held last frame, so act like jump isn't held for the rest of the airtime
+			// FF TODO: Potentially add a jump-specific button-held-state variable to handle jump queueing, since manipulating the button states directly is rather hacky
 			mv->m_nButtons &= ~IN_JUMP;
+		}
+		else if (!bUseJumpQueue)
+		{
+			// act like the jump key was never held last frame; this is needed because of how the trimping code interacts with the rampslide code
+			mv->m_nOldButtons &= ~IN_JUMP;
 		}
 		// FF <--
 		return false;		// in air, so no effect
 	}
-
+	
 	// Don't allow jumping when the player is in a stasis field.
 #ifndef HL2_EPISODIC
 	if ( player->m_Local.m_bSlowMovement )
 		return false;
 #endif
-
-#ifdef CLIENT_DLL
-	if ( mv->m_nOldButtons & IN_JUMP && cl_jumpqueue.GetBool() )
+	
+	// If jump queue is enabled and we have been holding jump since we last jumped, then don't allow jumping again until it's been released for at least one frame
+	if ( bUseJumpQueue && mv->m_nOldButtons & IN_JUMP )
 		return false;		// don't pogo stick
-#else
-	if ( mv->m_nOldButtons & IN_JUMP && (Q_atoi( engine->GetClientConVarValue( player->entindex(), "cl_jumpqueue" ) ) ) )
-		return false;		// don't pogo stick
-#endif
 
 	return true;
 }
