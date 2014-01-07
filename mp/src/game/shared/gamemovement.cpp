@@ -4138,7 +4138,9 @@ bool CGameMovement::CanUnduck()
 		//  up for uncrouching
 		Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 		Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch );
+		// FF -->
+		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f;  // half the height to simulate a centered origin; in TFC, crouching in the air does not affect your origin at all
+		// FF <--
 		viewDelta.Negate();
 		VectorAdd( newOrigin, viewDelta, newOrigin );
 	}
@@ -4156,7 +4158,6 @@ bool CGameMovement::CanUnduck()
 //-----------------------------------------------------------------------------
 // Purpose: Stop ducking
 //-----------------------------------------------------------------------------
-// FF: UNUSED. Overwritten in FF's GameMovement
 void CGameMovement::FinishUnDuck( void )
 {
 	int i;
@@ -4178,7 +4179,9 @@ void CGameMovement::FinishUnDuck( void )
 		//  up for uncrouching
 		Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 		Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch );
+		// FF -->
+		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f;  // half the height to simulate a centered origin; in TFC, crouching in the air does not affect your origin at all
+		// FF <--
 		viewDelta.Negate();
 		VectorAdd( newOrigin, viewDelta, newOrigin );
 	}
@@ -4294,7 +4297,7 @@ void CGameMovement::FinishDuck( void )
 		Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 		Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
 		// FF -->
-		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f ; // Mirv: We only want half the difference
+		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f; // half the height to simulate a centered origin; in TFC, crouching in the air does not affect your origin at all
 		// FF <--
 		Vector out;
    		VectorAdd( mv->GetAbsOrigin(), viewDelta, out );
@@ -4332,9 +4335,7 @@ void CGameMovement::StartUnDuckJump( void )
 
 	Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
 	Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-	// FF -->
-	Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f; // Mirv: We only want half the difference
-	// FF <--
+	Vector viewDelta = ( hullSizeNormal - hullSizeCrouch );
 	Vector out;
 	VectorAdd( mv->GetAbsOrigin(), viewDelta, out );
 	mv->SetAbsOrigin( out );

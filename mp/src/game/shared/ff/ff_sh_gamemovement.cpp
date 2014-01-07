@@ -496,211 +496,19 @@ void CFF_SH_GameMovement::PlayerRoughLandingEffects( float fvol )
 	}
 }
 
-/** Handles unducking
-	Overwritten from CGameMovement
-*/
-void CFF_SH_GameMovement::FinishUnDuck( void )
-{
-	int i;
-	trace_t trace;
-	Vector newOrigin;
-
-	VectorCopy( mv->GetAbsOrigin(), newOrigin );
-
-	// FF -->
-	// The extra check (m_Local.m_bDucked) added because players were popping up 
-	// into the air when they hadn't yet been moved down for the duck
-	if ( player->GetGroundEntity() != NULL && player->m_Local.m_bDucked )
-	// FF <--
-	{
-		for ( i = 0; i < 3; i++ )
-		{
-			newOrigin[i] += ( VEC_DUCK_HULL_MIN_SCALED( player )[i] - VEC_HULL_MIN_SCALED( player )[i] );
-		}
-	}
-	else
-	{
-		// If in air an letting go of crouch, make sure we can offset origin to make
-		//  up for uncrouching
-		Vector hullSizeNormal = VEC_HULL_MAX_SCALED( player ) - VEC_HULL_MIN_SCALED( player );
-		Vector hullSizeCrouch = VEC_DUCK_HULL_MAX_SCALED( player ) - VEC_DUCK_HULL_MIN_SCALED( player );
-		Vector viewDelta = ( hullSizeNormal - hullSizeCrouch ) / 2.0f;
-		viewDelta.Negate();
-		VectorAdd( newOrigin, viewDelta, newOrigin );
-	}
-
-	player->m_Local.m_bDucked = false;
-	player->RemoveFlag( FL_DUCKING );
-	player->m_Local.m_bDucking  = false;
-	player->m_Local.m_bInDuckJump  = false;
-	player->SetViewOffset( GetPlayerViewOffset( false ) );
-	player->m_Local.m_flDucktime = 0;
-
-	mv->SetAbsOrigin( newOrigin );
-
-#ifdef CLIENT_DLL
-	player->ResetLatched();
-#endif
-
-	// Recategorize position since ducking can change origin
-	CategorizePosition();
-	
-	// FF TODO: A lot of unported changes here; this block replaces the else { } and below
-	/*
-	//trace = pmove->PM_PlayerTrace( newOrigin, newOrigin, PM_NORMAL, -1 );
-	TracePlayerBBox(newOrigin, newOrigin, PlayerSolidMask(), COLLISION_GROUP_PLAYER_MOVEMENT, trace);
-
-	if ( !trace.startsolid )
-	{
-		player->m_Local.m_bDucked = false; // pmove->usehull = 0;
-
-		// Oh, no, changing hulls stuck us into something, try unsticking downward first.
-		//trace = pmove->PM_PlayerTrace( newOrigin, newOrigin, PM_NORMAL, -1  );
-		TracePlayerBBox(newOrigin, newOrigin, PlayerSolidMask(), COLLISION_GROUP_PLAYER_MOVEMENT, trace);
-
-		if ( trace.startsolid )
-		{
-			// See if we are stuck?  If so, stay ducked with the duck hull until we have a clear spot
-			//Con_Printf( "unstick got stuck\n" );
-			player->m_Local.m_bDucked = true; // pmove->usehull = 1;
-			return;
-		}
-
-		player->RemoveFlag(FL_DUCKING); // pmove->flags &= ~FL_DUCKING;
-		player->m_Local.m_bDucking  = false;
-		//pmove->view_ofs[2] = VEC_VIEW;
-		Vector vecViewOffset = player->GetViewOffset();
-		vecViewOffset[2] = VEC_VIEW[2];
-		player->SetViewOffset(vecViewOffset);
-		player->m_Local.m_flDucktime = 0;
-
-		VectorCopy( newOrigin, mv->m_vecAbsOrigin );
-
-		// Recatagorize position since ducking can change origin
-		CategorizePosition();
-	}
-	*/
-}
-
 /** Handles ducking
 	Overwritten from CGameMovement
+	Purpose: Make unducking instantaneous
 */
 void CFF_SH_GameMovement::Duck( void )
 {
-	// FF TODO: Port these changes, this function was totally rewritten
-	/*
-	if (!player->IsAlive())
-		return;
-
-	int i;
-	float time;
-	float duckFraction;
-
-	int buttonsChanged	= ( mv->m_nOldButtons ^ mv->m_nButtons );	// These buttons have changed this frame
-	int nButtonPressed	=  buttonsChanged & mv->m_nButtons;		// The changed ones still down are "pressed"
-
-	//int duckchange		= buttonsChanged & IN_DUCK ? 1 : 0;
-	//int duckpressed		= nButtonPressed & IN_DUCK ? 1 : 0;
-
-	if ( mv->m_nButtons & IN_DUCK )
-	{
-		mv->m_nOldButtons |= IN_DUCK;
-	}
-	else
-	{
-		mv->m_nOldButtons &= ~IN_DUCK;
-	}
-
-	//if ( player->GetFlags() & FL_DUCKING )
-	//{
-	//	pmove->cmd.forwardmove *= 0.333;
-	//	pmove->cmd.sidemove    *= 0.333;
-	//	pmove->cmd.upmove      *= 0.333;
-	//}
-
-	HandleDuckingSpeedCrop();
-
-	if ( ( mv->m_nButtons & IN_DUCK ) || ( player->m_Local.m_bDucking ) || ( player->GetFlags() & FL_DUCKING ) )
-	{
-		if ( mv->m_nButtons & IN_DUCK )
-		{
-			if ( (nButtonPressed & IN_DUCK ) && !( player->GetFlags() & FL_DUCKING ) )
-			{
-				// Use 1 second so super long jump will work
-				player->m_Local.m_flDucktime = 1000;
-				player->m_Local.m_bDucking    = true;
-			}
-
-			time = max( 0.0, ( 1.0 - (float)player->m_Local.m_flDucktime / 1000.0 ) );
-
-			if ( player->m_Local.m_bDucking )
-			{
-				// Finish ducking immediately if duck time is over or not on ground
-				if ( ( (float)player->m_Local.m_flDucktime / 1000.0 <= ( 1.0 - TIME_TO_DUCK ) ) ||
-					( player->GetGroundEntity() == NULL ) && player->m_Local.m_flDucktime > 0 )
-				{
-					player->m_Local.m_bDucked = true; //pmove->usehull = 1;
-					//pmove->view_ofs[2] = VEC_DUCK_VIEW;
-					Vector vecOffset = player->GetViewOffset();
-					vecOffset[2] = VEC_DUCK_VIEW[2];
-					player->SetViewOffset(vecOffset);
-
-					player->AddFlag(FL_DUCKING);	//player->GetFlags() |= FL_DUCKING;
-
-					//player->m_Local.m_bDucking = false;
-
-					// HACKHACK - Fudge for collision bug - no time to fix this properly
-					if ( player->GetGroundEntity() != NULL )
-					{
-						trace_t pm;
-						TracePlayerBBox(mv->m_vecAbsOrigin, mv->m_vecAbsOrigin - (VEC_DUCK_HULL_MIN - VEC_HULL_MIN), PlayerSolidMask(), COLLISION_GROUP_PLAYER_MOVEMENT, pm);
-						for ( i = 0; i < 3; i++ )
-						{
-							//Assert(pm.fraction == 1.0f);
-							mv->m_vecAbsOrigin[i] -= pm.fraction * ( VEC_DUCK_HULL_MIN[i] - VEC_HULL_MIN[i] );
-						}
-						// See if we are stuck?
-						FixPlayerCrouchStuck(true);
-
-						// Recatagorize position since ducking can change origin
-						CategorizePosition();
-					}
-					else
-					{
-						player->m_Local.m_bDucking = false;
-					}
-				}
-				else
-				{
-					float fMore = VEC_DUCK_HULL_MIN[2] - VEC_HULL_MIN[2];
-
-					// Calc parametric time
-					duckFraction = SplineFraction( time, (1.0/TIME_TO_DUCK) );
-					
-					//pmove->view_ofs[2] = ((VEC_DUCK_VIEW - fMore ) * duckFraction) + (VEC_VIEW * (1-duckFraction));
-					Vector vecViewOfs = player->GetViewOffset();
-					vecViewOfs[2] = ((VEC_DUCK_VIEW[2] - fMore ) * duckFraction) + (VEC_VIEW[2] * (1-duckFraction));
-					player->SetViewOffset(vecViewOfs);
-				}
-			}
-		}
-		else
-		{
-			// Try to unduck
-			FinishUnDuck();
-		}
-	}
-	*/
-
 	int buttonsChanged	= ( mv->m_nOldButtons ^ mv->m_nButtons );	// These buttons have changed this frame
 	int buttonsPressed	=  buttonsChanged & mv->m_nButtons;			// The changed ones still down are "pressed"
-	int buttonsReleased	=  buttonsChanged & mv->m_nOldButtons;		// The changed ones which were previously down are "released"
+	//int buttonsReleased	=  buttonsChanged & mv->m_nOldButtons;		// The changed ones which were previously down are "released"
 
 	// Check to see if we are in the air.
 	bool bInAir = ( player->GetGroundEntity() == NULL );
 	bool bInDuck = ( player->GetFlags() & FL_DUCKING ) ? true : false;
-	bool bDuckJump = ( player->m_Local.m_flJumpTime > 0.0f );
-	bool bDuckJumpTime = ( player->m_Local.m_flDuckJumpTime > 0.0f );
 
 	if ( mv->m_nButtons & IN_DUCK )
 	{
@@ -719,34 +527,20 @@ void CFF_SH_GameMovement::Duck( void )
 	HandleDuckingSpeedCrop();
 
 	// If the player is holding down the duck button, the player is in duck transition, ducking, or duck-jumping.
-	if ( ( mv->m_nButtons & IN_DUCK ) || player->m_Local.m_bDucking  || bInDuck || bDuckJump )
+	if ( ( mv->m_nButtons & IN_DUCK ) || player->m_Local.m_bDucking  || bInDuck )
 	{
 		// DUCK
-		if ( ( mv->m_nButtons & IN_DUCK ) || bDuckJump )
+		if ( ( mv->m_nButtons & IN_DUCK ) )
 		{
-/* FF: squeek: commenting this block out for now
-// XBOX SERVER ONLY
-#if !defined(CLIENT_DLL)
-			if ( IsX360() && buttonsPressed & IN_DUCK )
-			{
-				// Hinting logic
-				if ( player->GetToggledDuckState() && player->m_nNumCrouches < NUM_CROUCH_HINTS )
-				{
-					UTIL_HudHintText( player, "#Valve_Hint_Crouch" );
-					player->m_nNumCrouches++;
-				}
-			}
-#endif
-*/
 			// Have the duck button pressed, but the player currently isn't in the duck position.
-			if ( ( buttonsPressed & IN_DUCK ) && !bInDuck && !bDuckJump && !bDuckJumpTime )
+			if ( ( buttonsPressed & IN_DUCK ) && !bInDuck )
 			{
 				player->m_Local.m_flDucktime = GAMEMOVEMENT_DUCK_TIME;
 				player->m_Local.m_bDucking = true;
 			}
 			
 			// The player is in duck transition and not duck-jumping.
-			if ( player->m_Local.m_bDucking && !bDuckJump && !bDuckJumpTime )
+			if ( player->m_Local.m_bDucking )
 			{
 				float flDuckMilliseconds = MAX( 0.0f, GAMEMOVEMENT_DUCK_TIME - ( float )player->m_Local.m_flDucktime );
 				float flDuckSeconds = flDuckMilliseconds * 0.001f;
@@ -763,120 +557,13 @@ void CFF_SH_GameMovement::Duck( void )
 					SetDuckedEyeOffset( flDuckFraction );
 				}
 			}
-
-			if ( bDuckJump )
-			{
-				// Make the bounding box small immediately.
-				if ( !bInDuck )
-				{
-					StartUnDuckJump();
-				}
-				else
-				{
-					// Check for a crouch override.
-					if ( !( mv->m_nButtons & IN_DUCK ) )
-					{
-						trace_t trace;
-						if ( CanUnDuckJump( trace ) )
-						{
-							FinishUnDuckJump( trace );
-							player->m_Local.m_flDuckJumpTime = ( GAMEMOVEMENT_TIME_TO_UNDUCK * ( 1.0f - trace.fraction ) ) + GAMEMOVEMENT_TIME_TO_UNDUCK_INV;
-						}
-					}
-				}
-			}
 		}
 		// UNDUCK (or attempt to...)
 		else
 		{
-			if ( player->m_Local.m_bInDuckJump )
-			{
-				// Check for a crouch override.
-   				if ( !( mv->m_nButtons & IN_DUCK ) )
-				{
-					trace_t trace;
-					if ( CanUnDuckJump( trace ) )
-					{
-						FinishUnDuckJump( trace );
-					
-						if ( trace.fraction < 1.0f )
-						{
-							player->m_Local.m_flDuckJumpTime = ( GAMEMOVEMENT_TIME_TO_UNDUCK * ( 1.0f - trace.fraction ) ) + GAMEMOVEMENT_TIME_TO_UNDUCK_INV;
-						}
-					}
-				}
-				else
-				{
-					player->m_Local.m_bInDuckJump = false;
-				}
-			}
-
-			if ( bDuckJumpTime )
-				return;
-
-			// Try to unduck unless automovement is not allowed
-			// NOTE: When not onground, you can always unduck
-			if ( player->m_Local.m_bAllowAutoMovement || bInAir || player->m_Local.m_bDucking )
-			{
-				// We released the duck button, we aren't in "duck" and we are not in the air - start unduck transition.
-				if ( ( buttonsReleased & IN_DUCK ) )
-				{
-					if ( bInDuck && !bDuckJump )
-					{
-						player->m_Local.m_flDucktime = GAMEMOVEMENT_DUCK_TIME;
-					}
-					else if ( player->m_Local.m_bDucking && !player->m_Local.m_bDucked )
-					{
-						// Invert time if release before fully ducked!!!
-						float unduckMilliseconds = 1000.0f * TIME_TO_UNDUCK;
-						float duckMilliseconds = 1000.0f * TIME_TO_DUCK;
-						float elapsedMilliseconds = GAMEMOVEMENT_DUCK_TIME - player->m_Local.m_flDucktime;
-
-						float fracDucked = elapsedMilliseconds / duckMilliseconds;
-						float remainingUnduckMilliseconds = fracDucked * unduckMilliseconds;
-
-						player->m_Local.m_flDucktime = GAMEMOVEMENT_DUCK_TIME - unduckMilliseconds + remainingUnduckMilliseconds;
-					}
-				}
-				
-
-				// Check to see if we are capable of unducking.
-				if ( CanUnduck() )
-				{
-					// or unducking
-					if ( ( player->m_Local.m_bDucking || player->m_Local.m_bDucked ) )
-					{
-						float flDuckMilliseconds = MAX( 0.0f, GAMEMOVEMENT_DUCK_TIME - (float)player->m_Local.m_flDucktime );
-						float flDuckSeconds = flDuckMilliseconds * 0.001f;
-						
-						// Finish ducking immediately if duck time is over or not on ground
-						if ( flDuckSeconds > TIME_TO_UNDUCK || ( bInAir && !bDuckJump ) )
-						{
-							FinishUnDuck();
-						}
-						else
-						{
-							// Calc parametric time
-							float flDuckFraction = SimpleSpline( 1.0f - ( flDuckSeconds / TIME_TO_UNDUCK ) );
-							SetDuckedEyeOffset( flDuckFraction );
-							player->m_Local.m_bDucking = true;
-						}
-					}
-				}
-				else
-				{
-					// Still under something where we can't unduck, so make sure we reset this timer so
-					//  that we'll unduck once we exit the tunnel, etc.
-					if ( player->m_Local.m_flDucktime != GAMEMOVEMENT_DUCK_TIME )
-					{
-						SetDuckedEyeOffset(1.0f);
-						player->m_Local.m_flDucktime = GAMEMOVEMENT_DUCK_TIME;
-						player->m_Local.m_bDucked = true;
-						player->m_Local.m_bDucking = false;
-						player->AddFlag( FL_DUCKING );
-					}
-				}
-			}
+			// Try to unduck
+			if (CanUnduck())
+				FinishUnDuck();
 		}
 	}
 	// HACK: (jimd 5/25/2006) we have a reoccuring bug (#50063 in Tracker) where the player's
