@@ -37,6 +37,7 @@ protected:
 
 	// Ducking
 	virtual void	Duck( void );
+	virtual void	HandleDuckingSpeedCrop();
 	// <--- Overwritten functions
 };
 

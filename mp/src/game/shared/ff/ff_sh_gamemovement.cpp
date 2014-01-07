@@ -589,6 +589,28 @@ void CFF_SH_GameMovement::Duck( void )
 	}
 }
 
+/** Handles speed cropping while ducking
+	Overwritten from CGameMovement
+	Purpose: Allow for TFC-style duck speed cropping
+*/
+void CFF_SH_GameMovement::HandleDuckingSpeedCrop( void )
+{
+	// in HL1/TFC, crouching altered intended movement speed even while in the air
+	// it basically makes you lose speed while air controlling at high speeds
+	if (FFDEV_TFC_CROUCH_AIRMOVEMENT && ( player->GetFlags() & FL_DUCKING ))
+	{
+		float frac = 0.33333333f;
+		mv->m_flForwardMove	*= frac;
+		mv->m_flSideMove	*= frac;
+		mv->m_flUpMove		*= frac;
+		m_iSpeedCropped		|= SPEED_CROPPED_DUCK;
+	}
+	else
+	{
+		BaseClass::HandleDuckingSpeedCrop();
+	}
+}
+
 // Expose our interface.
 // Note: There can only be one IGameMovement exposed at a time
 static CFF_SH_GameMovement g_GameMovement;

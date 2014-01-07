@@ -15,6 +15,9 @@ extern bool g_bMovementOptimizations;
 #define SV_TRIMPTRIGGERSPEED 550.0f
 #define SV_TRIMPTRIGGERSPEEDDOWN 50.0f
 
+extern ConVar ffdev_tfc_crouch_airmovement;
+#define FFDEV_TFC_CROUCH_AIRMOVEMENT ffdev_tfc_crouch_airmovement.GetBool()
+
 #define BHOP_CAP_SOFT 1.4f
 #define BHOP_PCFACTOR 0.65f
 #define BHOP_CAP_HARD 1.8f
