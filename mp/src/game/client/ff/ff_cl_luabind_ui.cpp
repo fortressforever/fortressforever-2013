@@ -6,6 +6,7 @@
 #include "ff_sh_luabind.h"
 
 // dexter note 10/29/2013 these are definitely still needed for lua/luabind
+// later clarification - the undefs are needed, similiar to other min/max clashes on GCC
 #undef MINMAX_H
 #undef min
 #undef max
@@ -87,7 +88,7 @@ void FF_Lua_InitUI( lua_State *L )
 			.def("SetRawPos",						&vgui::Panel::SetPos)
 			.def("SetEnabled",						&vgui::Panel::SetEnabled),
 
-		class_<CFF_CL_LuaUI_BasePanel, bases<CHudElement, vgui::Panel>>("Panel")
+		class_<CFF_CL_LuaUI_BasePanel, bases<CHudElement, vgui::Panel> >("Panel")
 			.def(constructor<lua_State *, const char *>())
 			.def("SetPos",							(void(CFF_CL_LuaUI_BasePanel::*)(const char*, const char*))&CFF_CL_LuaUI_BasePanel::SetProportionalPos)
 			.def("SetPos",							(void(CFF_CL_LuaUI_BasePanel::*)(int, int))&CFF_CL_LuaUI_BasePanel::SetProportionalPos)
