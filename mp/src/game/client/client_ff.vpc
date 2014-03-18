@@ -106,17 +106,17 @@ $Project "Client (FF)"
 				//$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.h"
 			}
 
- 			$Folder	"Implementation Files" // [$WIN32]
+ 			$Folder	"Implementation Files" 
 			{
 				$File	"$SRCDIR\game\client\ShaderEditor\ShaderEditorSystem.cpp"
 				$File	"$SRCDIR\game\client\ShaderEditor\SEdit_ModelRender.cpp"
 				//$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.cpp"
 			}
 		}
-		$Folder "Shader Libraries"
-		{
-			$Lib mathlib
-			$Lib shaderlib
-		}
+		//$Folder "Shader Libraries"
+		//{
+		//	$Lib mathlib
+		//	$Lib shaderlib
+		//}
 	}
 }
