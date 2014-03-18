@@ -2,7 +2,9 @@
 #include "cbase.h"
 #include "ff_sh_player.h"
 
-#include <string.h>
+#include "tier0/valve_minmax_off.h"
+#include <string>
+#include "tier0/valve_minmax_on.h"
 
 #define FF_COMMAND(cmd, desc) \
 	void CliCmdFunc_##cmd(const CCommand &args) \
