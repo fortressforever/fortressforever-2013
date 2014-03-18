@@ -79,21 +79,21 @@ private:
 	CNetworkVar( int, m_iCriteria_TeamsAllowed );
 	CNetworkVar( int, m_iCriteria_ClassesAllowed );
 
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsCarriedByActivator;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsNotCarriedByActivator;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsCarriedByTeam;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsNotCarriedByTeam;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsCarriedByAny;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsNotCarriedByAny;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsCarriedByOne;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsNotCarriedByOne;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsAtSpawnPoint;
-	CUtlVector<CHandle<CFF_SH_ItemFFGoal>>		m_Criteria_ItemsNotAtSpawnPoint;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsCarriedByActivator;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsNotCarriedByActivator;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsCarriedByTeam;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsNotCarriedByTeam;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsCarriedByAny;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsNotCarriedByAny;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsCarriedByOne;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsNotCarriedByOne;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsAtSpawnPoint;
+	CUtlVector<CHandle <CFF_SH_ItemFFGoal> >		m_Criteria_ItemsNotAtSpawnPoint;
 
-	CUtlVector<CHandle<CFF_SH_BaseFFGoal>>		m_Criteria_GoalsAreActive;
-	CUtlVector<CHandle<CFF_SH_BaseFFGoal>>		m_Criteria_GoalsAreInactive;
-	CUtlVector<CHandle<CFF_SH_BaseFFGoal>>		m_Criteria_GoalsAreEnabled;
-	CUtlVector<CHandle<CFF_SH_BaseFFGoal>>		m_Criteria_GoalsAreDisabled;
+	CUtlVector<CHandle <CFF_SH_BaseFFGoal> >		m_Criteria_GoalsAreActive;
+	CUtlVector<CHandle <CFF_SH_BaseFFGoal> >		m_Criteria_GoalsAreInactive;
+	CUtlVector<CHandle <CFF_SH_BaseFFGoal> >		m_Criteria_GoalsAreEnabled;
+	CUtlVector<CHandle <CFF_SH_BaseFFGoal> >		m_Criteria_GoalsAreDisabled;
 
 #ifdef GAME_DLL
 protected:
