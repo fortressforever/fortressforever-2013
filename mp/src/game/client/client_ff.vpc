@@ -113,5 +113,10 @@ $Project "Client (FF)"
 				//$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.cpp"
 			}
 		}
+		$Folder "Shader Libraries"
+		{
+			$Lib mathlib
+			$Lib shaderlib
+		}
 	}
 }
