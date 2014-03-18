@@ -6,7 +6,9 @@
 #include <vgui_controls/Panel.h>
 #include "vgui_controls/EditablePanel.h"
 
+#include "tier0/valve_minmax_off.h"
 #include "luabind/object.hpp"
+#include "tier0/valve_minmax_on.h"
 
 class CFF_CL_LuaUI_BasePanel : public CHudElement, public vgui::EditablePanel
 {

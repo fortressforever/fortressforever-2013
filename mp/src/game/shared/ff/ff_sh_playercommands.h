@@ -1,7 +1,11 @@
 #pragma once
 #include "cbase.h"
 #include "ff_sh_player.h"
+
+// dexter: beware valve min/max messes up stl on gcc 4.2+
+#include "tier0/valve_minmax_off.h"
 #include <string>
+#include "tier0/valve_minmax_on.h"
 
 #define FF_COMMAND(cmd, desc) \
 	void CliCmdFunc_##cmd(const CCommand &args) \

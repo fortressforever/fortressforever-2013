@@ -1,6 +1,11 @@
 #include "cbase.h"
 #include "ff_sh_team_manager.h"
+
+// beware min/max messes up stl stuff, so turn off momentarily
+#include "tier0/valve_minmax_off.h"
 #include <map>
+#include "tier0/valve_minmax_on.h"
+
 
 #ifdef GAME_DLL
 #include "entitylist.h"
