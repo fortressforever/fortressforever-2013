@@ -11,6 +11,21 @@
 #include "entitylist.h"
 #endif
 
+// dexter HACK make sure valve minmax gets turned on for both server/client
+// for some reason valve minmax on skips POSIX builds. editing valve_minmax_on blows
+// stuff up 
+#if defined(POSIX)
+
+#ifndef max
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#endif
+
 //#include "boost/assign.hpp"
 
 // memdbgon must be the last include file in a .cpp file!!!

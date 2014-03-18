@@ -4,6 +4,7 @@
 //
 // $NoKeywords: $
 //=============================================================================//
+
 #include "cbase.h"
 #include "ff_sh_gamerules.h"
 #include "viewport_panel_names.h"
@@ -33,11 +34,30 @@
 	#include "hl2mp_cvars.h"
 	//#include "ff_sh_team_manager.h"
 	#include "ff_sv_info_ff_team_manager.h"
-	#include <vector>
 
+	#include "tier0/valve_minmax_off.h"
+	#include <vector>
+	#include "tier0/valve_minmax_on.h"
 #ifdef DEBUG	
 	#include "hl2mp_bot_temp.h"
 #endif
+
+// dexter HACK make sure valve minmax gets turned on for both server/client
+// for some reason valve minmax on skips POSIX builds. editing valve_minmax_on blows
+// stuff up 
+#if defined(POSIX)
+
+#ifndef max
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#endif
+
+#include "tier0/memdbgon.h"
 
 extern void respawn(CBaseEntity *pEdict, bool fCopyCorpse);
 

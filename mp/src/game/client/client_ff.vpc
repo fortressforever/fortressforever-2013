@@ -106,7 +106,7 @@ $Project "Client (FF)"
 				//$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.h"
 			}
 
- 			$Folder	"Implementation Files"
+ 			$Folder	"Implementation Files" // [$WIN32]
 			{
 				$File	"$SRCDIR\game\client\ShaderEditor\ShaderEditorSystem.cpp"
 				$File	"$SRCDIR\game\client\ShaderEditor\SEdit_ModelRender.cpp"
