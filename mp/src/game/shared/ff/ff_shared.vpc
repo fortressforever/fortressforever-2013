@@ -67,11 +67,12 @@ $Project
 		}
 
 		// folder structure has to match for remove to work correctly..
-		$Folder "HL2MP"
-		{
-			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.cpp"
-			-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.h"
-		}
+		// Dexter 20140516: fixed w/ non inheriting server/client ff VPCS now
+		//$Folder "HL2MP"
+		//{
+		//	-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.cpp"
+		//	-$File	"$SRCDIR\game\shared\hl2mp\hl2mp_gamerules.h"
+		//}
 	}
 
 	$Folder "Link Libraries"

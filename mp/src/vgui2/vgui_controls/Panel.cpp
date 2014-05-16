@@ -3419,9 +3419,9 @@ bool Panel::RequestFocusNext(VPANEL panel)
 void Panel::RequestFocus(int direction)
 {
 	// NOTE: This doesn't make any sense if we don't have keyboard input enabled
-	// FF --> squeek: Not sure what this assert is for, as presumably we do want panels without keyboard input to be able to request focus (example: scoreboard)
-	//Assert( ( IsX360() || IsConsoleStylePanel() ) || IsKeyBoardInputEnabled() );
-	// FF <--
+    // FF --> squeek: Not sure what this assert is for, as presumably we do want panels without keyboard input to be able to request focus (example: scoreboard)
+    //Assert( ( IsX360() || IsConsoleStylePanel() ) || IsKeyBoardInputEnabled() );
+    // FF <--
 	//	ivgui()->DPrintf2("RequestFocus(%s, %s)\n", GetName(), GetClassName());
 	OnRequestFocus(GetVPanel(), NULL);
 }
@@ -3913,7 +3913,7 @@ void Panel::PinToSibling( const char *pszSibling, PinCorner_e pinOurCorner, PinC
 	_pinCornerToSibling = pinOurCorner;
 	_pinToSiblingCorner = pinSibling;
 
-	if ( _pinToSibling && pszSibling && !Q_strcmp( _pinToSibling, pszSibling ) )
+	if ( m_pinSibling.Get() && _pinToSibling && pszSibling && !Q_strcmp( _pinToSibling, pszSibling ) )
 		return;
 
 	if (_pinToSibling)

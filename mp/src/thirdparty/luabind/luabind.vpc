@@ -14,6 +14,11 @@ $Configuration
 		$EnableC++Exceptions			"Yes (/EHsc)" 
 		//$PreprocessorDefinitions		"LUABIND_CPLUSPLUS_LUA"
 		//$CompileAs					"Compile as C Code (/TC)"
+		// Dexter 20140516: valve turned on warning as errors, but lua and luabind have some crap warnings we want to ignore
+		$TreatWarningsAsErrors				"No (/WX-)" [!$ANALYZE && !$WIN64]
+
+		// additionally shut these up. _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH is a new one, its set to 2 in luabind, and 0 elsewhere now
+		$PreprocessorDefinitions		"_CRT_SECURE_NO_WARNINGS;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH"
 	}
 }
 
