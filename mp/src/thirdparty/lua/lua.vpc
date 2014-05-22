@@ -9,15 +9,20 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE"
-		$PreprocessorDefinitions	"LUA_OPNAMES"
 		$CompileAs			"Compile as C Code (/TC)"
 		$GCC_ExtraCompilerFlags		"-x c" [$LINUXALL] // force compile as C on linux, it will build with G++ by default
 
 		// Dexter 20140516: valve turned on warning as errors, but lua and luabind have some crap warnings we want to ignore
 		$TreatWarningsAsErrors				"No (/WX-)" [!$ANALYZE && !$WIN64]
+		$PreprocessorDefinitions		"$BASE;_CRT_SECURE_NO_WARNINGS;LUA_OPNAMES"
+	}
 
-		// additionally shut these up
-		$PreprocessorDefinitions		"_CRT_SECURE_NO_WARNINGS"
+	$Librarian
+	{
+		// Suppress this warning using the undocumented /ignore linker switch
+		// schemalib.lib(schemaclassinfo.obj) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+		$AdditionalOptions					"$BASE /ignore:4221"
+		$IgnoreAllDefaultLibraries			"Yes (/NODEFAULTLIB)"
 	}
 }
 

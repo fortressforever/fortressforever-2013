@@ -10,7 +10,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"		
+		$AdditionalIncludeDirectories	"$BASE;$THIRDPARTYDIR;$LUADIR"
 		$EnableC++Exceptions			"Yes (/EHsc)" 
 		//$PreprocessorDefinitions		"LUABIND_CPLUSPLUS_LUA"
 		//$CompileAs					"Compile as C Code (/TC)"
@@ -18,7 +18,13 @@ $Configuration
 		$TreatWarningsAsErrors				"No (/WX-)" [!$ANALYZE && !$WIN64]
 
 		// additionally shut these up. _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH is a new one, its set to 2 in luabind, and 0 elsewhere now
-		$PreprocessorDefinitions		"_CRT_SECURE_NO_WARNINGS;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH"
+		// ;_ITERATOR_DEBUG_LEVEL=0
+		$PreprocessorDefinitions		"$BASE;_CRT_SECURE_NO_WARNINGS"
+	}
+
+	$Librarian
+	{
+		$IgnoreAllDefaultLibraries			"Yes (/NODEFAULTLIB)"
 	}
 }
 
