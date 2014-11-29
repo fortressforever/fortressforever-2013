@@ -1,5 +1,17 @@
 # Fortress Forever (Source SDK 2013)
 
+---
+
+## Note: This port is not currently being actively developed
+
+See [fortressforever/fortressforever](https://github.com/fortressforever/fortressforever), the repository for Source SDK 2006 version of Fortress Forever
+
+---
+
+### Helpful Resources
+
+* [A list of the differences in the SDK files between the default Source SDK and the FF code](http://www.fortress-forever.com/diff/)
+
 ### Committing
 
 * Always make sure the code you are committing compiles
